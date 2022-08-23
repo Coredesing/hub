@@ -2,7 +2,7 @@ import Layout from '@/components/Layout'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { api, Categories, Right } from '..'
+import { api, Categories, cleanHTML, Right } from '..'
 import { format } from 'date-fns'
 import Pagination from '@/components/Pages/Hub/Pagination'
 import { useEffect, useState } from 'react'
@@ -71,7 +71,7 @@ export async function getStaticProps (context) {
 
   const { pagination } = posts.meta
   return {
-    props: { posts, pagination },
+    props: { posts: cleanHTML(posts), pagination },
     revalidate: 60
   }
 }

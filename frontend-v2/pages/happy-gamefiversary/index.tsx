@@ -1,4 +1,3 @@
-import { ParallaxProvider, Parallax } from 'react-scroll-parallax'
 import fonts from '@/components/Pages/Adventure/index.module.scss'
 import logo from '@/components/Pages/Adventure/images/logo.png'
 import banner from '@/components/Pages/Adventure/images/banner.png'
@@ -31,6 +30,7 @@ const menu = [{
 }, {
   id: 'leaderboard',
   text: 'Leaderboard',
+  hidden: true,
   secondary: true
 }, {
   id: 'history',
@@ -47,6 +47,7 @@ const menu = [{
 }, {
   id: 'partners',
   text: 'Partners',
+  hidden: true,
   secondary: true
 }]
 
@@ -162,7 +163,7 @@ const Content = () => {
         </div>
         <div className={clsx('w-full md:block md:w-auto absolute top-20 left-0 md:relative md:top-0 md:left-0', menuMobile ? 'block' : 'hidden')}>
           <ul className="flex flex-col md:flex-row bg-gamefiDark-900 rounded md:bg-transparent py-2 drop-shadow-lg uppercase font-casual font-semibold text-sm leading-tight">
-            {menu.map((item, i) => <li key={item.id}>
+            {menu.filter(x => !x.hidden).map((item, i) => <li key={item.id}>
               <a href={`#${item.id}`} className={`px-4 lg:px-6 py-3 hover:text-gamefiGreen-500 relative block ${item.secondary ? 'md:hidden xl:block' : ''}`} onClick={() => {
                 gtagEvent('catventure', { section: item.id })
               }}>
@@ -181,15 +182,15 @@ const Content = () => {
         </div>
       </div>
     </header>
-    <div className="dark:bg-black dark:text-white font-atlas min-h-screen">
-      <div className="transform -mb-40 sm:-mb-20 relative">
-        <section className="relative md:container mx-auto z-10 pt-20" id="about">
-          <div className="w-screen md:w-auto h-screen md:aspect-[16/7.5] md:h-auto relative">
+    <div className="dark:bg-black dark:text-white font-atlas">
+      <div className="relative">
+        <section className="relative md:container mx-auto z-10 md:pt-20" id="about">
+          <div className="w-screen md:w-auto h-screen md:aspect-[16/7] md:h-auto relative">
             <div className="absolute inset-0 flex items-center justify-center">
               <img src={banner.src} alt="" className="absolute bottom-0 w-full" />
             </div>
-            <div className="absolute inset-0 flex items-start pt-[25%] md:pt-10 lg:pt-8 2xl:pt-24 justify-center z-10">
-              <h2 className="font-spotnik font-bold text-center text-4xl sm:text-5xl lg:text-6xl xl:text-7xl 2xl:text-[80px] leading-none uppercase">
+            <div className="absolute inset-0 flex items-start pt-[25%] md:pt-4 xl:pt-0 2xl:pt-16 justify-center z-10">
+              <h2 className="font-spotnik font-bold text-center text-4xl sm:text-5xl xl:text-7xl 2xl:text-[80px] leading-none uppercase">
                 <span className="block">Catventure</span> In The Multiverse
               </h2>
             </div>
@@ -206,113 +207,100 @@ const Content = () => {
         </section>
       </div>
 
-      <Parallax speed={20} className="-mb-40 sm:-mb-20 3xl:mt-24">
-        <section className="mx-auto max-w-[1920px] overflow-hidden z-20">
-          <div className="md:container mx-auto text-center bg-black p-8 w-full">
-            <div className="font-spotnik max-w-4xl mx-auto">
-              <p className="text-2xl xl:text-3xl py-8">
-                Catventure in the Multiverse - bringing players a captivating, thrilling, and diverse experience of multiple gameplays. Participating in Catventure, players become the Castronauts and Space Clowders to travel through our multiverse of games and metaverse.
-              </p>
-              <p className="text-2xl xl:text-3xl py-8">
-                Find yourself challenging limits through various missions across the gameplays, gaining Gafish points, and reaching the top players of GameFi.org championship.</p>
-              <p className="text-2xl xl:text-3xl py-8">
-                The more Gafish you earn, the stronger you are as a Castronaut and Space Clowder. Top strongest players and teams on the leaderboard have valuable rewards awaiting at the end of Catventure. Along this journey, GameFi.org’s ultimate spin of luck will also stay available for every Castronaut to take their chance of winning $GAFI airdrop.
-              </p>
-              <p className="text-2xl xl:text-3xl py-8">
-                Catventure takes place from
-                August 22, 2022 to September 8, 2022.
-                Stay tuned, Castronauts!
-                Happy 1st Gamefiversary!
-              </p>
-            </div>
+      <section className="mx-auto max-w-[1920px] overflow-hidden z-20">
+        <div className="md:container mx-auto text-center bg-black px-8 pt-24 w-full">
+          <div className="font-spotnik max-w-[930px] mx-auto">
+            <p className="text-2xl xl:text-3xl">
+              Catventure in the Multiverse - bringing players a captivating, thrilling, and diverse experience of multiple gameplays. Participating in Catventure, players become the Castronauts and Space Clowders to travel through our multiverse of games and metaverse.
+            </p>
           </div>
-        </section>
-      </Parallax>
+        </div>
+      </section>
 
-      {/* <Parallax speed={20}>
-        <section className="mx-auto max-w-[1920px] overflow-hidden">
-          <div className="relative py-40">
-            <div className="flex items-center bg-white border-8 border-black py-2 md:py-4 absolute rotate-[4deg] left-1/2 transform -translate-x-1/2">
-              {[1, 2, 3, 4, 5, 6, 7].map((e) => {
-                return (
-                  <div key={e} className="flex flex-none items-center">
-                    <span className="font-bold text-base lg:text-2xl 2xl:text-4xl leading-none text-black uppercase -mb-1">
-                      Event Leaderboard
-                    </span>
-                    <img src={fish.src} alt="icon-fish" className="mx-4" />
-                  </div>
-                )
-              })}
-            </div>
-            <div className="flex items-center bg-white border-8 border-black py-2 md:py-4 absolute -rotate-[4deg] left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-[#93FF61] to-[#FAFF00]">
-              {[1, 2, 3, 4, 5, 6, 7].map((e) => {
-                return (
-                  <div key={e} className="flex flex-none items-center">
-                    <span className="font-bold text-base lg:text-2xl 2xl:text-4xl leading-none text-black uppercase -mb-1">
-                      Event Leaderboard
-                    </span>
-                    <img src={fish.src} alt="icon-fish" className="mx-4" />
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-        </section>
-      </Parallax> */}
-      <Parallax speed={20}>
-        <section className="mx-auto max-w-[1920px]" id="history">
-          <div className="md:container mx-auto p-8">
-            <span className="text-transparent bg-gradient-to-br from-[#93FF61] to-[#FAFF00] bg-clip-text font-spotnik text-lg md:text-2xl font-bold uppercase">
-              [ GameFi.Org History ]
-            </span>
-          </div>
-          <Flicking
-            autoResize={true}
-            useResizeObserver={true}
-            resizeDebounce={50}
-            defaultIndex={historyActive}
-            align="center"
-            interruptable={true}
-            ref={flickingHistory}
-            plugins={plugins}
-            onWillChange={(e) => {
-              setHistoryActive(e.index)
-              gtagEvent('catventure_history', { time: e.index })
-            }}
-          >
-            {history.map((item) => <div key={item.time} className="w-full text-white flex items-center justify-center">
-              <div className="py-16 sm:w-[60%] max-w-[750px] text-justify text-base md:text-lg lg:text-xl xl:text-2xl underline-offset-8">
-                <div className="relative z-0 text-center text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-[80px] drop-shadow-[0_0_1px_rgba(255,255,255,0.5)] text-black uppercase font-bold">{item.time}</div>
-                <div className="relative px-8 xl:px-16 z-20 -mt-6 md:-mt-8 xl:-mt-9">{item.content()}</div>
-              </div>
-            </div>)}
-          </Flicking>
-          <Flicking
-            autoResize={true}
-            useResizeObserver={true}
-            resizeDebounce={50}
-            defaultIndex={historyActive}
-            align="center"
-            interruptable={true}
-            ref={flickingTimeline}
-            bound={true}
-          >
-            {history.map((item, i) => <div className={clsx('group flex-none w-1/3 lg:w-1/4 xl:w-1/6 text-center relative cursor-pointer text-white text-opacity-70 hover:text-opacity-75', i === historyActive && 'text-opacity-100')} key={i}>
-              <div className="relative !bg-transparent cursor-pointer flex items-center justify-center">
-                <div className={`rounded-full border ${i === historyActive ? 'border-gamefiGreen-500' : 'border-transparent group-hover:border-white'}`}>
-                  <div className={`h-2 w-2 m-4 ${i === historyActive ? 'bg-gamefiGreen-500' : 'bg-white'} rounded-full`}></div>
+      {/* <section className="mx-auto max-w-[1920px] overflow-hidden">
+        <div className="relative pb-40 pt-20">
+          <div className="flex items-center bg-white border-8 border-black py-2 md:py-4 absolute rotate-[4deg] left-1/2 transform -translate-x-1/2">
+            {[1, 2, 3, 4, 5, 6, 7].map((e) => {
+              return (
+                <div key={e} className="flex flex-none items-center">
+                  <span className="font-bold text-base lg:text-2xl 2xl:text-4xl leading-none text-black uppercase -mb-1">
+                    Event Leaderboard
+                  </span>
+                  <img src={fish.src} alt="icon-fish" className="mx-4" />
                 </div>
-              </div>
-              <div className={'pt-2 text-[12px]'}>{history[i].time}</div>
-            </div>)}
+              )
+            })}
+          </div>
+          <div className="flex items-center bg-white border-8 border-black py-2 md:py-4 absolute -rotate-[4deg] left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-[#93FF61] to-[#FAFF00]">
+            {[1, 2, 3, 4, 5, 6, 7].map((e) => {
+              return (
+                <div key={e} className="flex flex-none items-center">
+                  <span className="font-bold text-base lg:text-2xl 2xl:text-4xl leading-none text-black uppercase -mb-1">
+                    Event Leaderboard
+                  </span>
+                  <img src={fish.src} alt="icon-fish" className="mx-4" />
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </section> */}
 
-            <ViewportSlot>
-              <div className="absolute top-5 h-px w-full bg-gamefiDark-650"></div>
-            </ViewportSlot>
-          </Flicking>
-        </section>
-      </Parallax>
-      <section className="mx-auto max-w-[1920px] overflow-hidden mt-16" id="adventure">
+      <div id="history" className="pt-24 invisible"></div>
+      <section className="mx-auto max-w-[1920px]">
+        <div className="md:container mx-auto p-8">
+          <span className="text-transparent bg-gradient-to-br from-[#93FF61] to-[#FAFF00] bg-clip-text font-spotnik text-lg md:text-2xl font-bold uppercase">
+            [ GameFi.org History ]
+          </span>
+        </div>
+        <Flicking
+          autoResize={true}
+          useResizeObserver={true}
+          resizeDebounce={50}
+          defaultIndex={historyActive}
+          align="center"
+          interruptable={true}
+          ref={flickingHistory}
+          plugins={plugins}
+          onWillChange={(e) => {
+            setHistoryActive(e.index)
+            gtagEvent('catventure_history', { time: e.index })
+          }}
+        >
+          {history.map((item) => <div key={item.time} className="w-full text-white flex items-center justify-center">
+            <div className="py-16 sm:w-[60%] max-w-[750px] text-base md:text-lg lg:text-xl xl:text-2xl underline-offset-8">
+              <div className="relative z-0 text-center text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-[80px] drop-shadow-[0_0_1px_rgba(255,255,255,0.5)] text-black uppercase font-bold">{item.time}</div>
+              <div className="relative px-8 xl:px-16 z-20 -mt-6 md:-mt-8 xl:-mt-9">{item.content()}</div>
+            </div>
+          </div>)}
+        </Flicking>
+        <Flicking
+          autoResize={true}
+          useResizeObserver={true}
+          resizeDebounce={50}
+          defaultIndex={historyActive}
+          align="center"
+          interruptable={true}
+          ref={flickingTimeline}
+          bound={true}
+        >
+          {history.map((item, i) => <div className={clsx('group flex-none w-1/3 lg:w-1/4 xl:w-1/6 text-center relative cursor-pointer text-white text-opacity-70 hover:text-opacity-75', i === historyActive && 'text-opacity-100')} key={i}>
+            <div className="relative !bg-transparent cursor-pointer flex items-center justify-center">
+              <div className={`rounded-full border ${i === historyActive ? 'border-gamefiGreen-500' : 'border-transparent group-hover:border-white'}`}>
+                <div className={`h-2 w-2 m-4 ${i === historyActive ? 'bg-gamefiGreen-500' : 'bg-white'} rounded-full`}></div>
+              </div>
+            </div>
+            <div className={'pt-2 text-[12px]'}>{history[i].time}</div>
+          </div>)}
+
+          <ViewportSlot>
+            <div className="absolute top-5 h-px w-full bg-gamefiDark-650"></div>
+          </ViewportSlot>
+        </Flicking>
+      </section>
+
+      <div id="adventure" className="pt-24 invisible"></div>
+      <section className="mx-auto max-w-[1920px] overflow-hidden">
         <div className="relative w-full overflow-hidden">
           <div className="flex items-center bg-white py-2 md:py-4 my-4">
             {[1, 2, 3, 4, 5, 6, 7].map((e) => {
@@ -339,7 +327,9 @@ const Content = () => {
       <section className="mx-auto max-w-[1920px] overflow-hidden bg-[#141414]" id="spin">
         <Spin comingsoon />
       </section>
-      <section className="mx-auto max-w-[1920px] overflow-hidden bg-repeat-x" id="press" style={{ backgroundImage: `url(${grid.src})` }}>
+
+      <div id="press" className="pt-24 invisible -mt-24"></div>
+      <section className="mx-auto max-w-[1920px] overflow-hidden bg-repeat-x" style={{ backgroundImage: `url(${grid.src})` }}>
         <div className="container mx-auto py-16 relative">
           <div className="p-4">
             <p className="font-spotnik text-3xl md:text-4xl lg:text-5xl font-bold uppercase">Multiverse <br /> Insight News</p>
@@ -402,9 +392,7 @@ const Content = () => {
 }
 
 const Adventure = () => {
-  return <ParallaxProvider>
-    <Content></Content>
-  </ParallaxProvider>
+  return <Content></Content>
 }
 
 export default Adventure

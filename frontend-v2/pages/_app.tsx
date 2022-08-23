@@ -21,8 +21,10 @@ const FB_PIXEL_ID = process.env.NEXT_PUBLIC_FB_PIXEL_ID
 const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID
 
 const callbackVH = () => {
-  const vh = window.innerHeight * 0.01
-  document.documentElement.style.setProperty('--vh', `${vh}px`)
+  window.requestAnimationFrame(() => {
+    const vh = window.innerHeight * 0.01
+    document.documentElement.style.setProperty('--vh', `${vh}px`)
+  })
 }
 
 const debounced = debounce(callbackVH, 100)
@@ -30,12 +32,6 @@ const debounced = debounce(callbackVH, 100)
 function MyApp ({ Component, pageProps }: AppProps) {
   useEffect(() => {
     debounced()
-    // comment below to avoid jerkiness
-    // window.addEventListener('resize', debounced)
-
-    // return () => {
-    //   window.removeEventListener('resize', debounced)
-    // }
   }, [])
 
   const router = useRouter()

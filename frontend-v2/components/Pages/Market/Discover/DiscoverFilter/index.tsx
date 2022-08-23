@@ -2,7 +2,7 @@ import Dropdown from '@/components/Base/Dropdown'
 // import { BNB, BUSD_BSC, GAFI } from '@/components/web3'
 import { ObjectType } from '@/utils/types'
 import React, { useState } from 'react'
-import isNumber from 'is-number'
+import { isNumber } from '@/utils'
 // import { ethers } from 'ethers'
 
 type Props = {

@@ -394,8 +394,9 @@ const Component = () => {
                     <div className="flex justify-between mb-3 items-center">
                       <div className="text-xs lg:text-sm font-casual leading-7 lg:leading-7 capitalize mr-10 xl:mr-12">Email</div>
                       <input
-                        className="bg-[#303035] border border-[#3C3C42] placeholder-white placeholder-opacity-30 font-casual text-sm rounded-sm px-4 py-1.5 w-full focus-visible:border-gamefiDark-350"
+                        className="disabled:cursor-not-allowed bg-[#303035] border border-[#3C3C42] placeholder-white placeholder-opacity-30 font-casual text-sm rounded-sm px-4 py-1.5 w-full focus-visible:border-gamefiDark-350"
                         name="email"
+                        disabled={accountHub?.confirmed}
                         type="email"
                         placeholder="Your email"
                         autoFocus

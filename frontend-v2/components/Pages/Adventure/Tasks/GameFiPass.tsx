@@ -99,7 +99,7 @@ export default function GameFiPass ({ listSocial, loadingSocial, setConnectedAll
     connectWallet(false, email).then(async (res: any) => {
       if (res.error) {
         setLoading(false)
-        toast.error('Could not update info')
+        toast.error(res?.error?.err?.message || 'Something went Wrong')
         return
       }
       try {
@@ -119,7 +119,6 @@ export default function GameFiPass ({ listSocial, loadingSocial, setConnectedAll
             }
           })
         }
-        console.log('response', response)
         if (response?.err) {
           toast.error(response?.err?.message || 'Something went Wrong')
           setLoading(false)
@@ -127,7 +126,8 @@ export default function GameFiPass ({ listSocial, loadingSocial, setConnectedAll
         } else {
           responseSendMail = await fetcher('/api/hub/emailValidation', {
             method: 'POST',
-            body: JSON.stringify(payload),
+            // body: JSON.stringify({ redirectUrl: `${window.location.hostname}${router.asPath}` }),
+            body: JSON.stringify({}),
             headers: {
               'X-Signature': signature,
               'X-Wallet-Address': walletAddress
@@ -220,10 +220,10 @@ export default function GameFiPass ({ listSocial, loadingSocial, setConnectedAll
                           }}
                         />
                         <button
-                          className="flex-none hidden md:block items-center justify-center overflow-hidden text-gamefiGreen-700 font-semibold font-casual text-[13px] hover:opacity-95 cursor-pointer w-[200px] "
+                          className="disabled:cursor-not-allowed flex-none hidden md:block items-center justify-center overflow-hidden text-gamefiGreen-700 font-semibold font-casual text-[13px] hover:opacity-95 cursor-pointer w-[200px] "
                           onClick={handleUpdate}
                           type="submit"
-                          disabled={loading}
+                          disabled={loading || disableVerify}
                         >
                           {loading ? <Spinning className="w-6 h-6" /> : (disableVerify ? 'Please check your email' : 'Verify my email')}
                         </button>
@@ -231,10 +231,10 @@ export default function GameFiPass ({ listSocial, loadingSocial, setConnectedAll
                   </div>
                   {confirmed || <div className="md:hidden flex justify-end mt-2">
                     <button
-                      className="flex md:hidden items-center overflow-hidden text-gamefiGreen-700 font-semibold font-casual text-[13px] hover:opacity-95 cursor-pointer"
+                      className="disabled:cursor-not-allowed flex md:hidden items-center overflow-hidden text-gamefiGreen-700 font-semibold font-casual text-[13px] hover:opacity-95 cursor-pointer"
                       onClick={handleUpdate}
                       type="submit"
-                      disabled={loading}
+                      disabled={loading || disableVerify}
                     >
                       {loading ? <Spinning className="w-6 h-6" /> : (disableVerify ? 'Please check your email' : 'Verify my email')}
                     </button>

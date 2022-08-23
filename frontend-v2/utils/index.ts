@@ -375,17 +375,18 @@ export const pad = (num = 0, width = 2, char = '0') => {
     : new Array(width - _num.length + 1).join(char) + _num
 }
 
-function usePrevious (value) {
-  const ref = useRef(value)
-  useEffect(() => {
-    ref.current = value // assign the value of ref to the argument
-  }, [value]) // this code will run when the value of 'value' changes
-  return ref.current // in the end, return the current ref value.
-}
-export default usePrevious
-
 export const isValidEmail = (email: string) =>
   // eslint-disable-next-line no-useless-escape
   /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
     email
   )
+
+export const isNumber = (num) => {
+  if (typeof num === 'number') {
+    return num - num === 0
+  }
+  if (typeof num === 'string' && num.trim() !== '') {
+    return Number.isFinite ? Number.isFinite(+num) : isFinite(+num)
+  }
+  return false
+}

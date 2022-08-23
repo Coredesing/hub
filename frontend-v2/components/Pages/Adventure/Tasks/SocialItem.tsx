@@ -24,6 +24,7 @@ const SocialItem = ({ data }) => {
     label,
     icon,
     isCompleted,
+    nameSocial,
     action
   } = useMemo(() => {
     const rewardQuantity = get(data, 'rewards[0].quantity')
@@ -53,6 +54,7 @@ const SocialItem = ({ data }) => {
     }].find(v => get(data, 'name').includes(v.name))
     return {
       isCompleted,
+      nameSocial: get(data, 'nameSocial') ? `@${get(data, 'nameSocial').username}` : '',
       label: currentSocial.name,
       icon: currentSocial.icon,
       name: `Sync with ${currentSocial.name}`,
@@ -137,14 +139,14 @@ const SocialItem = ({ data }) => {
             styles[label],
             'w-full rounded-sm h-[34px] flex items-center',
             (isCompleted || isLoading || !action?._id)
-              ? 'bg-[#383A43] cursor-not-allowed shadow-none border-none'
+              ? 'cursor-not-allowed'
               : 'cursor-pointer hover:opacity-80'
           )}
         >
           <div className={clsx(
             'w-[44px] flex justify-center h-full items-center',
             (isCompleted || isLoading || !action?._id)
-              ? 'bg-inherit !shadow-none cursor-not-allowed shadow-none border-none'
+              ? 'cursor-not-allowed'
               : ''
           )}>
             {icon}
@@ -153,12 +155,16 @@ const SocialItem = ({ data }) => {
 
             <span
               className={clsx(
-                'font-bold text-[13px] leading-[150%] tracking-[0.02em]',
-                isCompleted || !action?._id ? 'text-white/20' : 'text-white'
+                'font-bold text-[13px] leading-[150%] tracking-[0.02em] text-white'
               )}
             >
-              {buttonLabel || name || ''}
+              {nameSocial || buttonLabel || name || ''}
             </span>
+          </div>
+          <div className={clsx('w-[30px]', isCompleted ? 'block' : 'invisible')}>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M7 0C3.15 0 0 3.15 0 7C0 10.85 3.15 14 7 14C10.85 14 14 10.85 14 7C14 3.15 10.85 0 7 0ZM6.125 9.975L3.15 7L4.375 5.775L6.125 7.525L9.625 4.025L10.85 5.25L6.125 9.975Z" fill="white" />
+            </svg>
           </div>
         </button>
       </div>

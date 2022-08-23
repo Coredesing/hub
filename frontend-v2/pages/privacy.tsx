@@ -9,7 +9,7 @@ const Disclaimer = () => (
 
       <div className="uppercase font-bold text-2xl mb-2 mt-8">1. Why Do We Collect Your Data?</div>
       <p className="font-casual text-sm leading-6 opacity-80 mb-8">GameFi.org will collect the necessary personal information by lawful and fair means to serve the following purposes.</p>
-      <ul style={{listStyleType: "circle", marginLeft: 10}}>
+      <ul style={{ listStyleType: 'circle', marginLeft: 10 }}>
         <li className="font-casual text-sm leading-6 opacity-80 mb-8">To identify you as a user for security purposes</li>
         <li className="font-casual text-sm leading-6 opacity-80 mb-8">To understand your needs and your eligibility for products and services</li>
         <li className="font-casual text-sm leading-6 opacity-80 mb-8">To send you our newsletter or communicate with you in other ways about our products or services that we believe you might be interested in, yet you can unsubscribe from our marketing activities at any time</li>
@@ -29,7 +29,7 @@ const Disclaimer = () => (
 
       <div className="uppercase font-bold text-2xl mb-2 mt-8">2.2. Information collected when you visit our website</div>
       <p className="font-casual text-sm leading-6 opacity-80 mb-8">We may automatically gather the following information on each of your visits to our website and use of our services:</p>
-      <ul style={{listStyleType: "circle", marginLeft: 10}}>
+      <ul style={{ listStyleType: 'circle', marginLeft: 10 }}>
         <li className="font-casual text-sm leading-6 opacity-80 mb-8">Information about visits to our website: which websites you visited before accessing our services or website, browser type, information about your browser, date and time, the volume of data transmitted, and network operator;</li>
         <li className="font-casual text-sm leading-6 opacity-80 mb-8">Technical data on your device used to access the platform, such as IP address, time zone settings, and locations, operating system;</li>
         <li className="font-casual text-sm leading-6 opacity-80 mb-8">Transaction data including purchases of crypto assets;</li>
@@ -65,7 +65,7 @@ const Disclaimer = () => (
       <p className="font-casual text-sm leading-6 opacity-80 mb-8">You can request us to update, correct, or complete your personal information that you believe to be outdated, inaccurate, or incomplete. You can also change your personal information in your account at any time.</p>
       <p className="font-casual text-sm leading-6 opacity-80 mb-8">Right to Erasure ("Right to be Forgotten")</p>
       <p className="font-casual text-sm leading-6 opacity-80 mb-8">You may request to have your personal information deleted from our records in case:</p>
-      <ul style={{listStyleType: "upper-roman", marginLeft: 10}}>
+      <ul style={{ listStyleType: 'upper-roman', marginLeft: 10 }}>
         <li className="font-casual text-sm leading-6 opacity-80 mb-8">your personal information is no longer necessary to be used for the services or on the platform</li>
         <li className="font-casual text-sm leading-6 opacity-80 mb-8">personal information was collected in relation to processing that you previously consented to, but later withdrew such consent</li>
         <li className="font-casual text-sm leading-6 opacity-80 mb-8">your personal information was collected in relation to processing activities to which you object, and there are no overriding legitimate grounds for our processing.</li>
@@ -73,7 +73,7 @@ const Disclaimer = () => (
       <p className="font-casual text-sm leading-6 opacity-80 mb-8">Right to data portability</p>
       <p className="font-casual text-sm leading-6 opacity-80 mb-8">In some cases, you can ask to receive the data that you have provided to us in a structured, commonly used, and machine-readable format. we will provide you, or third-party, your personal information in a machine-readable format. this right only applies to the personal information you have consented us to use.</p>
       <p className="font-casual text-sm leading-6 opacity-80 mb-8">Right to restrict processing: you have the right to limit the processing of your data under certain circumstances as follows:</p>
-      <ul style={{listStyleType: "circle", marginLeft: 10}}>
+      <ul style={{ listStyleType: 'circle', marginLeft: 10 }}>
         <li className="font-casual text-sm leading-6 opacity-80 mb-8">to establish the accuracy of the personal information;</li>
         <li className="font-casual text-sm leading-6 opacity-80 mb-8">when the processing is considered unlawful, but you do not wish to have your personal information erased;</li>
         <li className="font-casual text-sm leading-6 opacity-80 mb-8">where we no longer need to process your personal information, but the information must be retained for legal reasons; and</li>
@@ -85,7 +85,7 @@ const Disclaimer = () => (
       <p className="font-casual text-sm leading-6 opacity-80 mb-8">You reserve the right to withdraw your consent at any time where We are relying on it to process your Personal Information. Withdrawing your consent does not affect the lawfulness of Our processing of your Personal Information prior to withdrawing.</p>
       <p className="font-casual text-sm leading-6 opacity-80 mb-8">Right to withdraw your consent: for processing requiring your consent, you have the right to withdraw your consent at any time. Exercising this right does not affect the lawfulness of the processing based on the consent given before the withdrawal of the latter;</p>
       <p className="font-casual text-sm leading-6 opacity-80 mb-8">Please also be noted that there are some limitations when You wish to exercise any one of these individual rights. We may limit your individual rights in the following situations:</p>
-      <ul style={{listStyleType: "upper-roman", marginLeft: 10}}>
+      <ul style={{ listStyleType: 'upper-roman', marginLeft: 10 }}>
         <li className="font-casual text-sm leading-6 opacity-80 mb-8">Where denial of access is required by-laws;</li>
         <li className="font-casual text-sm leading-6 opacity-80 mb-8">When granting access would have a negative impact on others' privacy;</li>
         <li className="font-casual text-sm leading-6 opacity-80 mb-8">In order to protect Our rights and properties;</li>

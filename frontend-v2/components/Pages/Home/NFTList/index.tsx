@@ -5,7 +5,6 @@ import NFTCard from '@/components/Pages/Market/NFTCard'
 import { useNFTInfos } from '@/components/Pages/Market/utils'
 import FilterDropdown from '../FilterDropdown'
 import { useRouter } from 'next/router'
-// import ShadowLoader from '@/components/Base/ShadowLoader'
 import { useFetch } from '@/utils'
 
 const NFTFilterOptions = [

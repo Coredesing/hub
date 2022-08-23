@@ -1,7 +1,7 @@
 import React from 'react'
 import clsx from 'clsx'
-import isNumber from 'is-number'
 import styles from './form-input.module.scss'
+import { isNumber } from '@/utils'
 
 interface IProps {
   value: any;

@@ -2,7 +2,7 @@ import Layout from '@/components/Layout'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { api, Categories, Right } from '..'
+import { api, Categories, cleanHTML, Right } from '..'
 import { format } from 'date-fns'
 import Pagination from '@/components/Pages/Hub/Pagination'
 import { useEffect, useState } from 'react'
@@ -18,7 +18,7 @@ const Articles = ({ posts, tag, pagination }) => {
     }
 
     router.push(`/insight/tag/${tag}/${page}`)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page])
   return <Layout title={tag ? `GameFi.org - ${tag.toUpperCase()} Insight` : 'GameFi.org - Insight'} description="An integrated information channel providing the latest news on GameFi.org">
     <div className="px-4 lg:px-16 mx-auto lg:block max-w-7xl mb-16">
@@ -26,7 +26,7 @@ const Articles = ({ posts, tag, pagination }) => {
       <div className="flex flex-col sm:flex-row gap-12 mt-10 mb-12">
         <div className="flex-1">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-            { posts && posts.map(item => <div key={item.id} className="flex flex-col gap-4 sm:gap-0">
+            {posts && posts.map(item => <div key={item.id} className="flex flex-col gap-4 sm:gap-0">
               <Link href={`/insight/${item.slug}`} passHref={true}>
                 <a className="block relative w-full aspect-[16/9]">
                   <Image src={item.feature_image} layout="fill" alt={item.title} className="rounded" objectFit={'contain'}></Image>
@@ -68,7 +68,7 @@ export async function getStaticProps (context) {
     }
   }
 
-  const posts = await api.posts.browse({ filter: `tag:${tag}`, limit: PER_PAGE, page }).catch(() => {})
+  const posts = await api.posts.browse({ filter: `tag:${tag}`, limit: PER_PAGE, page }).catch(() => { })
   if (!posts) {
     return {
       notFound: true,
@@ -78,7 +78,7 @@ export async function getStaticProps (context) {
 
   const { pagination } = posts.meta
   return {
-    props: { posts, tag, pagination },
+    props: { posts: cleanHTML(posts), tag, pagination },
     revalidate: 60
   }
 }

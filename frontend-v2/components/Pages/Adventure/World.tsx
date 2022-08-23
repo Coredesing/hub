@@ -97,6 +97,16 @@ enum LandShape {
   SEVENTEEN = 17,
   EIGHTEEN = 18
 }
+
+enum TooltipPlacement {
+  TOP = 'top',
+  TOP_RIGHT = 'top-right',
+  TOP_LEFT = 'top-left',
+  BOTTOM = 'bottom',
+  BOTTOM_RIGHT = 'bottom-right',
+  BOTTOM_LEFT = 'bottom-left'
+}
+
 type LandRaw = {
   slug: string;
   shape: LandShape;
@@ -107,12 +117,12 @@ type LandRaw = {
   img: StaticImageData;
   logo: { src: string };
   tooltip?: [number, number];
-  ping?: number;
+  tooltipPlacement?: TooltipPlacement;
+  ping: number;
 }
 type Land = LandRaw & {
   status: string;
   points: number[];
-  tooltip: [number, number];
   hexagons: number[][];
   tooltipPosition(): number[];
 }
@@ -315,6 +325,16 @@ const landsDefault: LandRaw[] = [{
   logo: logoGameFi,
   ping: 15
 }, {
+  slug: 'moon-strike',
+  shape: LandShape.SEVEN,
+  positions: [18, 12],
+  name: 'Moon Strike',
+  categories: ['FPS', 'Strategy'],
+  description: 'A Sci-Fi NFTs multiplayer with shooter and development based on AAA quality from Unreal Engine.',
+  img: imgMoonStrike,
+  logo: logoMoonStrike,
+  ping: 2
+}, {
   slug: 'kucoin',
   shape: LandShape.TWO,
   positions: [16, 18],
@@ -324,57 +344,6 @@ const landsDefault: LandRaw[] = [{
   img: imgKucoin,
   logo: logoKucoin,
   ping: 4
-}, {
-  slug: 'dvision',
-  shape: LandShape.THREE,
-  positions: [3, 22],
-  name: 'Dvision Network',
-  categories: ['Action', 'NFT', 'Metaverse'],
-  description: 'Dvision Network is a multichain metaverse platform that is built on top of the Ethereum Network and Binance Smart Chain and is powered by the DVI utility and governance token across its all platform pillars, which powers the robust and diversified NFT marketplace within its augmented reality. Dvision is based on three primary platform features, which are known as NFT Market, Meta-Space, and Meta-City.',
-  img: imgDvision,
-  logo: logoDvision,
-  ping: 5
-}, {
-  slug: 'epic-war',
-  shape: LandShape.FOUR,
-  positions: [13, 26],
-  name: 'Epic War',
-  categories: ['FPS', 'Strategy', 'Role Playing'],
-  description: 'Epic War is a 3D Blockchain Cinematic Game that is free-to-play-to-earn (F2P2E). It is a massively multiplayer real-time strategy game (MMORTS) and social network based on blockchain technology. Epic War offers gamers the thrill of first-person shooter action in a cutting-edge gaming environment.',
-  img: imgEpicwar,
-  logo: logoEpicwar,
-  ping: 5
-}, {
-  slug: 'desports',
-  shape: LandShape.FIFTEEN,
-  positions: [8, 49],
-  name: 'DESports',
-  categories: ['eSports', 'Tournament', 'Organizer'],
-  description: 'Desports, powered by Icetea Labs - leading blockchain incubator in the world & 500Bros - top SEA eSports organisers, is Decentralised Esports Platform which is the pioneer & revolution for Web3 Gaming.',
-  img: imgDEsports,
-  logo: logoDEsports,
-  ping: 5
-}, {
-  slug: 'metashooter',
-  shape: LandShape.TWO,
-  positions: [16, 70],
-  name: 'MetaShooter',
-  categories: ['Action', 'PvP', 'Strategy'],
-  description: 'MetaShooter is the first decentralized blockchain-based hunting metaverse. MetaShooter joins millions of gaming enthusiasts in a community where they can experience realistic hunting in the open world and develop many activities with monetization opportunities.',
-  img: imgMetashooter,
-  logo: logoMetashooter,
-  ping: 5
-}, {
-  slug: 'moon-strike',
-  shape: LandShape.SEVEN,
-  positions: [18, 12],
-  name: 'Moon Strike',
-  categories: ['FPS', 'Strategy'],
-  description: 'A Sci-Fi NFTs multiplayer with shooter and development based on AAA quality from Unreal Engine.',
-  img: imgMoonStrike,
-  logo: logoMoonStrike,
-  tooltip: [16, 11],
-  ping: 2
 }, {
   slug: 'isekaiverse',
   shape: LandShape.EIGHT,
@@ -386,6 +355,28 @@ const landsDefault: LandRaw[] = [{
   logo: logoIsekaiverse,
   ping: 2
 }, {
+  slug: 'dvision',
+  shape: LandShape.THREE,
+  positions: [3, 22],
+  name: 'Dvision Network',
+  categories: ['Action', 'NFT', 'Metaverse'],
+  description: 'Dvision Network is a multichain metaverse platform that is built on top of the Ethereum Network and Binance Smart Chain and is powered by the DVI utility and governance token across its all platform pillars, which powers the robust and diversified NFT marketplace within its augmented reality. Dvision is based on three primary platform features, which are known as NFT Market, Meta-Space, and Meta-City.',
+  img: imgDvision,
+  logo: logoDvision,
+  tooltipPlacement: TooltipPlacement.TOP_LEFT,
+  ping: 5
+}, {
+  slug: 'epic-war',
+  shape: LandShape.FOUR,
+  positions: [13, 26],
+  name: 'Epic War',
+  categories: ['FPS', 'Strategy', 'Role Playing'],
+  description: 'Epic War is a 3D Blockchain Cinematic Game that is free-to-play-to-earn (F2P2E). It is a massively multiplayer real-time strategy game (MMORTS) and social network based on blockchain technology. Epic War offers gamers the thrill of first-person shooter action in a cutting-edge gaming environment.',
+  img: imgEpicwar,
+  logo: logoEpicwar,
+  tooltipPlacement: TooltipPlacement.TOP_LEFT,
+  ping: 5
+}, {
   slug: 'engine-of-fury',
   shape: LandShape.TEN,
   positions: [3, 31],
@@ -395,6 +386,17 @@ const landsDefault: LandRaw[] = [{
   img: imgEnginesOfFury,
   logo: logoEnginesOfFury,
   ping: 1
+}, {
+  slug: 'ninneko',
+  shape: LandShape.FIVE,
+  positions: [7, 34],
+  name: 'Ninneko',
+  categories: ['Idol', 'RPG', 'NFT'],
+  description: 'Ninneko is an idle-rpg game, based on a japanese theme. With a wide variety of skills and strategy, Ninneko will surely bring you a new gaming experience with unpredictable gameplay. Dive in and become the strongest.',
+  img: imgNinneko,
+  logo: logoNinneko,
+  tooltipPlacement: TooltipPlacement.BOTTOM_LEFT,
+  ping: 7
 }, {
   slug: 'goons-of-balatroon',
   shape: LandShape.ELEVEN,
@@ -414,6 +416,7 @@ const landsDefault: LandRaw[] = [{
   description: 'Monsterra is a multi-chain game run on BNB, Avalanche and Terra networks inspired by the Axie Infinity game\'s pet world and the gameplay in Clash of Clan or Boom Beach of Supercell.',
   img: imgMonsterra,
   logo: logoMonsterra,
+  tooltipPlacement: TooltipPlacement.TOP_LEFT,
   ping: 4
 }, {
   slug: 'codyfight',
@@ -426,6 +429,38 @@ const landsDefault: LandRaw[] = [{
   logo: logoCodyfight,
   ping: 2
 }, {
+  slug: 'titan-hunters',
+  shape: LandShape.SIX,
+  positions: [16, 44],
+  name: 'Titan Hunters',
+  categories: ['NFT', 'Casual', 'Adventure'],
+  description: 'Titan Hunters is a rogue-like mobile game where you hunt ferocious Titans and earn real money with the power of NFTs. Titan Hunters is the first popular GameFi in Japan with impressive achievements: ranked 3rd in Japan’s App Store, gone viral on Twitter Japan, and appeared in 50+ big Japanese newspapers.',
+  img: imgTitanHunters,
+  logo: logoTitanHunters,
+  ping: 3
+}, {
+  slug: 'desports',
+  shape: LandShape.FIFTEEN,
+  positions: [8, 49],
+  name: 'DESports',
+  categories: ['eSports', 'Tournament', 'Organizer'],
+  description: 'Desports, powered by Icetea Labs - leading blockchain incubator in the world & 500Bros - top SEA eSports organisers, is Decentralised Esports Platform which is the pioneer & revolution for Web3 Gaming.',
+  img: imgDEsports,
+  logo: logoDEsports,
+  tooltipPlacement: TooltipPlacement.TOP_LEFT,
+  ping: 5
+}, {
+  slug: 'aradena',
+  shape: LandShape.SIXTEEN,
+  positions: [3, 52],
+  name: 'Aradena',
+  categories: ['Card', 'Strategy', 'Turn-based'],
+  description: 'Free-to-play and insanely fun, Aradena: Battlegrounds is a PvP trading card hex-battler launching in Q1 2023. Aradena: Battlegrounds is a TCG where players can build their deck, trade their cards, and compete for rewards on an immersive 3D battlefield. Trade, Battle, and Earn in the next generation of strategy gaming.',
+  img: imgAradena,
+  logo: logoAradena,
+  tooltipPlacement: TooltipPlacement.BOTTOM_LEFT,
+  ping: 2
+}, {
   slug: 'the-unfettered',
   shape: LandShape.NINE,
   positions: [18, 53],
@@ -436,26 +471,15 @@ const landsDefault: LandRaw[] = [{
   logo: logoTheUnfettered,
   ping: 3
 }, {
-  slug: 'ninneko',
-  shape: LandShape.FIVE,
-  positions: [7, 34],
-  tooltip: [6, 33],
-  name: 'Ninneko',
-  categories: ['Idol', 'RPG', 'NFT'],
-  description: 'Ninneko is an idle-rpg game, based on a japanese theme. With a wide variety of skills and strategy, Ninneko will surely bring you a new gaming experience with unpredictable gameplay. Dive in and become the strongest.',
-  img: imgNinneko,
-  logo: logoNinneko,
-  ping: 3
-}, {
-  slug: 'aradena',
+  slug: 'pikaster',
   shape: LandShape.SIXTEEN,
-  positions: [3, 52],
-  name: 'Aradena',
-  categories: ['Card', 'Strategy', 'Turn-based'],
-  description: 'Free-to-play and insanely fun, Aradena: Battlegrounds is a PvP trading card hex-battler launching in Q1 2023. Aradena: Battlegrounds is a TCG where players can build their deck, trade their cards, and compete for rewards on an immersive 3D battlefield. Trade, Battle, and Earn in the next generation of strategy gaming.',
-  img: imgAradena,
-  logo: logoAradena,
-  ping: 2
+  positions: [11, 56],
+  name: 'Pikaster',
+  categories: ['Card', 'NFT', 'Strategy'],
+  description: 'Pikaster is a play-to-earn gamefi project developed by Metaland, powered by Unity Engine. A card-based battle strategy PvE and PvP game, featuring Pikaster (NFTs), an innovative NFTs staking and evolution system, scholarship system, guilds and wars, World Trees, marketplace and in-game wallets.',
+  img: imgPikaster,
+  logo: logoPikaster,
+  ping: 0
 }, {
   slug: 'heroes-land',
   shape: LandShape.FIVE,
@@ -465,7 +489,6 @@ const landsDefault: LandRaw[] = [{
   description: 'Heroes Land is a match-3 puzzle RPG game with a unique dual-gameplay model combining both traditional gameplay mode and blockchain game mode. There are various game activities where users can enjoy and utilize their skills, from evolving and summoning heroes, and upgrading lands to Daily Quests, Tower Conquest, PvE, PvP, and Clan to earn game tokens.',
   img: imgHeroesLand,
   logo: logoHeroesLand,
-  tooltip: [2, 61],
   ping: 5
 }, {
   slug: 'metacity',
@@ -478,16 +501,6 @@ const landsDefault: LandRaw[] = [{
   logo: logoMetacity,
   ping: 5
 }, {
-  slug: 'iguverse',
-  shape: LandShape.EIGHT,
-  positions: [11, 56],
-  name: 'IguVerse',
-  categories: ['NFT', 'Socialize-to-earn', 'Move-to-earn'],
-  description: 'IguVerse GameFi app redefines the whole concept of NFT using AI / ML technologies. Unique user-generated NFTs will become the new standard NFT 2.0, dethroning faceless collections. In our GameFi app, we introduce an innovative game mechanic Socialize to Earn, along with two more Earn concepts - Move to Earn and Play to Earn. We associate them with simple tasks and offer users to walk their own NFT pets, feed them and share their photos on social media to get rewards.',
-  img: imgIguVerse,
-  logo: logoIguVerse,
-  ping: 1
-}, {
   slug: 'dinox-world',
   shape: LandShape.SEVENTEEN,
   positions: [7, 66],
@@ -496,19 +509,8 @@ const landsDefault: LandRaw[] = [{
   description: 'DINOX World is the ultimate dinosaur-themed NFT combat & strategy game. Own, battle, & level up your very own NFT dinosaurs or play for free with in-game non-NFT dinos. Hatch your own unique dino and use specialized Action Cards to strategize & defeat wopponents in this entertaining, turn-based tactical game!',
   img: imgDinox,
   logo: logoDinox,
-  tooltip: [5, 67],
-  ping: 5
-}, {
-  slug: 'titan-hunters',
-  shape: LandShape.SIX,
-  positions: [16, 44],
-  tooltip: [15, 44],
-  name: 'Titan Hunters',
-  categories: ['NFT', 'Casual', 'Adventure'],
-  description: 'Titan Hunters is a rogue-like mobile game where you hunt ferocious Titans and earn real money with the power of NFTs. Titan Hunters is the first popular GameFi in Japan with impressive achievements: ranked 3rd in Japan’s App Store, gone viral on Twitter Japan, and appeared in 50+ big Japanese newspapers.',
-  img: imgTitanHunters,
-  logo: logoTitanHunters,
-  ping: 4
+  tooltipPlacement: TooltipPlacement.BOTTOM_LEFT,
+  ping: 9
 }, {
   slug: 'evermoon',
   shape: LandShape.THIRTEEN,
@@ -520,15 +522,27 @@ const landsDefault: LandRaw[] = [{
   logo: logoEvermoon,
   ping: 2
 }, {
-  slug: 'pikaster',
-  shape: LandShape.SIXTEEN,
+  slug: 'metashooter',
+  shape: LandShape.TWO,
+  positions: [16, 70],
+  name: 'MetaShooter',
+  categories: ['Action', 'PvP', 'Strategy'],
+  description: 'MetaShooter is the first decentralized blockchain-based hunting metaverse. MetaShooter joins millions of gaming enthusiasts in a community where they can experience realistic hunting in the open world and develop many activities with monetization opportunities.',
+  img: imgMetashooter,
+  logo: logoMetashooter,
+  tooltipPlacement: TooltipPlacement.BOTTOM_LEFT,
+  ping: 16
+}, {
+  slug: 'iguverse',
+  shape: LandShape.EIGHT,
   positions: [11, 74],
-  name: 'Pikaster',
-  categories: ['Card', 'NFT', 'Strategy'],
-  description: 'Pikaster is a play-to-earn gamefi project developed by Metaland, powered by Unity Engine. A card-based battle strategy PvE and PvP game, featuring Pikaster (NFTs), an innovative NFTs staking and evolution system, scholarship system, guilds and wars, World Trees, marketplace and in-game wallets.',
-  img: imgPikaster,
-  logo: logoPikaster,
-  ping: 0
+  name: 'IguVerse',
+  categories: ['NFT', 'Socialize-to-earn', 'Move-to-earn'],
+  description: 'IguVerse GameFi app redefines the whole concept of NFT using AI / ML technologies. Unique user-generated NFTs will become the new standard NFT 2.0, dethroning faceless collections. In our GameFi app, we introduce an innovative game mechanic Socialize to Earn, along with two more Earn concepts - Move to Earn and Play to Earn. We associate them with simple tasks and offer users to walk their own NFT pets, feed them and share their photos on social media to get rewards.',
+  img: imgIguVerse,
+  logo: logoIguVerse,
+  tooltipPlacement: TooltipPlacement.BOTTOM_LEFT,
+  ping: 1
 }, {
   slug: 'befitter',
   shape: LandShape.FIFTEEN,
@@ -538,7 +552,7 @@ const landsDefault: LandRaw[] = [{
   description: 'beFITTER is a web3 fitnessfi and socialfi app that aims to build a healthier ecosystem helping users balance their lives, improve their mental & physical health, gain achievements, and still get monetary incentives.',
   img: imgBeFitter,
   logo: logoBeFitter,
-  tooltip: [2, 79],
+  tooltipPlacement: TooltipPlacement.TOP_LEFT,
   ping: 12
 }, {
   slug: 'moverse-run',
@@ -559,7 +573,6 @@ const landsDefault: LandRaw[] = [{
   description: 'Cards of Ethernity is a digital collectible competitive PC card game with P2E and F2P options, developed by Aether Games Inc. Players are able to trade, rent and sell their finest quality 2D Dark Fantasy NFTs freely, with the same level of ownership as if they were real, tangible cards.',
   img: imgAetherGames,
   logo: logoAetherGames,
-  tooltip: [18, 78],
   ping: 1
 }, {
   slug: 'planet-sandbox',
@@ -570,7 +583,7 @@ const landsDefault: LandRaw[] = [{
   description: 'Planet Sandbox is a physics-powered TPS sandbox shooting NFT game that allows players to build and own arenas to fight other players in different game modes using their own NFT weapons and accessories. Powered by the $PSB tokens, Planet Sandbox has created multiple play-to-earn opportunities within their Metaverse.',
   img: imgPlanetSandbox,
   logo: logoPlanetSandbox,
-  ping: 5
+  ping: 6
 }, {
   slug: 'dark-country',
   shape: LandShape.FOUR,
@@ -580,7 +593,7 @@ const landsDefault: LandRaw[] = [{
   description: 'Dark Country is a PlayAndEarn American Gothic NFT Trading Card and Strategy Game in a somber Wild West setting with rangers, cowboys, haunted Indians, zombies, ghosts, and demons. The main game idea & mechanics are inspired by classic CCGs like Magic: the Gathering and HearthStone.',
   img: imgDarkCountry,
   logo: logoDarkCountry,
-  tooltip: [7, 87],
+  tooltipPlacement: TooltipPlacement.TOP_LEFT,
   ping: 5
 }, {
   slug: 'monster-era',
@@ -603,6 +616,17 @@ const landsDefault: LandRaw[] = [{
   logo: logoSummonersArena,
   ping: 5
 }, {
+  slug: 'rise-of-immortals',
+  shape: LandShape.THIRTEEN,
+  positions: [4, 100],
+  name: 'Rise of Immortals',
+  categories: ['Strategy', 'Turn-based', 'Metaverse'],
+  description: 'Rise of Immortals is an AAA hero-based strategy game powered by NFTs on the Ethereum blockchain (Layer 2 Immutable X).',
+  img: imgRiseOfImmortals,
+  logo: logoRiseOfImmortals,
+  tooltipPlacement: TooltipPlacement.BOTTOM_LEFT,
+  ping: 2
+}, {
   slug: 'thunder-lands',
   shape: LandShape.SEVEN,
   positions: [19, 94],
@@ -623,16 +647,6 @@ const landsDefault: LandRaw[] = [{
   logo: logoPlanetMojo,
   ping: 1
 }, {
-  slug: 'rise-of-immortals',
-  shape: LandShape.THIRTEEN,
-  positions: [4, 100],
-  name: 'Rise of Immortals',
-  categories: ['Strategy', 'Turn-based', 'Metaverse'],
-  description: 'Rise of Immortals is an AAA hero-based strategy game powered by NFTs on the Ethereum blockchain (Layer 2 Immutable X).',
-  img: imgRiseOfImmortals,
-  logo: logoRiseOfImmortals,
-  ping: 2
-}, {
   slug: 'aniwar',
   shape: LandShape.SIXTEEN,
   positions: [8, 104],
@@ -651,50 +665,9 @@ const landsDefault: LandRaw[] = [{
   description: 'Homie Wars is the first free-to-play, free-to-earn battle royale crypto game, inspired by Fall Guys and introducing an action-packed metaverse that houses exciting activities, various game modes, and creative opportunities to interact with your homies!',
   img: imgHomieWar,
   logo: logoHomieWar,
+  tooltipPlacement: TooltipPlacement.BOTTOM_LEFT,
   ping: 1
 }]
-
-const LandDetails = ({ land, onClose }: { land: Land; onClose: () => void }) => {
-  const [missions, setMissions] = useState([])
-
-  useEffect(() => {
-    fetcher(`https://catventure.gamefi.org/v1/projects/${land.slug}/tasks`)
-      .then(response => {
-        setMissions((response?.data?.tasks || []).filter(x => (x.name || '').indexOf('dummy') === -1))
-      })
-      .catch(() => {
-        setMissions([])
-      })
-  }, [land])
-  return <div className="flex flex-col w-full h-full sm:h-auto md:h-full font-atlas bg-black relative">
-    <div className="block md:absolute xl:relative z-0 w-full"><Image src={land.img} alt="image" layout="responsive"></Image></div>
-    <div className="p-4 flex-1 flex flex-col overflow-hidden z-10 md:pt-28 lg:pt-36 xl:pt-4">
-      <p className="text-xs xl:text-sm 2xl:text-base text-white xl:text-gamefiDark-300 mb-2" style={{ textShadow: '0px 0px 4px black' }}>{land.categories.join(', ')}</p>
-      <h3 className="font-spotnik text-xl xl:text-2xl 2xl:text-[32px] leading-none uppercase font-bold" style={{ textShadow: '0px 0px 4px black' }}>{land.name}</h3>
-      <p className="leading-normal my-4 xl:my-6 2xl:my-8 text-sm 2xl:text-base line-clamp-4 lg:line-clamp-3 xl:line-clamp-4 2xl:line-clamp-none" style={{ textShadow: '0px 0px 4px black' }}>{land.description}</p>
-      <p className="font-bold mb-2 text-sm 2xl:text-base 2xl:mb-4">Missions</p>
-      <div className="flex-1 overflow-auto mb-4">
-        {!!missions?.length && missions.map(mission =>
-          <div className="flex items-center mb-2 2xl:mb-4" key={mission.id}>
-            <input type="radio" value="" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
-            <label className="ml-2 text-xs xl:text-sm 2xl:text-base dark:text-gray-300">{mission.name}</label>
-          </div>
-        )}
-
-        {!missions?.length && 'Coming Soon'}
-      </div>
-      <Link href="/happy-gamefiversary/tasks" passHref={true}>
-        <a className="mt-auto bg-gradient-to-r from-[#93FF61] to-[#FAFF00] text-black font-casual font-semibold text-[12px] uppercase block w-full clipped-t-r py-3 mb-2 lg:mb-4 text-center">
-          Join Now
-        </a>
-      </Link>
-    </div>
-    <svg onClick={onClose} className="absolute right-1 top-1 w-6 h-6 cursor-pointer stroke-white hover:stroke-gamefiGreen-500 z-10 drop-shadow-xl" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M18 6L6 18" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M6 6L9 9L12 12M18 18L15 15" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  </div>
-}
 
 const World = ({ width = 1600, height = 750, screens = 3, r = 22, items = landsDefault, className = '' }) => {
   const ref = useRef<SVGSVGElement | undefined>()
@@ -705,6 +678,7 @@ const World = ({ width = 1600, height = 750, screens = 3, r = 22, items = landsD
   const widthPerHexagon = useMemo(() => Math.sqrt(3) * r, [r])
   const hexagonsPerRow = useMemo(() => Math.ceil(widthMax / widthPerHexagon), [widthMax, widthPerHexagon])
   const debug = false
+  const isLargeScreen = () => window?.innerWidth >= 1260
 
   const [projects, setProjects] = useState([])
   useEffect(() => {
@@ -732,12 +706,15 @@ const World = ({ width = 1600, height = 750, screens = 3, r = 22, items = landsD
         ...land,
         status: land.slug === 'gamefi' ? 'INTRO' : (project?.status || 'LOCK'),
         points,
-        tooltip: land.tooltip || ([land.positions[0] - 2, land.positions[1]]),
         hexagons: points.map(v => {
           return centers[v]
         }),
         tooltipPosition () {
-          return centers[hexagonsPerRow * (this as Land).tooltip[0] + (this as Land).tooltip[1]]
+          if (land.tooltip?.length === 2) {
+            return centers[hexagonsPerRow * land.tooltip[0] + land.tooltip[1]]
+          }
+
+          return centers[points[land.ping]]
         }
       }
 
@@ -787,7 +764,7 @@ const World = ({ width = 1600, height = 750, screens = 3, r = 22, items = landsD
         setWarningZoom(true)
         warningTimeout = setTimeout(() => {
           setWarningZoom(false)
-        }, 1500)
+        }, 800)
         return false
       }
 
@@ -854,7 +831,7 @@ const World = ({ width = 1600, height = 750, screens = 3, r = 22, items = landsD
 
     select(ref.current)
       // eslint-disable-next-line @typescript-eslint/unbound-method
-      .call(zoomRef.current.scaleTo, window?.innerWidth >= 1260 ? 1 : 1.5)
+      .call(zoomRef.current.scaleTo, isLargeScreen() ? 1 : 1.5)
       // eslint-disable-next-line @typescript-eslint/unbound-method
       .transition().duration(400).call(zoomRef.current.translateTo, x, y)
   }, [height, landActive, resetZoom, width])
@@ -879,13 +856,10 @@ const World = ({ width = 1600, height = 750, screens = 3, r = 22, items = landsD
           {lands.map(land => (
             <g onClick={(e) => {
               onLandsClicked(land, e)
-            }} key={land.slug} transform={`translate(${translate.x}, ${translate.y}) scale(${translate.k})`} className="transition-colors cursor-pointer fill-[#BEBEBE] hover:fill-[#00FFFF] hover:[fill-opacity:0.1] stroke-[#FFFFFF] hover:stroke-[#ABFFFF]" fillOpacity={0.15} strokeOpacity={0.4}>
+            }} key={land.slug} transform={`translate(${translate.x}, ${translate.y}) scale(${translate.k})`} className={`transition-colors cursor-pointer fill-[#BEBEBE] hover:fill-[#00FFFF] hover:[fill-opacity:0.1] stroke-[#FFFFFF] hover:stroke-[#ABFFFF] ${landActive?.slug === land.slug && 'fill-[#93FF61] stroke-[#93FF61]'}`} fillOpacity={0.15} strokeOpacity={0.4}>
               {land.hexagons.map((p, i) => !!p && <path key={i} d={`M${p[0]},${p[1]}${hexbin.hexagon()}`}></path>)}
 
-              {land.tooltipPosition() && <g strokeWidth={1}>
-                <rect x={land.tooltipPosition()[0]} y={land.tooltipPosition()[1]} width={280 / 2} height={122 / 2} fill="black" fillOpacity={0.7} rx="2"></rect>
-                <image xlinkHref={land.logo.src} x={land.tooltipPosition()[0]} y={land.tooltipPosition()[1]} width={280 / 2} height={122 / 2} />
-              </g>}
+              <LandTooltip land={land}></LandTooltip>
 
               {land.hexagons[land.ping] && <g stroke="none" fillOpacity={80}>
                 <circle r="30" cx={land.hexagons[land.ping][0]} cy={land.hexagons[land.ping][1]} fill="white" fillOpacity={0.1} className="animate-pulse"></circle>
@@ -896,7 +870,7 @@ const World = ({ width = 1600, height = 750, screens = 3, r = 22, items = landsD
           ))}
 
           <g className={warningZoom ? 'block' : 'hidden'} onClick={() => setWarningZoom(false)}>
-            <rect x="0" y="0" width="100%" height="100%" stroke="none" fill="black" fillOpacity={0.6} />
+            <rect x="0" y="0" width="100%" height="100%" stroke="none" fill="black" fillOpacity={0.4} />
             <text x="50%" y="50%" dominantBaseline="middle" textAnchor="middle" stroke="none" fill="#fff" fontSize={20} fontWeight="semi-bold" className="font-atlas">Use Ctrl + scroll to zoom the map</text>
           </g>
         </svg>
@@ -905,7 +879,7 @@ const World = ({ width = 1600, height = 750, screens = 3, r = 22, items = landsD
         </div>
 
         <div className="absolute bottom-2 right-2 flex gap-x-2 leading-none text-sm lg:text-base">
-          {translate?.k <= 1 && <div onClick={() => zoomIn()} className="inline-flex items-center gap-2 border border-white rounded-md py-1 px-2 lg:px-4 lg:py-2 cursor-pointer bg-black bg-opacity-50 hover:bg-opacity-100">
+          {translate?.k < (isLargeScreen ? 1.5 : 2) && <div onClick={() => zoomIn(isLargeScreen ? 1.5 : 2)} className="inline-flex items-center gap-2 border border-white rounded-md py-1 px-2 lg:px-4 lg:py-2 cursor-pointer bg-black bg-opacity-50 hover:bg-opacity-100">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
             </svg> Zoom In
@@ -945,4 +919,81 @@ const World = ({ width = 1600, height = 750, screens = 3, r = 22, items = landsD
   )
 }
 
+const LandDetails = ({ land, onClose }: { land: Land; onClose: () => void }) => {
+  const [missions, setMissions] = useState([])
+
+  useEffect(() => {
+    fetcher(`https://catventure.gamefi.org/v1/projects/${land.slug}/tasks`)
+      .then(response => {
+        setMissions((response?.data?.tasks || []).filter(x => (x.name || '').indexOf('dummy') === -1))
+      })
+      .catch(() => {
+        setMissions([])
+      })
+  }, [land?.slug])
+  return <div className="flex flex-col w-full h-full sm:h-auto md:h-full font-atlas bg-black relative">
+    <div className="block md:absolute xl:relative z-0 w-full"><Image src={land.img} alt="image" layout="responsive"></Image></div>
+    <div className="p-4 flex-1 flex flex-col overflow-hidden z-10 md:pt-28 lg:pt-36 xl:pt-4">
+      <p className="text-xs xl:text-sm 2xl:text-base text-white xl:text-gamefiDark-300 mb-2" style={{ textShadow: '0px 0px 4px black' }}>{land.categories.join(', ')}</p>
+      <h3 className="font-spotnik text-xl xl:text-2xl 2xl:text-[32px] leading-none uppercase font-bold" style={{ textShadow: '0px 0px 4px black' }}>{land.name}</h3>
+      <p className="leading-normal my-4 xl:my-6 2xl:my-8 text-sm 2xl:text-base line-clamp-4 lg:line-clamp-3 xl:line-clamp-4 2xl:line-clamp-none" style={{ textShadow: '0px 0px 4px black' }}>{land.description}</p>
+      <p className="font-bold mb-2 text-sm 2xl:text-base 2xl:mb-4">Missions</p>
+      <div className="flex-1 overflow-auto mb-4">
+        {!!missions?.length && missions.map(mission =>
+          <div className="flex items-center mb-2 2xl:mb-4" key={mission.id}>
+            <input type="radio" value="" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
+            <label className="ml-2 text-xs xl:text-sm 2xl:text-base dark:text-gray-300">{mission.name}</label>
+          </div>
+        )}
+
+        {!missions?.length && 'Coming Soon'}
+      </div>
+      <Link href="/happy-gamefiversary/tasks" passHref={true}>
+        <a className="mt-auto bg-gradient-to-r from-[#93FF61] to-[#FAFF00] text-black font-casual font-semibold text-[12px] uppercase block w-full clipped-t-r py-3 mb-2 lg:mb-4 text-center" onClick={() => {
+          gtagEvent('catventure_join', { land: land.slug })
+        }}>
+          Join Now
+        </a>
+      </Link>
+    </div>
+    <svg onClick={onClose} className="absolute right-1 top-1 w-6 h-6 cursor-pointer stroke-white hover:stroke-gamefiGreen-500 z-10 drop-shadow-xl" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M18 6L6 18" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M6 6L9 9L12 12M18 18L15 15" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  </div>
+}
+
+const LandTooltip = ({ land, width = 140, height = 61 }: { land: Land; width?: number; height?: number }) => {
+  const position = land?.tooltipPosition()
+  if (position?.length !== 2) {
+    return null
+  }
+
+  const placement = land.tooltipPlacement || TooltipPlacement.TOP_RIGHT
+  let [x, y] = position
+  if ([TooltipPlacement.TOP, TooltipPlacement.TOP_RIGHT, TooltipPlacement.TOP_LEFT].indexOf(placement) > -1) {
+    y = y - height
+  }
+
+  if (placement === TooltipPlacement.TOP) {
+    x = x - width / 2
+  }
+
+  if (placement === TooltipPlacement.TOP_LEFT) {
+    x = x - width
+  }
+
+  if (placement === TooltipPlacement.BOTTOM) {
+    x = x - width / 2
+  }
+
+  if (placement === TooltipPlacement.BOTTOM_LEFT) {
+    x = x - width
+  }
+
+  return <g strokeWidth={1} className="[fill-opacity:0.7] hover:[fill-opacity:1]">
+    <rect x={x} y={y} width={width} height={height} fill="black" rx="2"></rect>
+    <image xlinkHref={land.logo.src} x={x} y={y} width={width} height={height} />
+  </g>
+}
 export default World

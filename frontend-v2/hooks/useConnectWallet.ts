@@ -50,7 +50,7 @@ const useConnectWallet = () => {
                 .then((response) => {
                   resetToken()
                   if (response.error) {
-                    resolve({ error: response.error })
+                    resolve({ error: response })
                   }
 
                   if (!response.data?.walletAddress) {

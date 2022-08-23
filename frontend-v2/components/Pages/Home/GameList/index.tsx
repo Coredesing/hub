@@ -141,17 +141,6 @@ const GameList = () => {
                   }
                 </div>
             }
-            {/* {
-              topGamesLoading
-                ? <div className="grid grid-cols-5 gap-4">
-                  <ShadowLoader></ShadowLoader>
-                  <ShadowLoader></ShadowLoader>
-                  <ShadowLoader></ShadowLoader>
-                  <ShadowLoader></ShadowLoader>
-                  <ShadowLoader></ShadowLoader>
-                </div>
-                : <></>
-            } */}
           </div>
         </div>
         : <></>

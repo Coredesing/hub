@@ -119,7 +119,7 @@ function UserProfile ({ editable = false, data, totalReviewOfAllStatus = 0, tier
           }
         }
         const payload: any = { username, firstName, lastName, avatar: avatarId }
-        if (email && email.match(/\S+@\S+\.\S+/)) {
+        if (email && email.match(/\S+@\S+\.\S+/) && !email.match(/\*\**/)) {
           payload.email = email
         }
         const response = await fetcher('/api/hub/profile/update', {

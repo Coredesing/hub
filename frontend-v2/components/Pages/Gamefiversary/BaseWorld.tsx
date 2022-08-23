@@ -66,8 +66,6 @@ const BaseWorld = ({
     [account]
   )
 
-  console.log({ flickingGameRef, flickingListGameRef })
-
   return (
     <>
       {projects?.length !== 0 && (

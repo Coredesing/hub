@@ -7,10 +7,8 @@ import { useMemo } from 'react'
 
 const TopWorldItem = ({ data, playGame }) => {
   const canPlayNow = useMemo(() => {
-    return data?.status?.toUpperCase() !== 'LOCK' ||
-      data?.slug === 'epic-war' ||
-      data?.slug === 'befitter'
-  }, [data?.slug, data?.status])
+    return data?.status?.toUpperCase() !== 'LOCK' && data.playUrl
+  }, [data])
 
   return (
     <div className="flex flex-col h-[600px] md:h-auto md:flex-1 bg-[#1B1D26] relative">
@@ -135,13 +133,7 @@ const TopWorldItem = ({ data, playGame }) => {
                 onClick={() => {
                   playGame(data.id)
                 }}
-                href={`${
-                  data?.slug === 'epic-war'
-                    ? 'https://portal.epicwar.io/'
-                    : data?.slug === 'befitter'
-                      ? 'https://befitter.io/'
-                      : ''
-                }`}
+                href={data.playUrl}
                 target="_blank"
                 rel="noreferrer"
               >

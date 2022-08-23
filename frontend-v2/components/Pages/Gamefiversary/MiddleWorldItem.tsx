@@ -1,20 +1,18 @@
-import add from '@/components/Pages/Adventure/images/add.svg'
-import left from '@/components/Pages/Adventure/images/left.svg'
-import right from '@/components/Pages/Adventure/images/right.svg'
 import smile from '@/components/Pages/Adventure/images/smile.svg'
 import angry from '@/components/Pages/Adventure/images/angry.svg'
-import Image from 'next/image'
 import currentFish from '@/components/Pages/Adventure/images/current-fish.svg'
 import clsx from 'clsx'
 import playNow from '@/components/Pages/Adventure/images/play-now.svg'
 import { useMemo } from 'react'
+import { useMyWeb3 } from '@/components/web3/context'
 
-const MiddleWorldItem = ({ data, playGame }) => {
+const MiddleWorldItem = ({ data, playGame, connectedAllSocial = false }) => {
   const canPlayNow = useMemo(() => {
     return data?.status?.toUpperCase() !== 'LOCK' ||
       data?.slug === 'epic-war' ||
       data?.slug === 'befitter'
   }, [data?.slug, data?.status])
+  const { account } = useMyWeb3()
 
   return (
     <div className="flex flex-col h-[600px] md:h-auto md:flex-1 bg-[#1B1D26] relative">
@@ -24,7 +22,7 @@ const MiddleWorldItem = ({ data, playGame }) => {
           Account Type: {data?.accountType}
         </p>
       </div>
-      <div className="flex-1 flex flex-col overflow-y-scroll md:mr-2 gap-2">
+      <div className="flex-1 flex flex-col overflow-y-scroll md:mr-2 gap-2 pb-30 md:pb-0">
         {data?.tasks?.length > 0 &&
           data?.tasks.map((task, iTask) => (
             <div key={`task-${iTask}`} className="gap-1 md:gap-0 mr-2 ml-4">
@@ -139,7 +137,7 @@ const MiddleWorldItem = ({ data, playGame }) => {
                 onClick={() => {
                   playGame(data.id)
                 }}
-                href={`${
+                href={account && connectedAllSocial && `${
                   data?.slug === 'epic-war'
                     ? 'https://portal.epicwar.io/'
                     : data?.slug === 'befitter'

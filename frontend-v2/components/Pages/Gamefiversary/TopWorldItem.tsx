@@ -4,11 +4,13 @@ import currentFish from '@/components/Pages/Adventure/images/current-fish.svg'
 import clsx from 'clsx'
 import playNow from '@/components/Pages/Adventure/images/play-now.svg'
 import { useMemo } from 'react'
+import { useMyWeb3 } from '@/components/web3/context'
 
-const TopWorldItem = ({ data, playGame }) => {
+const TopWorldItem = ({ data, playGame, connectedAllSocial = false }) => {
   const canPlayNow = useMemo(() => {
     return data?.status?.toUpperCase() !== 'LOCK' && data.playUrl
   }, [data])
+  const { account } = useMyWeb3()
 
   return (
     <div className="flex flex-col h-[600px] md:h-auto md:flex-1 bg-[#1B1D26] relative">
@@ -18,7 +20,7 @@ const TopWorldItem = ({ data, playGame }) => {
           Account Type: {data?.accountType}
         </p>
       </div>
-      <div className="flex-1 flex flex-col overflow-y-scroll md:mr-2 gap-2">
+      <div className="flex-1 flex flex-col overflow-y-scroll md:mr-2 gap-2 pb-30 md:pb-0">
         {data?.tasks?.length > 0 &&
           data?.tasks.map((task, iTask) => (
             <div key={`task-${iTask}`} className="gap-1 md:gap-0 mr-2 ml-4">
@@ -126,14 +128,19 @@ const TopWorldItem = ({ data, playGame }) => {
           {canPlayNow
             ? (
               <a
-                className="bg-gradient-to-tl from-[#6CDB00] via-[#6CDB00] to-[#C9DB00] ml-auto flex items-center justify-center w-2/3 sm:w-1/3 md:w-1/5 aspect-6 md:aspect-[5/1.1] 2xl:aspect-6 uppercase text-sm text-black font-bold tracking-[0.02em] rounded-br"
+                className={clsx(
+                  'cursor-pointer bg-gradient-to-tl from-[#6CDB00] via-[#6CDB00] to-[#C9DB00] ml-auto flex items-center justify-center w-2/3 sm:w-1/3 md:w-1/5 aspect-6 md:aspect-[5/1.1] 2xl:aspect-6 uppercase text-sm text-black font-bold tracking-[0.02em] rounded-br'
+                )}
                 style={{
                   clipPath: 'polygon(14% 0, 100% 0, 100% 100%, 0% 100%)'
                 }}
                 onClick={() => {
                   playGame(data.id)
                 }}
-                href={data.playUrl}
+                href={
+                  account && connectedAllSocial &&
+                  data.playUrl
+                }
                 target="_blank"
                 rel="noreferrer"
               >

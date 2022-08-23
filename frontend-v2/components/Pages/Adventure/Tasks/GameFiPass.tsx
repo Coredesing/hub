@@ -44,13 +44,12 @@ export default function GameFiPass ({ listSocial, loadingSocial, setConnectedAll
   useEffect(() => {
     if (firstCome) {
       setFirstCome(false)
-      return
     }
-    if (!account) {
-      delayTimer.current = setTimeout(() => {
-        showConnectWallet(true)
-      }, 2000)
-    } else clearTimeout(delayTimer.current)
+    // if (!account) {
+    //   delayTimer.current = setTimeout(() => {
+    //     showConnectWallet(true)
+    //   }, 2000)
+    // } else clearTimeout(delayTimer.current)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account])
 
@@ -159,6 +158,7 @@ export default function GameFiPass ({ listSocial, loadingSocial, setConnectedAll
 
     <div
       className={clsx(
+        loadingSocial ? 'hidden' : 'block',
         'w-full rounded-[4px] p-2 py-5 md:p-6 overflow-hidden relative bg-white max-w-[1180px] mx-auto'
       )}
     >

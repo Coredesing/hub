@@ -10,17 +10,22 @@ import { fetcher } from '@/utils'
 import { useMyWeb3 } from '@/components/web3/context'
 import TopWorldItem from './TopWorldItem'
 import MiddleWorldItem from './MiddleWorldItem'
+import { useWalletContext } from '@/components/Base/WalletConnector/provider'
 
 type WorldType = 'top-world' | 'middle-world'
 
 const BaseWorld = ({
   projects,
   type,
-  className = ''
+  className = '',
+  layoutBodyRef,
+  connectedAllSocial
 }: {
   projects: Array<Record<string, unknown>>;
   type: WorldType;
   className?: string;
+  layoutBodyRef: any;
+  connectedAllSocial: boolean;
 }) => {
   const flickingGameRef = useRef(null)
   const flickingListGameRef = useRef(null)
@@ -28,6 +33,7 @@ const BaseWorld = ({
   const [plugins, setPlugins] = useState<Plugin[]>([])
 
   const { account } = useMyWeb3()
+  const { setShowModal: showConnectWallet } = useWalletContext()
 
   useEffect(() => {
     if (!projects || !projects.length) return
@@ -57,16 +63,22 @@ const BaseWorld = ({
 
   const playGame = useCallback(
     async (id) => {
+      if (!account) {
+        showConnectWallet(true)
+        // return layoutBodyRef?.current?.scrollTo({ top: 0, behavior: 'smooth' })
+      }
+      if (!connectedAllSocial) {
+        return layoutBodyRef?.current?.scrollTo({ top: 0, behavior: 'smooth' })
+      }
+
       return fetcher(`/api/adventure/${account}/connect?id=${id}`, {
         method: 'PATCH'
       })
         .then((res) => console.log(res))
         .catch((e) => console.debug(e))
     },
-    [account]
+    [account, connectedAllSocial, layoutBodyRef, showConnectWallet]
   )
-
-  console.log({ flickingGameRef, flickingListGameRef })
 
   return (
     <>
@@ -79,7 +91,7 @@ const BaseWorld = ({
             </span>
             <img src={right.src} alt="" />
           </div>
-          {type === 'top-world' && (
+          {/* {type === 'top-world' && (
             <>
               <div className="hidden w-full lg:flex justify-center mb-12 mx-auto">
                 <Image
@@ -94,9 +106,9 @@ const BaseWorld = ({
                 ></Image>
               </div>
             </>
-          )}
+          )} */}
           <div
-            className={clsx('my-3', type === 'middle-world' ? 'mt-10' : 'mt-0')}
+            className={clsx('my-3 mt-10')}
           >
             {/* <img src={circleArrow.src} alt="" /> */}
             <Flicking
@@ -132,7 +144,7 @@ const BaseWorld = ({
                     className={clsx(
                       el?.status === 'UNLOCK'
                         ? 'bg-gradient-to-t from-[#C9DB00] to-[#6CDB00]'
-                        : 'bg-transparent',
+                        : 'bg-[#D9D9D9]',
                       'mx-auto mt-2 justify-center w-2 h-2 rounded-full'
                     )}
                   />
@@ -175,10 +187,10 @@ const BaseWorld = ({
                   alt=""
                 />
                 {type === 'top-world' && (
-                  <TopWorldItem data={el} playGame={playGame} />
+                  <TopWorldItem data={el} playGame={playGame} connectedAllSocial={connectedAllSocial}/>
                 )}
                 {type === 'middle-world' && (
-                  <MiddleWorldItem data={el} playGame={playGame} />
+                  <MiddleWorldItem data={el} playGame={playGame} connectedAllSocial={connectedAllSocial}/>
                 )}
               </div>
             ))}

@@ -30,7 +30,7 @@ const GameFiPassV2 = ({ listSocial, loadingSocial, accountEligible, fetchEligibl
     }
     if (listSocial.every((v: { isCompleted: any }) => v.isCompleted) && accountHub?.confirmed) {
       await fetcher('/api/adventure/updateEligible', {
-        method: 'post',
+        method: 'PATCH',
         body: JSON.stringify({
           walletAddress: account
         })

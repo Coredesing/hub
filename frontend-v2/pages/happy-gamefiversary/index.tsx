@@ -174,10 +174,10 @@ const Content = () => {
               </a>
             </li>)}
             <li className="px-4 xl:px-6">
-              <Link href="/happy-gamefiversary/tasks" passHref={true} onClick={() => {
-                gtagEvent('catventure_join_now')
-              }}>
-                <a className="mt-auto bg-gradient-to-r from-[#93FF61] to-[#FAFF00] text-black font-casual font-semibold text-[12px] uppercase block w-full clipped-t-r px-6 py-3 text-center">
+              <Link href="/happy-gamefiversary/tasks" passHref={true}>
+                <a className="mt-auto bg-gradient-to-r from-[#93FF61] to-[#FAFF00] text-black font-casual font-semibold text-[12px] uppercase block w-full clipped-t-r px-6 py-3 text-center" onClick={() => {
+                  gtagEvent('catventure_join_now')
+                }}>
                   Join Now
                 </a>
               </Link>
@@ -213,9 +213,9 @@ const Content = () => {
 
       <section className="mx-auto max-w-[1920px] overflow-hidden z-20">
         <div className="md:container mx-auto text-center bg-black px-8 pt-24 w-full">
-          <div className="font-spotnik max-w-[930px] mx-auto">
+          <div className="font-spotnik max-w-[870px] mx-auto py-1">
             <p className="text-2xl xl:text-3xl">
-              Catventure in the Multiverse - bringing players a captivating, thrilling, and diverse experience of multiple gameplays. Participating in Catventure, players become the Catstronauts and Space Clowders to travel through our metaverses of games and metaverse.
+              To celebrate our first Gamefiversary, GameFi.org is honored to bring you the Catventure in the Multiverse. This very first event will bring you a captivating, thrilling, and diverse experience of multiple gameplays. Let&lsquo;s get on our spaceship to become a Catstronaut and join Space Clowders to travel through our Multiverse of games and metaverse.
             </p>
           </div>
         </div>
@@ -264,9 +264,10 @@ const Content = () => {
           defaultIndex={historyActive}
           align="center"
           interruptable={true}
+          preventClickOnDrag={false}
           ref={flickingHistory}
           plugins={plugins}
-          onWillChange={(e) => {
+          onChanged={(e) => {
             setHistoryActive(e.index)
             gtagEvent('catventure_history', { time: e.index })
           }}
@@ -285,6 +286,7 @@ const Content = () => {
           defaultIndex={historyActive}
           align="center"
           interruptable={true}
+          preventClickOnDrag={false}
           ref={flickingTimeline}
           bound={true}
         >
@@ -320,7 +322,7 @@ const Content = () => {
         <div className="container mx-auto flex justify-between py-16 relative">
           <div className="max-w-2xl px-4">
             <p className="font-spotnik text-3xl md:text-4xl lg:text-5xl font-bold uppercase">Catventure in <br /> the Multiverse</p>
-            <p className="text-sm md:text-base mt-6">Each gameplay in Catventure is a thrilling universe for our Castronauts and Space Clowders to explore, overcome missions and gain Gafish. Which one captivates you the most?</p>
+            <p className="text-sm md:text-base mt-6">Each gameplay in Catventure is a thrilling universe for our Catstronauts and Space Clowders to explore, overcome missions and gain Gafish. Which one captivates you the most?</p>
           </div>
           <div className="flex-none absolute md:relative right-0 md:right-auto opacity-50 md:opacity-100">
             <img src={satellite.src} alt="" />

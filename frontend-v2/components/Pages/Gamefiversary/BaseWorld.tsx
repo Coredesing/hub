@@ -12,6 +12,8 @@ import TopWorldItem from './TopWorldItem'
 import MiddleWorldItem from './MiddleWorldItem'
 import { useWalletContext } from '@/components/Base/WalletConnector/provider'
 import toast from 'react-hot-toast'
+import '@egjs/flicking-plugins/dist/pagination.css'
+import '@egjs/react-flicking/dist/flicking.css'
 
 type WorldType = 'top-world' | 'middle-world'
 

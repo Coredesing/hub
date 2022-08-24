@@ -50,14 +50,14 @@ const GameFiTaskLayout = ({ children, title, description, image, disableFooter, 
           <meta charSet="utf-8" />
           <link rel="shortcut icon" href="/favicon.ico" />
           <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-          <meta property="og:title" content={title || defaultTitle} key="title" />
-          <meta property="og:description" content={description || defaultDescription} key="description" />
-          <meta property="og:image" content={image || 'https://gamefi.org/gamefi.jpg?v=1655805418132'} key="image" />
+          <meta property="og:title" content={title} key="title" />
+          <meta property="og:description" content={description} key="description" />
+          <meta property="og:image" content={'https://gamefi.org/happy-gamefiversary.jpg?v=1661187628261'} key="image" />
           <meta name="keywords" content="launchpad, game hub, nft marketplace, game portal, game pass, game guild, tournament, metaverse, ido"></meta>
           <meta name="twitter:card" content="summary_large_image" />
-          <meta name="twitter:title" content={title || defaultTitle} />
-          <meta name="twitter:description" content={description || defaultDescription} />
-          <meta name="twitter:image" content={image || 'https://gamefi.org/gamefi.jpg?v=1655805418132'} />
+          <meta name="twitter:title" content={title} />
+          <meta name="twitter:description" content={description} />
+          <meta name="twitter:image" content={'https://gamefi.org/happy-gamefiversary.jpg?v=1661187628261'} />
         </Head>
 
         <div>

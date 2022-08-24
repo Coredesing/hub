@@ -552,7 +552,7 @@ const Spin = ({ className, comingsoon }: { className?: string; comingsoon?: bool
   }, [allowanceGAFIEnough, amountPurchase, approveAndReloadGAFI, balanceGAFIEnough, contract, formatAmountTicket, loadingAllowanceGAFI, loadingApprovalGAFI, purchasing, updateTICKETBalance, valueInWeiGAFI])
 
   return (
-    <div className={clsx('px-4 xl:p-16 2xl:px-32 container mx-auto lg:block font-atlas', className)}>
+    <div className={clsx('container mx-auto lg:block font-atlas p-6 lg:p-12', className)}>
       <div className="flex flex-col md:flex-row justify-between gap-4 py-8 lg:py-10 xl:py-12">
         <div className="w-full flex flex-col items-center md:block">
           <div className="font-spotnik text-4xl 2xl:text-5xl font-bold uppercase w-full">
@@ -561,8 +561,9 @@ const Spin = ({ className, comingsoon }: { className?: string; comingsoon?: bool
               <Image src={f2gf} alt="fish to gafi"></Image> Lucky Spin
             </h4>
           </div>
-          <p className="text-base mt-8">Tell your fortune with the multiverse’s wheel of luck. Use Gafish earned from Catventure, buy $GAFI, or stake more to buy Tickets for GameFi.org lucky spin.</p>
-          <p className="text-base mt-8">Will it be $GAFI, more Tickets, or a Loss for you?</p>
+          <p className="text-base mt-8">Challenge your luck with the multiverse&lsquo;s wheel of fortune by using the GameFi.org ticket given to you through the <Link passHref href="/insight/gamefi-org-lucky-spin-tell-fortune-with-the-multiverses-wheel-of-luck" ><a className="text-gamefiGreen-500 hover:underline hover:underline-offset-4">GAFI Stakers Thank-you tickets</a></Link>, or Community Referral Programs. </p>
+          <p className="text-base mt-8">You can also redeem your Gafish earned from your Catventure or purchase with $GAFI. 1000 GAFI is waiting for you. Read the rules <Link passHref href="/insight/gamefi-org-lucky-spin-tell-fortune-with-the-multiverses-wheel-of-luck" ><a className="text-gamefiGreen-500 hover:underline hover:underline-offset-4">HERE</a></Link>.</p>
+          <p className="text-base mt-8">Connect your wallet to start spinning. Good luck, Catstronaut!</p>
           {account && <div className="mt-12 w-full max-w-sm">
             <div className="clipped-b-l-t-r bg-gamefiDark-400 p-px">
               <div className="clipped-b-l-t-r bg-gamefiDark-800">

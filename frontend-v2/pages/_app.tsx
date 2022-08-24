@@ -32,6 +32,7 @@ const debounced = debounce(callbackVH, 100)
 function MyApp ({ Component, pageProps }: AppProps) {
   useEffect(() => {
     debounced()
+    window.addEventListener('resize', debounced)
   }, [])
 
   const router = useRouter()

@@ -348,7 +348,7 @@ const Content = () => {
                 <div className="font-bold text-7xl">1</div>
                 <div>
                   <h4 className="font-bold uppercase text-3xl">Related News</h4>
-                  <p className="text-base">Follow our latest articles about<br /><Link href="/insight/tag/gamefiversary" passHref><a className="hover:underline">the Gamefiversary event here!</a></Link></p>
+                  <p className="text-base">Follow our latest articles about<br /><Link href="/insight/tag/gamefiversary" passHref><a className="text-gamefiGreen-500 hover:underline hover:underline-offset-4">the Gamefiversary event here!</a></Link></p>
                 </div>
               </div>
               {insights && <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4">
@@ -363,7 +363,7 @@ const Content = () => {
                 <div className="font-bold text-7xl">2</div>
                 <div>
                   <h4 className="font-bold uppercase text-3xl">Twitter News</h4>
-                  <p className="text-base">Never miss any post from us<br /> <a href="https://twitter.com/GameFi_Official" target="_blank" rel="noreferrer" className="hover:underline">👉🏻 Check it out now</a></p>
+                  <p className="text-base">Never miss any post from us<br /> <a href="https://twitter.com/GameFi_Official" target="_blank" rel="noreferrer" className="text-gamefiGreen-500 hover:underline hover:underline-offset-4">👉🏻 Check it out now</a></p>
                 </div>
               </div>
               {tweets && <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4">

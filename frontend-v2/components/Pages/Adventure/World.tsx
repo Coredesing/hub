@@ -320,7 +320,7 @@ const landsDefault: LandRaw[] = [{
   positions: [4, 12],
   name: 'GameFi.org',
   categories: ['Hub', 'Launchpad', 'Community', 'Marketplace'],
-  description: 'GameFi.org is a one-stop destination for Web3 gaming. We aim to build digital communities and manage virtual economies for mainstream adoption. GameFi.org offers a suite of solutions covering the entire games and gamified projects lifecycle, following a vision of one digital platform, one virtual identity requiring zero blockchain knowledge.',
+  description: '',
   img: imgGameFi,
   logo: logoGameFi,
   ping: 15
@@ -936,7 +936,9 @@ const LandDetails = ({ land, onClose }: { land: Land; onClose: () => void }) => 
     <div className="p-4 flex-1 flex flex-col overflow-hidden z-10 md:pt-28 lg:pt-36 xl:pt-4">
       <p className="text-xs xl:text-sm 2xl:text-base text-white xl:text-gamefiDark-300 mb-2" style={{ textShadow: '0px 0px 4px black' }}>{land.categories.join(', ')}</p>
       <h3 className="font-spotnik text-xl xl:text-2xl 2xl:text-[32px] leading-none uppercase font-bold" style={{ textShadow: '0px 0px 4px black' }}>{land.name}</h3>
-      <p className="leading-normal my-4 xl:my-6 2xl:my-8 text-sm 2xl:text-base line-clamp-4 lg:line-clamp-3 xl:line-clamp-4 2xl:line-clamp-none" style={{ textShadow: '0px 0px 4px black' }}>{land.description}</p>
+      <p className="leading-normal my-4 xl:my-6 2xl:my-8 text-sm 2xl:text-base line-clamp-4 lg:line-clamp-3 xl:line-clamp-4 2xl:line-clamp-none" style={{ textShadow: '0px 0px 4px black' }}>
+        {land.status !== 'INTRO' ? land.description : <>GameFi.org is a one-stop destination for Web3 gaming. We aim to build digital communities and manage virtual economies for mainstream adoption with <strong>ONE</strong> digital platform, <strong>ONE</strong> virtual identity requiring <strong>ZERO</strong> blockchain knowledge.</>}
+      </p>
       <p className="font-bold mb-2 text-sm 2xl:text-base 2xl:mb-4">Missions</p>
       <div className="flex-1 overflow-auto mb-4">
         {!!missions?.length && missions.map(mission =>

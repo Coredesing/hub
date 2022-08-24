@@ -142,7 +142,7 @@ const BaseWorld = ({
             <img src={right.src} alt="" />
           </div>
           <div
-            className={clsx('my-3 mt-10')}
+            className={clsx('my-5 mt-10')}
           >
             <img src={circleArrow.src} alt="prev" className='xl:block hidden absolute -left-16 top-44 rotate-180 cursor-pointer' onClick={prev}/>
             <Flicking
@@ -187,7 +187,7 @@ const BaseWorld = ({
                     className={clsx(
                       el?.status === 'UNLOCK'
                         ? 'bg-gradient-to-t from-[#C9DB00] to-[#6CDB00]'
-                        : 'bg-[#D9D9D9]',
+                        : '',
                       'mx-auto mt-2 justify-center w-2 h-2 rounded-full'
                     )}
                   />

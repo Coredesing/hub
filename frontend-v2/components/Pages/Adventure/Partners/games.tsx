@@ -76,8 +76,8 @@ const items = [
 ]
 
 const Games = () => {
-  return <div className="p-6 lg:p-12 container mx-auto lg:block font-atlas mt-8">
-    <div className="text-3xl mb-3 text-center">
+  return <div className="px-6 lg:px-12 container mx-auto lg:block font-atlas mt-16">
+    <div className="text-3xl mb-3 lg:mb-6 text-center">
       <span className="bg-gradient-to-r from-[#93FF61] to-[#FAFF00] bg-clip-text text-transparent">Game</span> Partners
     </div>
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">

@@ -38,10 +38,9 @@ const TopWorldItem = ({ data, playGame, accountEligible = false }) => {
                         className={clsx(
                           'h-[6px] bg-white rounded-sm',
                           task?.stages[0]?.isCompleted && 'w-full',
-                          !(task.currentRepetition / task.stages[0]?.repetition)
-                            ? 'w-0'
-                            : `w-[${(task.currentRepetition / task.stages[0]?.repetition) * 100}%]`
+                          !(task.currentRepetition / task.stages[0]?.repetition) && 'w-0'
                         )}
+                        style={{ width: `${(task.currentRepetition / task.stages[0]?.repetition) * 100}%` }}
                       />
                     </div>
                     <span className="font-casual text-xs text-white/40">
@@ -65,10 +64,9 @@ const TopWorldItem = ({ data, playGame, accountEligible = false }) => {
                             className={clsx(
                               'h-[6px] bg-white rounded-sm',
                               task.stages[1]?.isCompleted && 'w-full',
-                              !(task.currentRepetition / task.stages[1]?.repetition)
-                                ? 'w-0'
-                                : `w-[${(task.currentRepetition / task.stages[1]?.repetition) * 100}%]`
+                              !(task.currentRepetition / task.stages[1]?.repetition) && 'w-0'
                             )}
+                            style={{ width: `${(task.currentRepetition / task.stages[1]?.repetition) * 100}%` }}
                           />
                         </div>
                         <span className="font-casual text-xs text-white/40">

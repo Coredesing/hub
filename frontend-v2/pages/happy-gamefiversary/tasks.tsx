@@ -73,19 +73,24 @@ const Detail = () => {
     fetchJoinedTeam()
   }, [account, fetchJoinedTeam])
 
-  const handleJoinTeam = useCallback(() => {
-    if (!refferalLink) return
+  const parseInputJoinTeam = useCallback((input) => {
     const regex = /^https:\/\/gamefi\.org\/adventure\/join\?team=([a-zA-Z0-9-]*)$/
 
     let matches = []
     let slug = ''
-    if (regex.test(refferalLink)) {
-      matches = refferalLink.match(regex)
+    if (regex.test(input)) {
+      matches = input.match(regex)
       slug = matches?.length > 0 && matches[1]
     } else {
-      slug = /^[a-zA-Z0-9-]*$/.test(refferalLink) && refferalLink
+      slug = /^[a-zA-Z0-9-]*$/.test(input) && input
     }
 
+    return slug
+  }, [])
+  const handleJoinTeam = useCallback(() => {
+    if (!refferalLink) return
+
+    const slug = parseInputJoinTeam(refferalLink)
     setInputTeamSlug(slug)
 
     if (!slug) {
@@ -114,7 +119,7 @@ const Detail = () => {
       setRefferalLink('')
       fetchJoinedTeam()
     })
-  }, [account, fetchJoinedTeam, refferalLink])
+  }, [account, fetchJoinedTeam, parseInputJoinTeam, refferalLink])
 
   const fetchTasks = useCallback(async () => {
     return fetcher(`/api/adventure/project/${account}`).then(res => {
@@ -235,7 +240,10 @@ const Detail = () => {
               type="text"
               placeholder="Enter referral link here"
               value={refferalLink}
-              onChange={(e) => { setRefferalLink(e?.target?.value || '') }}
+              onChange={(e) => {
+                setRefferalLink(e?.target?.value || '')
+                setInputTeamSlug(parseInputJoinTeam(e?.target?.value || ''))
+              }}
               className="focus:border-none focus:ring-0 bg-transparent border-none ring-0 w-full"
             >
             </input>

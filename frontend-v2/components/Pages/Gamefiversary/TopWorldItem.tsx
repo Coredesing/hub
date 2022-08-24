@@ -127,7 +127,10 @@ const TopWorldItem = ({ data, playGame, accountEligible = false }) => {
         <div className="flex flex-col md:flex-row w-full pt-8 bg-gradient-to-t from-[#1B1D26] via-[#1B1D26]/95 to-transparent">
           <div className="flex flex-col md:flex-row md:items-center px-6 py-2 text-sm font-casual">
             <span className="text-white mr-1">
-              This game has extra contribute bonus.
+              You will have more rewards from
+              <span className='font-semibold'>
+                { ` ${data?.name}` }.
+              </span>
             </span>
             <span className="text-gamefiGreen-700">View Detail</span>
           </div>

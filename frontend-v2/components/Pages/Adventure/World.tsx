@@ -72,6 +72,8 @@ import logoAniwar from '@/components/Pages/Adventure/images/lands/aniwar-logo.pn
 import imgAniwar from '@/components/Pages/Adventure/images/lands/aniwar.png'
 import logoHomieWar from '@/components/Pages/Adventure/images/lands/homie-wars-logo.png'
 import imgHomieWar from '@/components/Pages/Adventure/images/lands/homie-wars.png'
+import logoStepApp from '@/components/Pages/Adventure/images/lands/step-app-logo.png'
+import imgStepApp from '@/components/Pages/Adventure/images/lands/step-app.png'
 
 import clsx from 'clsx'
 import { fetcher, gtagEvent } from '@/utils'
@@ -347,13 +349,24 @@ const landsDefault: LandRaw[] = [{
 }, {
   slug: 'isekaiverse',
   shape: LandShape.EIGHT,
-  positions: [10, 19],
+  positions: [10, 18],
   name: 'Isekaiverse',
   categories: ['Strategy', 'NFT', 'Card'],
   description: 'Isekai battle game is a real-time, head-to-head battle game set in Isekai Island. Build your battle deck and outsmart the enemy in a fast paced real-time battle starring your favourite Isekai Island characters and more. Start battling against players from around the world!',
   img: imgIsekaiverse,
   logo: logoIsekaiverse,
   ping: 2
+}, {
+  slug: 'step-app',
+  shape: LandShape.NINE,
+  positions: [11, 27],
+  name: 'Step App',
+  categories: ['Metaverse', 'Sports', 'Move2Earn'],
+  description: 'Take your fitness habits and aspirations to the next level with Step App. You and your metaverse avatar advance together through filling daily fitness quests and PvP challenges. Step App\'s celebrity-endorsed augmented reality tech merges the metaverse with the physical world. Step App is the first application on the FitFi protocol, built by the core team on its own Avalanche subnet.',
+  img: imgStepApp,
+  logo: logoStepApp,
+  tooltipPlacement: TooltipPlacement.BOTTOM_LEFT,
+  ping: 3
 }, {
   slug: 'dvision',
   shape: LandShape.THREE,
@@ -368,7 +381,7 @@ const landsDefault: LandRaw[] = [{
 }, {
   slug: 'epic-war',
   shape: LandShape.FOUR,
-  positions: [13, 26],
+  positions: [16, 27],
   name: 'Epic War',
   categories: ['FPS', 'Strategy', 'Role Playing'],
   description: 'Epic War is a 3D Blockchain Cinematic Game that is free-to-play-to-earn (F2P2E). It is a massively multiplayer real-time strategy game (MMORTS) and social network based on blockchain technology. Epic War offers gamers the thrill of first-person shooter action in a cutting-edge gaming environment.',
@@ -556,18 +569,18 @@ const landsDefault: LandRaw[] = [{
   ping: 12
 }, {
   slug: 'moverse-run',
-  shape: LandShape.NINE,
-  positions: [14, 79],
+  shape: LandShape.EIGHTEEN,
+  positions: [20, 79],
   name: 'Moverse.run',
   categories: ['Move-to-earn', 'FitnessFi', 'NFT'],
   description: 'Moverse is a web3.0 fitness and social lifestyle app presenting Move To Earn and Engage To Earn activities to make one healthy physically, mentally, and financially. Moverse is powered by BNB Chain.',
   img: imgMoverse,
   logo: logoMoverse,
-  ping: 3
+  ping: 1
 }, {
   slug: 'aether-games',
-  shape: LandShape.EIGHTEEN,
-  positions: [20, 79],
+  shape: LandShape.NINE,
+  positions: [14, 79],
   name: 'Aether Games',
   categories: ['Card', 'Digital Collectibles', 'NFT'],
   description: 'Cards of Ethernity is a digital collectible competitive PC card game with P2E and F2P options, developed by Aether Games Inc. Players are able to trade, rent and sell their finest quality 2D Dark Fantasy NFTs freely, with the same level of ownership as if they were real, tangible cards.',

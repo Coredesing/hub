@@ -566,7 +566,7 @@ const Spin = ({ className, comingsoon }: { className?: string; comingsoon?: bool
           <p className="text-base mt-8">Connect your wallet to start spinning. Good luck, Catstronaut!</p>
           {account && <div className="mt-12 w-full max-w-sm">
             <div className="clipped-b-l-t-r bg-gamefiDark-400 p-px">
-              <div className="clipped-b-l-t-r bg-gamefiDark-800">
+              <div className="clipped-b-l-t-r bg-[#141414]">
                 <div className="flex items-center p-4 border-b border-gamefiDark-400">
                   <Image src={iconGF} alt="gafi" className="flex-none"></Image>
                   <div className="ml-4 flex-1">

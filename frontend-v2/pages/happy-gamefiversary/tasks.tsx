@@ -23,6 +23,7 @@ const Detail = () => {
   const [loadingSocial, setLoadingSocial] = useState(false)
   const [listSocial, setListSocial] = useState([])
   const [accountEligible, setAccountEligible] = useState(false)
+  const [fetchEligibleDone, setFetchEligibleDone] = useState(false)
 
   const layoutBodyRef = useRef(null)
   const router = useRouter()
@@ -37,10 +38,8 @@ const Detail = () => {
 
   const fetchEligible = useCallback(async () => {
     return fetcher(`/api/adventure/${account}/checkEligible`).then(res => {
-      setAccountEligible(false)
-      if (res?.isEligible) {
-        setAccountEligible(true)
-      }
+      setAccountEligible(res?.data?.isEligible)
+      setFetchEligibleDone(true)
     }).catch(e => console.debug(e))
   }, [account])
 
@@ -259,6 +258,7 @@ const Detail = () => {
             loadingSocial={loadingSocial}
             accountEligible={accountEligible}
             fetchEligible={fetchEligible}
+            fetchEligibleDone={fetchEligibleDone}
           ></GameFiPassV2>
         </div>
         {/* Top world */}

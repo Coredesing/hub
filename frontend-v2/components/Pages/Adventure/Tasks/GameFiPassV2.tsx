@@ -11,7 +11,7 @@ import { useRouter } from 'next/router'
 import styles from './tasks.module.scss'
 import useWalletSignature from '@/hooks/useWalletSignature'
 
-const GameFiPassV2 = ({ listSocial, loadingSocial, accountEligible, fetchEligible }) => {
+const GameFiPassV2 = ({ listSocial, loadingSocial, accountEligible, fetchEligible, fetchEligibleDone = false }) => {
   const { account } = useMyWeb3()
   const [inputEmail, setInputEmail] = useState('')
 
@@ -41,9 +41,9 @@ const GameFiPassV2 = ({ listSocial, loadingSocial, accountEligible, fetchEligibl
   }, [accountHub, listSocial, account, fetchEligible])
 
   useEffect(() => {
-    if (!account || accountEligible || !listSocial?.length) return
+    if (!account || accountEligible || !listSocial?.length || !fetchEligibleDone) return
     updateEligible()
-  }, [account, accountEligible, updateEligible, listSocial])
+  }, [account, accountEligible, updateEligible, listSocial, fetchEligibleDone])
 
   useEffect(() => {
     if (accountHub && accountHub.email) {

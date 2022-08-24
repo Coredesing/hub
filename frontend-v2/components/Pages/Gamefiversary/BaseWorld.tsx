@@ -60,6 +60,7 @@ const BaseWorld = ({
       const index = projects?.findIndex(item => item.slug === slug)
       if (index > -1) {
         setCurrentProjectIndex(index)
+        flickingListGameRef.current?.moveTo(index).catch(() => {})
         setTimeout(() => {
           ref?.current?.scrollIntoView()
         }, 1000)

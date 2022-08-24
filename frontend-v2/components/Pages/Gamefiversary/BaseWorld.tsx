@@ -72,8 +72,7 @@ const BaseWorld = ({
         })
       ])
       flickingGameRef.current.change = (e) => setCurrentProjectIndex(e.index)
-      flickingListGameRef.current.change = (e) =>
-        setCurrentProjectIndex(e.index)
+      flickingListGameRef.current.change = (e) => setCurrentProjectIndex(e.index)
     }, 1000)
   }, [projects])
 
@@ -126,7 +125,7 @@ const BaseWorld = ({
                   <div
                     className={clsx(
                       'border-2 border-transparent rounded-xl cursor-pointer overflow-hidden mx-1',
-                      i === currentProjectIndex ? 'border-[#6CDB00]' : ''
+                      i === currentProjectIndex ? 'bg-[#6CDB00]' : ''
                     )}
                   >
                     <div className="w-full rounded-xl overflow-hidden aspect-[158/213]">

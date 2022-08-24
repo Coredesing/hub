@@ -875,9 +875,9 @@ const World = ({ width = 1600, height = 750, screens = 3, r = 22, items = landsD
               <LandTooltip land={land}></LandTooltip>
 
               {land.hexagons[land.ping] && <g stroke="none" fillOpacity={80}>
-                <circle r="30" cx={land.hexagons[land.ping][0]} cy={land.hexagons[land.ping][1]} fill="white" fillOpacity={0.1} className="animate-pulse"></circle>
-                <circle r="15" cx={land.hexagons[land.ping][0]} cy={land.hexagons[land.ping][1]} fill="white" fillOpacity={0.3} className="animate-pulse"></circle>
-                <circle r="5" cx={land.hexagons[land.ping][0]} cy={land.hexagons[land.ping][1]} fill="white"></circle>
+                <circle r="30" cx={land.hexagons[land.ping][0]} cy={land.hexagons[land.ping][1]} fill={land.status === 'UNLOCK' ? '#70C81B' : 'white'} fillOpacity={0.1} className="animate-pulse"></circle>
+                <circle r="15" cx={land.hexagons[land.ping][0]} cy={land.hexagons[land.ping][1]} fill={land.status === 'UNLOCK' ? '#70C81B' : 'white'} fillOpacity={0.3} className="animate-pulse"></circle>
+                <circle r="5" cx={land.hexagons[land.ping][0]} cy={land.hexagons[land.ping][1]} fill={land.status === 'UNLOCK' ? '#70C81B' : 'white'}></circle>
               </g>}
             </g>
           ))}

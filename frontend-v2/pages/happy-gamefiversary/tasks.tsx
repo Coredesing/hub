@@ -53,8 +53,8 @@ const imagesProjects = {
     imageMobile: require('@/assets/images/adventure/titan-hunters.png')
   },
   kucoin: {
-    // imageVertical: require('@/assets/images/adventure/kucoin.png'),
-    // imageMobile: require('@/assets/images/adventure/kucoin.png')
+    imageVertical: require('@/assets/images/adventure/kucoin.jpeg'),
+    imageMobile: require('@/assets/images/adventure/kucoin-m.jpeg')
   },
   dvision: {
     imageVertical: require('@/assets/images/adventure/dvision.png'),
@@ -66,11 +66,11 @@ const imagesProjects = {
   },
   isekaiverse: {
     imageVertical: require('@/assets/images/adventure/isekai-verse.png'),
-    imageMobile: ''
+    imageMobile: require('@/assets/images/adventure/isekai-verse.png')
   },
-  'engine-of-furry': {
-    imageVertical: '',
-    imageMobile: ''
+  'engine-of-fury': {
+    imageVertical: require('@/assets/images/adventure/engine-of-fury.jpeg'),
+    imageMobile: require('@/assets/images/adventure/engine-of-fury-m.jpeg')
   },
   monsterra: {
     imageVertical: require('@/assets/images/adventure/monsterra.png'),
@@ -141,8 +141,8 @@ const imagesProjects = {
     imageMobile: require('@/assets/images/adventure/summoners-arena.png')
   },
   'thunder-lands': {
-    imageVertical: '',
-    imageMobile: ''
+    imageVertical: require('@/assets/images/adventure/thunder-lands.jpeg'),
+    imageMobile: require('@/assets/images/adventure/thunder-lands.jpeg')
   },
   'planet-mojo': {
     imageVertical: require('@/assets/images/adventure/planet-mojo.png'),
@@ -172,7 +172,7 @@ const theme = 'dark'
 
 const Content = () => {
   const [loadingSocial, setLoadingSocial] = useState(true)
-  const [connectedAllSocial, setConnectedAllSocial] = useState(false)
+  const [accountEligible, setAccountEligible] = useState(false)
   const [listSocial, setListSocial] = useState([])
   const { account } = useMyWeb3()
   const [gafish, setGafish] = useState(0)
@@ -256,13 +256,21 @@ const Content = () => {
   const listProjectTop = useMemo(() => {
     if (!projects?.length || !projects) return []
 
-    return projects.find((el) => el?.name === 'TOP_WORLD')?.projects
+    return projects.find((el) => el?.name === 'TOP_WORLD')?.projects.sort((a, b) => {
+      if (a?.status === 'UNLOCK') return -1
+      if (a?.status === 'LOCK') return 1
+      return 0
+    })
   }, [projects])
 
   const listProjectMiddle = useMemo(() => {
     if (!projects?.length || !projects) return []
 
-    return projects.find((el) => el?.name === 'MIDDLE_WORLD')?.projects
+    return projects.find((el) => el?.name === 'MIDDLE_WORLD')?.projects.sort((a, b) => {
+      if (a?.status === 'UNLOCK') return -1
+      if (a?.status === 'LOCK') return 1
+      return 0
+    })
   }, [projects])
 
   const listTaskGamefi = useMemo(() => {
@@ -444,17 +452,17 @@ const Content = () => {
                     className="p-6 clipped-t-l-full pl-40 flex flex-col gap-[10px] justify-center"
                     style={{
                       background:
-                        'linear-gradient(89.97deg, #272935 60.34%, rgba(27, 29, 38, 0) 97.74%);'
+                        'linear-gradient(89.97deg, #272935 60.34%, rgba(27, 29, 38, 0) 97.74%)'
                     }}
                   >
                     <span className="font-casual font-medium text-base leading-[100%] text-white">
                       {!account
                         ? 'Meoww! You need to connect wallet first.'
-                        : !connectedAllSocial
+                        : !accountEligible
                           ? "Just a little bit more. Let's complete all tasks to verify your account."
                           : 'Meow~ Gafi needs sometime after landing in the multiverse!'}
                     </span>
-                    {account && connectedAllSocial && (
+                    {account && accountEligible && (
                       <span className="font-casual font-normal text-sm text-white/60">
                         Gameplay in Catventure will be available in 48 hours.
                         Stay tuned, Catstronaut!
@@ -471,11 +479,11 @@ const Content = () => {
                 </div>
                 <section className="mx-auto mb-14 md:mb-0 mt-10">
                   <div className="md:container mx-auto md:mb-[90px] px-6">
-                    {account && !connectedAllSocial && (
+                    {account && !accountEligible && (
                       <GameFiPass
                         listSocial={listSocial}
                         loadingSocial={loadingSocial}
-                        setConnectedAllSocial={setConnectedAllSocial}
+                        setAccountEligible={setAccountEligible}
                       />
                     )}
                   </div>
@@ -537,13 +545,13 @@ const Content = () => {
                   projects={listProjectTop}
                   type="top-world"
                   layoutBodyRef={layoutBodyRef}
-                  connectedAllSocial={connectedAllSocial}
+                  accountEligible={accountEligible}
                 />
                 <BaseWorld
                   projects={listProjectMiddle}
                   type="middle-world"
                   layoutBodyRef={layoutBodyRef}
-                  connectedAllSocial={connectedAllSocial}
+                  accountEligible={accountEligible}
                   className="mt-10"
                 />
                 {/* middle world */}

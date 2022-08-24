@@ -18,12 +18,16 @@ import { useMyWeb3 } from '@/components/web3/context'
 import Item from './SocialItem'
 import styles from './tasks.module.scss'
 
-export default function GameFiPass ({ listSocial, loadingSocial, setConnectedAllSocial }) {
+export default function GameFiPass ({
+  listSocial,
+  loadingSocial,
+  setAccountEligible
+}) {
   const [loading, setLoading] = useState(false)
   const [firstCome, setFirstCome] = useState(true)
+  const [isEligible, setIsEligible] = useState(false)
   const { accountHub: data } = useHubContext()
   const { connectWallet } = useConnectWallet()
-  const { setShowModal: showConnectWallet } = useWalletContext()
   const [disableVerify, setDisableVerify] = useState(false)
   const { account } = useMyWeb3()
   const screens = useScreens()
@@ -39,7 +43,6 @@ export default function GameFiPass ({ listSocial, loadingSocial, setConnectedAll
     }
   })
   const router = useRouter()
-  const delayTimer = useRef(null)
 
   useEffect(() => {
     if (firstCome) {
@@ -56,36 +59,36 @@ export default function GameFiPass ({ listSocial, loadingSocial, setConnectedAll
   useEffect(() => {
     if (!account) return
     if (isEmpty(data) || isEmpty(listSocial)) {
-      setConnectedAllSocial(false)
+      setAccountEligible(false)
       return
     }
-    if (listSocial.every((v: { isCompleted: any }) => v.isCompleted) && confirmed) {
-      setConnectedAllSocial(true)
-      // fetcher(`https://catventure.gamefi.org/v1/users/${walletAddress}/updateEligible`, {
-      //   method: 'PATCH',
-      //   body: JSON.stringify({
-      //     isEligible: true
-      //   }),
-      //   headers: {
-      //     Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI4YWU0YjY0YS01NDQ1LTQwMmMtOGQ4OC1jYzY5MWZjNjEyMzQiLCJwcm9qZWN0cyI6W10sImlhdCI6MTY2MTA4OTI3M30.a4olW9JnotKomWLQZ05WkYQRsT5zwmBoo_Ac_F2uEQg',
-      //   }
-      // })
-      fetcher('/api/adventure/updateEligible', {
-        method: 'post',
-        body: JSON.stringify({
-          walletAddress
+    if (
+      listSocial.every((v: { isCompleted: any }) => v.isCompleted) &&
+      confirmed
+    ) {
+      const handle = async () => {
+        const response = await fetcher(`/api/adventure/${account}/checkEligible`).catch(() => {
+          return {
+            isEligible: false
+          }
         })
-      })
-    } else setConnectedAllSocial(false)
+
+        if (response.isEligible) return
+
+        fetcher('/api/adventure/updateEligible', {
+          method: 'post',
+          body: JSON.stringify({
+            walletAddress
+          })
+        }).then(() => {
+          setAccountEligible(true)
+        })
+      }
+
+      handle()
+    } else setAccountEligible(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listSocial, confirmed, walletAddress])
-
-  // useEffect(() => {
-  //   if (!email || email.toLowerCase().includes(account?.toLowerCase())) {
-  //     setValue('email', '')
-  //   } else setValue('email', email)
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [email, account])
 
   const onSubmit = (dataSubmit: { email: any }) => {
     if (loading || disableVerify) return
@@ -94,60 +97,64 @@ export default function GameFiPass ({ listSocial, loadingSocial, setConnectedAll
       email = ''
     }
     setLoading(true)
-    setDisableVerify(true)
-    connectWallet(false, email).then(async (res: any) => {
-      if (res.error) {
-        setLoading(false)
-        toast.error(res?.error?.err?.message || 'Something went Wrong')
-        return
-      }
-      try {
-        const { walletAddress, signature, isRegister } = res
-        const payload: any = {
-          email
-        }
-
-        let response: { err: any }, responseSendMail
-        if (!isRegister && email) {
-          response = await fetcher('/api/hub/profile/update', {
-            method: 'POST',
-            body: JSON.stringify(payload),
-            headers: {
-              'X-Signature': signature,
-              'X-Wallet-Address': walletAddress
-            }
-          })
-        }
-        if (response?.err) {
-          toast.error(response?.err?.message || 'Something went Wrong')
+    connectWallet(false, email)
+      .then(async (res: any) => {
+        if (res.error) {
           setLoading(false)
+          toast.error(res?.error?.err?.message || 'Something went Wrong')
           return
-        } else {
-          responseSendMail = await fetcher('/api/hub/emailValidation', {
-            method: 'POST',
-            // body: JSON.stringify({ redirectUrl: `${window.location.hostname}${router.asPath}` }),
-            body: JSON.stringify({}),
-            headers: {
-              'X-Signature': signature,
-              'X-Wallet-Address': walletAddress
-            }
-          })
         }
-        setLoading(false)
-        if (responseSendMail?.error) {
-          toast.error('Something went Wrong')
-        } else {
-          router.replace(router.asPath)
-          toast.success('send successfully')
+        try {
+          const { walletAddress, signature, isRegister } = res
+          const payload: any = {
+            email
+          }
+
+          let response: { err: any }, responseSendMail
+          if (!isRegister && email) {
+            response = await fetcher('/api/hub/profile/update', {
+              method: 'POST',
+              body: JSON.stringify(payload),
+              headers: {
+                'X-Signature': signature,
+                'X-Wallet-Address': walletAddress
+              }
+            })
+          }
+          if (response?.err) {
+            toast.error(response?.err?.message || 'Something went Wrong')
+            setLoading(false)
+            return
+          } else {
+            responseSendMail = await fetcher('/api/hub/emailValidation', {
+              method: 'POST',
+              // body: JSON.stringify({ redirectUrl: `${window.location.hostname}${router.asPath}` }),
+              body: JSON.stringify({}),
+              headers: {
+                'X-Signature': signature,
+                'X-Wallet-Address': walletAddress
+              }
+            })
+          }
+          setLoading(false)
+          if (responseSendMail?.error) {
+            toast.error('Something went Wrong')
+          } else {
+            setDisableVerify(true)
+            router.replace(router.asPath)
+            toast.success('send successfully')
+          }
+        } catch (err) {
+          setLoading(false)
+          toast.error(err.message || 'Something went Wrong')
         }
-      } catch (err) {
+      })
+      .catch((err) => {
         setLoading(false)
-        toast.error(err.message || 'Something went Wrong')
-      }
-    }).catch(err => {
-      setLoading(false)
-      toast.error(err?.toString() || 'Could not sign the authentication message')
-    })
+        toast.error(
+          err?.toString() || 'Could not sign the authentication message'
+        )
+      })
   }
 
   const handleUpdate = (event) => {
@@ -155,25 +162,28 @@ export default function GameFiPass ({ listSocial, loadingSocial, setConnectedAll
     handleSubmit(onSubmit)()
   }
   return (
-
     <div
       className={clsx(
         loadingSocial ? 'hidden' : 'block',
         'w-full rounded-[4px] p-2 py-5 md:p-6 overflow-hidden relative bg-white max-w-[1180px] mx-auto'
       )}
     >
-      <Tippy disabled content={<span>GAmeFi</span>} className="font-casual text-sm leading-5 p-3">
+      <Tippy
+        disabled
+        content={<span>GAmeFi</span>}
+        className="font-casual text-sm leading-5 p-3"
+      >
         <div className="flex max-w-[250px] mb-5">
-          <div className="text-2xl uppercase font-bold mr-2 text-[#15171E]">GAmeFi <span className="font-medium">Pass</span></div>
+          <div className="text-2xl uppercase font-bold mr-2 text-[#15171E]">
+            GAmeFi <span className="font-medium">Pass</span>
+          </div>
           {/* <button className='ml-2'><svg className="w-4 h-4" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M8 0C3.6 0 0 3.6 0 8C0 12.4 3.6 16 8 16C12.4 16 16 12.4 16 8C16 3.6 12.4 0 8 0ZM9 12H7V7H9V12ZM8 6C7.4 6 7 5.6 7 5C7 4.4 7.4 4 8 4C8.6 4 9 4.4 9 5C9 5.6 8.6 6 8 6Z" fill="#858689" />
             </svg></button> */}
         </div>
       </Tippy>
       <div className="grid grid-cols-1 xl:grid-cols-8 gap-4">
-        <form
-          className="w-full m-auto col-span-8 md:col-span-5 mb-5 md:mb-0"
-        >
+        <form className="w-full m-auto col-span-8 md:col-span-5 mb-5 md:mb-0">
           <div className="flex gap-[16px]">
             <div className="">
               <div
@@ -188,13 +198,20 @@ export default function GameFiPass ({ listSocial, loadingSocial, setConnectedAll
                 />
               </div>
             </div>
-            <div className={clsx(styles.info, 'flex justify-center flex-col flex-1')}>
+            <div
+              className={clsx(
+                styles.info,
+                'flex justify-center flex-col flex-1'
+              )}
+            >
               <div className="">
                 <div className="mb-2 md:mb-5 flex items-center">
                   <div className="text-sm mr-3 xl:mr-7 font-casual font-semibold text-[#15171E]">
                     Wallet
                   </div>
-                  <div className="text-sm font-casual text-[#15171E]">{shorten(walletAddress || account)}</div>
+                  <div className="text-sm font-casual text-[#15171E]">
+                    {shorten(walletAddress || account)}
+                  </div>
                 </div>
 
                 <div className="">
@@ -203,42 +220,69 @@ export default function GameFiPass ({ listSocial, loadingSocial, setConnectedAll
                       Email
                     </div>
                     {confirmed
-                      ? <div className="text-sm font-casual text-[#15171E]">{email}</div>
-                      : <>
-                        <input
-                          className="bg-black/5 border placeholder-[#15171E]/50 placeholder-opacity-30 font-casual text-sm rounded-sm px-4 py-1.5 w-full text-[#15171E]"
-                          name="email"
-                          placeholder="Enter your email"
-                          maxLength={100}
-                          {...register('email', {
-                            required: true,
-                            validate: isValidEmail
-                          })}
-
-                          onChange={e => {
-                            setValue('email', e.target.value)
-                          }}
-                        />
-                        <button
-                          className="disabled:cursor-not-allowed flex-none hidden md:block items-center justify-center overflow-hidden text-gamefiGreen-700 font-semibold font-casual text-[13px] hover:opacity-95 cursor-pointer w-[200px] "
-                          onClick={handleUpdate}
-                          type="submit"
-                          disabled={loading || disableVerify}
-                        >
-                          {loading ? <Spinning className="w-6 h-6" /> : (disableVerify ? 'Please check your email' : 'Verify my email')}
-                        </button>
-                      </>}
+                      ? (
+                        <div className="text-sm font-casual text-[#15171E]">
+                          {email}
+                        </div>
+                      )
+                      : (
+                        <>
+                          <input
+                            className="bg-black/5 border placeholder-[#15171E]/50 placeholder-opacity-30 font-casual text-sm rounded-sm px-4 py-1.5 w-full text-[#15171E]"
+                            name="email"
+                            placeholder="Enter your email"
+                            maxLength={100}
+                            {...register('email', {
+                              required: true,
+                              validate: isValidEmail
+                            })}
+                            onChange={(e) => {
+                              setValue('email', e.target.value)
+                            }}
+                          />
+                          <button
+                            className="disabled:cursor-not-allowed flex-none hidden md:block items-center justify-center overflow-hidden text-gamefiGreen-700 font-semibold font-casual text-[13px] hover:opacity-95 cursor-pointer w-[200px] "
+                            onClick={handleUpdate}
+                            type="submit"
+                            disabled={loading || disableVerify}
+                          >
+                            {loading
+                              ? (
+                                <Spinning className="w-6 h-6" />
+                              )
+                              : disableVerify
+                                ? (
+                                  'Please check your email'
+                                )
+                                : (
+                                  'Verify my email'
+                                )}
+                          </button>
+                        </>
+                      )}
                   </div>
-                  {confirmed || <div className="md:hidden flex justify-end mt-2">
-                    <button
-                      className="disabled:cursor-not-allowed flex md:hidden items-center overflow-hidden text-gamefiGreen-700 font-semibold font-casual text-[13px] hover:opacity-95 cursor-pointer"
-                      onClick={handleUpdate}
-                      type="submit"
-                      disabled={loading || disableVerify}
-                    >
-                      {loading ? <Spinning className="w-6 h-6" /> : (disableVerify ? 'Please check your email' : 'Verify my email')}
-                    </button>
-                  </div>}
+                  {confirmed || (
+                    <div className="md:hidden flex justify-end mt-2">
+                      <button
+                        className="disabled:cursor-not-allowed flex md:hidden items-center overflow-hidden text-gamefiGreen-700 font-semibold font-casual text-[13px] hover:opacity-95 cursor-pointer"
+                        onClick={handleUpdate}
+                        type="submit"
+                        disabled={loading || disableVerify}
+                      >
+                        {loading
+                          ? (
+                            <Spinning className="w-6 h-6" />
+                          )
+                          : disableVerify
+                            ? (
+                              'Please check your email'
+                            )
+                            : (
+                              'Verify my email'
+                            )}
+                      </button>
+                    </div>
+                  )}
                   {errors.email && (
                     <div className="mt-2 text-normal text-red-500 ">
                       Email is required
@@ -248,11 +292,10 @@ export default function GameFiPass ({ listSocial, loadingSocial, setConnectedAll
               </div>
             </div>
           </div>
-        </form >
+        </form>
         <div className="col-span-8 md:col-span-3 flex justify-center flex-col relative min-h-[80px]">
-          {loadingSocial || listSocial.map(v => (
-            <Item data={v} key={v._id} />
-          ))}
+          {loadingSocial ||
+            listSocial.map((v) => <Item data={v} key={v._id} />)}
           {loadingSocial && <Loading isPart className="text-gamefiGreen-700" />}
         </div>
       </div>

@@ -18,3 +18,21 @@
     box-shadow: inset -2px 2px 0px rgba(255, 255, 255, 0.25);
   }
 }
+
+@media screen and (max-width: 960px) {
+  .gamefiPass {
+    background-image: url('../images/bg-gamefi-pass-mobile.png');
+    background-position: bottom center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+}
+
+@media screen and (min-width: 961px) {
+  .gamefiPass {
+    background-image: url('../images/bg-gamefi-pass.png');
+    background-position: top left;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+}

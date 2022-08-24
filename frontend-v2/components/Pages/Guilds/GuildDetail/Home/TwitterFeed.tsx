@@ -21,7 +21,6 @@ const TwitterFeed = () => {
     setLoading(true)
     try {
       const response = await fetcher(`/api/hub/guilds/feeds?id=${guildData.twitterId}&limit=${PER_PAGE}`)
-      console.log(response?.data?.posts)
       setPosts(response?.data?.posts?.data)
       setMeta(response?.data?.posts?.meta)
       setUser(response?.data?.user?.data)

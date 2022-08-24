@@ -1,3 +1,3 @@
-# Red Kite project
+# GameFi.org project
 
 ## High-level description

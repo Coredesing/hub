@@ -18,7 +18,6 @@ export default async function handler (req, res) {
   if (req.method === 'GET') {
     try {
       const response = await callWithRest(req.query?.address)
-      console.log(response)
       if (response) {
         res.status(200).json(response)
       } else {

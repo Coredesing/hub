@@ -15,7 +15,6 @@ export function callWithRest (address) {
 }
 
 export function joinTeam (address, slug) {
-  console.log(`${CATVENTURE_API_BASE_URL}/users/${address}/connect/teams/${slug}`)
   return fetcher(`${CATVENTURE_API_BASE_URL}/users/${address}/connect/teams/${slug}`, {
     method: 'PATCH',
     headers: {
@@ -48,7 +47,6 @@ export default async function handler (req, res) {
     try {
       const { address, slug } = req.query
       const response = await joinTeam(address, slug)
-      console.log(response)
 
       const { data, error } = response || {}
       if (isEmpty(error)) {

@@ -18,23 +18,22 @@ export function callWithRest (address: any) {
 }
 
 export default async function handler (req, res) {
-  const payload = typeof req.body === 'string' ? JSON.parse(req.body) : req.body
-  try {
-    const response = await callWithRest(payload?.walletAddress)
-    console.log(response)
-    const { data, error } = response || {}
-    if (isEmpty(error)) {
-      res.status(200).json(data)
-    } else {
+  if (req.method === 'PATCH') {
+    const payload = typeof req.body === 'string' ? JSON.parse(req.body) : req.body
+    try {
+      const response = await callWithRest(payload?.walletAddress)
+      const { data, error } = response || {}
+      if (isEmpty(error)) {
+        res.status(200).json(data)
+      } else {
+        res.status(500).json({
+          response
+        })
+      }
+    } catch (err) {
       res.status(500).json({
-        error: 'failed to load data',
-        err: error
+        err
       })
     }
-  } catch (err) {
-    res.status(500).json({
-      error: 'failed to load data',
-      err
-    })
   }
 }

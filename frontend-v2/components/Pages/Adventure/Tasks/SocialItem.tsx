@@ -126,9 +126,9 @@ const SocialItem = ({ data }) => {
   }
 
   return (
-    <div className="flex items-center grid grid-cols-6 mb-3 md:mb-3 gap-7">
-      <div className="text-[#15171E] font-semibold font-casual text-sm col-span-1 hidden md:block">{label}</div>
-      <div className="col-span-6 md:col-span-4">
+    <div className="items-center grid grid-cols-8 mb-3 md:mb-3 gap-7">
+      <div className="font-semibold font-casual text-sm col-span-2 hidden md:block">{label}</div>
+      <div className="col-span-8 md:col-span-6">
 
         <button
           // href={isCompleted ? 'javascript:void(0);' : link}
@@ -137,16 +137,16 @@ const SocialItem = ({ data }) => {
           onClick={doAction}
           className={clsx(
             styles[label],
-            'w-full rounded-sm h-[34px] flex items-center',
+            'w-full h-[34px] flex items-center rounded-sm overflow-hidden',
             (isCompleted || isLoading || !action?._id)
-              ? 'cursor-not-allowed'
+              ? 'cursor-not-allowed bg-gamefiDark-400 border-gamefiDark-400 shadow-none'
               : 'cursor-pointer hover:opacity-80'
           )}
         >
           <div className={clsx(
             'w-[44px] flex justify-center h-full items-center',
             (isCompleted || isLoading || !action?._id)
-              ? 'cursor-not-allowed'
+              ? 'bg-inherit !shadow-none cursor-not-allowed border-none'
               : ''
           )}>
             {icon}
@@ -155,7 +155,8 @@ const SocialItem = ({ data }) => {
 
             <span
               className={clsx(
-                'font-bold text-[13px] leading-[150%] tracking-[0.02em] text-white'
+                'font-bold text-[13px] leading-[150%] tracking-[0.02em]',
+                isCompleted || !action?._id ? 'text-white' : 'text-white'
               )}
             >
               {nameSocial || buttonLabel || name || ''}

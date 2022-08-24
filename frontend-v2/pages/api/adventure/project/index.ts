@@ -4,9 +4,9 @@ import { CATVENTURE_API_BASE_URL } from '@/utils/constants'
 
 const bearer = `bearer ${process.env.NEXT_CATVENTURE_API_KEY}`
 
-export function playGame (address, id) {
-  return fetcher(`${CATVENTURE_API_BASE_URL}/users/connect/${address}/projects/${id}`, {
-    method: 'PATCH',
+export function callWithRest (address) {
+  return fetcher(`${CATVENTURE_API_BASE_URL}/users/guest/progresses`, {
+    method: 'GET',
     headers: {
       'Content-Type': 'application/json',
       Authorization: bearer
@@ -15,16 +15,16 @@ export function playGame (address, id) {
 }
 
 export default async function handler (req, res) {
-  if (req.method === 'PATCH') {
+  if (req.method === 'GET') {
     try {
-      const { address, id } = req.query
-      const response = await playGame(address, id)
-
+      const response = await callWithRest(req.query?.address)
       const { data, error } = response || {}
       if (isEmpty(error)) {
         res.status(200).json(data)
       } else {
-        res.status(500).json(response)
+        res.status(500).json({
+          err: error
+        })
       }
     } catch (err) {
       res.status(500).json({

@@ -6,7 +6,7 @@ import playNow from '@/components/Pages/Adventure/images/play-now.svg'
 import { useMemo } from 'react'
 import { useMyWeb3 } from '@/components/web3/context'
 
-const TopWorldItem = ({ data, playGame, connectedAllSocial = false }) => {
+const TopWorldItem = ({ data, playGame, accountEligible = false }) => {
   const canPlayNow = useMemo(() => {
     return data?.status?.toUpperCase() !== 'LOCK' && data.playUrl
   }, [data])
@@ -120,33 +120,45 @@ const TopWorldItem = ({ data, playGame, connectedAllSocial = false }) => {
       <div className="absolute bottom-0 left-0 right-0">
         <div className="flex flex-col md:flex-row w-full pt-8 bg-gradient-to-t from-[#1B1D26] via-[#1B1D26]/95 to-transparent">
           <div className="flex flex-col md:flex-row md:items-center px-6 py-2 text-sm font-casual">
-            <span className="text-white">
-              This game has extra contribute bonus.{' '}
+            <span className="text-white mr-1">
+              This game has extra contribute bonus.
             </span>
             <span className="text-gamefiGreen-700">View Detail</span>
           </div>
           {canPlayNow
             ? (
-              <a
-                className={clsx(
-                  'cursor-pointer bg-gradient-to-tl from-[#6CDB00] via-[#6CDB00] to-[#C9DB00] ml-auto flex items-center justify-center w-2/3 sm:w-1/3 md:w-1/5 aspect-6 md:aspect-[5/1.1] 2xl:aspect-6 uppercase text-sm text-black font-bold tracking-[0.02em] rounded-br'
-                )}
-                style={{
-                  clipPath: 'polygon(14% 0, 100% 0, 100% 100%, 0% 100%)'
-                }}
-                onClick={() => {
-                  playGame(data.id)
-                }}
-                href={
-                  account && connectedAllSocial &&
-                  data.playUrl
-                }
-                target="_blank"
-                rel="noreferrer"
-              >
-              Play now
-                <img src={playNow.src} alt="" className="m-2" />
-              </a>
+              account && accountEligible
+                ? <a
+                  className={clsx(
+                    'cursor-pointer bg-gradient-to-tl from-[#6CDB00] via-[#6CDB00] to-[#C9DB00] ml-auto flex items-center justify-center w-2/3 sm:w-1/3 md:w-1/5 aspect-6 md:aspect-[5/1.1] 2xl:aspect-6 uppercase text-sm text-black font-bold tracking-[0.02em] rounded-br'
+                  )}
+                  style={{
+                    clipPath: 'polygon(14% 0, 100% 0, 100% 100%, 0% 100%)'
+                  }}
+                  onClick={() => {
+                    playGame(data.id)
+                  }}
+                  href={data.playUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Play now
+                  <img src={playNow.src} alt="" className="m-2" />
+                </a>
+                : <button
+                  className={clsx(
+                    'cursor-pointer bg-gradient-to-tl from-[#6CDB00] via-[#6CDB00] to-[#C9DB00] ml-auto flex items-center justify-center w-2/3 sm:w-1/3 md:w-1/5 aspect-6 md:aspect-[5/1.1] 2xl:aspect-6 uppercase text-sm text-black font-bold tracking-[0.02em] rounded-br'
+                  )}
+                  style={{
+                    clipPath: 'polygon(14% 0, 100% 0, 100% 100%, 0% 100%)'
+                  }}
+                  onClick={() => {
+                    playGame(data.id)
+                  }}
+                >
+                  Play now
+                  <img src={playNow.src} alt="" className="m-2" />
+                </button>
             )
             : (
               <div

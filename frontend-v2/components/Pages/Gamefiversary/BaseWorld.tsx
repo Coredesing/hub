@@ -1,6 +1,6 @@
 import left from '@/components/Pages/Adventure/images/left.svg'
 import right from '@/components/Pages/Adventure/images/right.svg'
-import Image from 'next/image'
+import circleArrow from '@/components/Pages/Adventure/images/circle-arrow.svg'
 import Flicking, { Plugin } from '@egjs/react-flicking'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import clsx from 'clsx'
@@ -11,6 +11,7 @@ import { useMyWeb3 } from '@/components/web3/context'
 import TopWorldItem from './TopWorldItem'
 import MiddleWorldItem from './MiddleWorldItem'
 import { useWalletContext } from '@/components/Base/WalletConnector/provider'
+import toast from 'react-hot-toast'
 
 type WorldType = 'top-world' | 'middle-world'
 
@@ -19,13 +20,13 @@ const BaseWorld = ({
   type,
   className = '',
   layoutBodyRef,
-  connectedAllSocial
+  accountEligible
 }: {
   projects: Array<Record<string, unknown>>;
   type: WorldType;
   className?: string;
   layoutBodyRef: any;
-  connectedAllSocial: boolean;
+  accountEligible: boolean;
 }) => {
   const flickingGameRef = useRef(null)
   const flickingListGameRef = useRef(null)
@@ -34,6 +35,19 @@ const BaseWorld = ({
 
   const { account } = useMyWeb3()
   const { setShowModal: showConnectWallet } = useWalletContext()
+
+  const next = () => {
+    const nextIndex = currentProjectIndex + 1
+    const index = nextIndex > projects.length ? projects.length - 1 : nextIndex
+    setCurrentProjectIndex(index)
+    flickingListGameRef.current?.moveTo(index).catch(() => {})
+  }
+  const prev = () => {
+    const prevIndex = currentProjectIndex - 1
+    const index = prevIndex < 0 ? 0 : prevIndex
+    setCurrentProjectIndex(index)
+    flickingListGameRef.current?.moveTo(index).catch(() => {})
+  }
 
   useEffect(() => {
     if (!projects || !projects.length) return
@@ -65,25 +79,26 @@ const BaseWorld = ({
     async (id) => {
       if (!account) {
         showConnectWallet(true)
+        return
         // return layoutBodyRef?.current?.scrollTo({ top: 0, behavior: 'smooth' })
       }
-      if (!connectedAllSocial) {
+      if (!accountEligible) {
+        toast.error('You should register your GameFi Pass first')
         return layoutBodyRef?.current?.scrollTo({ top: 0, behavior: 'smooth' })
       }
 
       return fetcher(`/api/adventure/${account}/connect?id=${id}`, {
         method: 'PATCH'
       })
-        .then((res) => console.log(res))
         .catch((e) => console.debug(e))
     },
-    [account, connectedAllSocial, layoutBodyRef, showConnectWallet]
+    [account, accountEligible, layoutBodyRef, showConnectWallet]
   )
 
   return (
     <>
       {projects?.length !== 0 && (
-        <section className={clsx(className)}>
+        <section className={clsx(className, 'relative')}>
           <div className="flex justify-center gap-3 sm:gap-6">
             <img src={left.src} alt="" />
             <span className="uppercase font-bold min-w-fit sm:text-2xl">
@@ -91,26 +106,10 @@ const BaseWorld = ({
             </span>
             <img src={right.src} alt="" />
           </div>
-          {/* {type === 'top-world' && (
-            <>
-              <div className="hidden w-full lg:flex justify-center mb-12 mx-auto">
-                <Image
-                  src={require('@/assets/images/adventure/meowo.png')}
-                  alt=""
-                ></Image>
-              </div>
-              <div className="lg:hidden w-full flex justify-center mb-12 mx-auto">
-                <Image
-                  src={require('@/assets/images/adventure/meowo-mobile.png')}
-                  alt=""
-                ></Image>
-              </div>
-            </>
-          )} */}
           <div
             className={clsx('my-3 mt-10')}
           >
-            {/* <img src={circleArrow.src} alt="" /> */}
+            <img src={circleArrow.src} alt="prev" className='xl:block hidden absolute -left-16 top-44 rotate-180 cursor-pointer' onClick={prev}/>
             <Flicking
               defaultIndex={currentProjectIndex}
               ref={flickingGameRef}
@@ -118,6 +117,7 @@ const BaseWorld = ({
               plugins={plugins}
               preventClickOnDrag={false}
               onChanged={(e) => setCurrentProjectIndex(e.index)}
+              interruptable={true}
             >
               {projects.map((el, i) => (
                 <div key={`top-world-${i}`} className="w-1/3 md:w-1/6">
@@ -151,7 +151,7 @@ const BaseWorld = ({
                 </div>
               ))}
             </Flicking>
-            {/* <img src={circleArrow.src} alt="" /> */}
+            <img src={circleArrow.src} alt="next" className='xl:block hidden absolute -right-16 top-44 cursor-pointer' onClick={next}/>
           </div>
           <Flicking
             defaultIndex={currentProjectIndex}
@@ -159,6 +159,7 @@ const BaseWorld = ({
             plugins={plugins}
             preventClickOnDrag={false}
             onChanged={(e) => setCurrentProjectIndex(e.index)}
+            interruptable={true}
           >
             {projects.map((el, i) => (
               <div
@@ -187,10 +188,10 @@ const BaseWorld = ({
                   alt=""
                 />
                 {type === 'top-world' && (
-                  <TopWorldItem data={el} playGame={playGame} connectedAllSocial={connectedAllSocial}/>
+                  <TopWorldItem data={el} playGame={playGame} accountEligible={accountEligible}/>
                 )}
                 {type === 'middle-world' && (
-                  <MiddleWorldItem data={el} playGame={playGame} connectedAllSocial={connectedAllSocial}/>
+                  <MiddleWorldItem data={el} accountEligible={accountEligible}/>
                 )}
               </div>
             ))}

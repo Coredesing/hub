@@ -20,6 +20,9 @@ import Image from 'next/image'
 import { format } from 'date-fns'
 import Head from 'next/head'
 import Link from 'next/link'
+import Guilds from '@/components/Pages/Adventure/Partners/guilds'
+import Communities from '@/components/Pages/Adventure/Partners/communities'
+import Games from '@/components/Pages/Adventure/Partners/games'
 
 // eslint-disable-next-line no-unused-expressions
 fonts
@@ -47,7 +50,6 @@ const menu = [{
 }, {
   id: 'partners',
   text: 'Partners',
-  hidden: true,
   secondary: true
 }]
 
@@ -150,7 +152,7 @@ const Content = () => {
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={'https://gamefi.org/happy-gamefiversary.jpg?v=1661187628261'} />
     </Head>
-    <header className="fixed top-0 z-40 flex-none mx-auto w-full dark:bg-black dark:text-white font-atlas">
+    <header className="fixed top-0 z-40 flex-none mx-auto w-full bg-black text-white font-atlas">
       <div className="sm:container mx-auto flex justify-between items-center p-3 lg:px-4 relative">
         <div className="flex justify-between flex-none w-full md:w-auto">
           <a href="#" className="flex items-center">
@@ -162,7 +164,7 @@ const Content = () => {
           </button>
         </div>
         <div className={clsx('w-full md:block md:w-auto absolute top-20 left-0 md:relative md:top-0 md:left-0', menuMobile ? 'block' : 'hidden')}>
-          <ul className="flex flex-col md:flex-row bg-gamefiDark-900 rounded md:bg-transparent py-2 drop-shadow-lg uppercase font-casual font-semibold text-sm leading-tight">
+          <ul className="flex flex-col md:flex-row bg-gamefiDark-900 rounded md:bg-transparent py-2 drop-shadow-lg uppercase font-casual font-semibold text-sm leading-tight justify-center items-center">
             {menu.filter(x => !x.hidden).map((item, i) => <li key={item.id}>
               <a href={`#${item.id}`} className={`px-4 lg:px-6 py-3 hover:text-gamefiGreen-500 relative block ${item.secondary ? 'md:hidden xl:block' : ''}`} onClick={() => {
                 gtagEvent('catventure', { section: item.id })
@@ -172,8 +174,10 @@ const Content = () => {
               </a>
             </li>)}
             <li className="px-4 xl:px-6">
-              <Link href="/happy-gamefiversary/tasks" passHref={true}>
-                <a className="mt-auto bg-gradient-to-r from-[#93FF61] to-[#FAFF00] text-black font-casual font-semibold text-[12px] uppercase block w-full clipped-t-r px-6 py-3 mb-2 lg:mb-4 text-center">
+              <Link href="/happy-gamefiversary/tasks" passHref={true} onClick={() => {
+                gtagEvent('catventure_join_now')
+              }}>
+                <a className="mt-auto bg-gradient-to-r from-[#93FF61] to-[#FAFF00] text-black font-casual font-semibold text-[12px] uppercase block w-full clipped-t-r px-6 py-3 text-center">
                   Join Now
                 </a>
               </Link>
@@ -182,7 +186,7 @@ const Content = () => {
         </div>
       </div>
     </header>
-    <div className="dark:bg-black dark:text-white font-atlas">
+    <div className="dark:bg-black dark:text-white font-atlas pb-16">
       <div className="relative">
         <section className="relative md:container mx-auto z-10 md:pt-20" id="about">
           <div className="w-screen md:w-auto h-screen md:aspect-[16/7] md:h-auto relative">
@@ -211,7 +215,7 @@ const Content = () => {
         <div className="md:container mx-auto text-center bg-black px-8 pt-24 w-full">
           <div className="font-spotnik max-w-[930px] mx-auto">
             <p className="text-2xl xl:text-3xl">
-              Catventure in the Multiverse - bringing players a captivating, thrilling, and diverse experience of multiple gameplays. Participating in Catventure, players become the Castronauts and Space Clowders to travel through our multiverse of games and metaverse.
+              Catventure in the Multiverse - bringing players a captivating, thrilling, and diverse experience of multiple gameplays. Participating in Catventure, players become the Catstronauts and Space Clowders to travel through our metaverses of games and metaverse.
             </p>
           </div>
         </div>
@@ -324,7 +328,9 @@ const Content = () => {
         </div>
         <World />
       </section>
-      <section className="mx-auto max-w-[1920px] overflow-hidden bg-[#141414]" id="spin">
+
+      <div id="spin" className="pt-24 invisible -mt-24"></div>
+      <section className="mx-auto max-w-[1920px] overflow-hidden bg-[#141414]">
         <Spin comingsoon />
       </section>
 
@@ -340,7 +346,7 @@ const Content = () => {
                 <div className="font-bold text-7xl">1</div>
                 <div>
                   <h4 className="font-bold uppercase text-3xl">Related News</h4>
-                  <p className="text-base">Follow our latest articles about<br />the Gamefiversary event here!</p>
+                  <p className="text-base">Follow our latest articles about<br /><Link href="/insight/tag/gamefiversary" passHref><a className="hover:underline">the Gamefiversary event here!</a></Link></p>
                 </div>
               </div>
               {insights && <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4">
@@ -355,7 +361,7 @@ const Content = () => {
                 <div className="font-bold text-7xl">2</div>
                 <div>
                   <h4 className="font-bold uppercase text-3xl">Twitter News</h4>
-                  <p className="text-base">Never miss any post from us<br /> 👉🏻 Check it out now</p>
+                  <p className="text-base">Never miss any post from us<br /> <a href="https://twitter.com/GameFi_Official" target="_blank" rel="noreferrer" className="hover:underline">👉🏻 Check it out now</a></p>
                 </div>
               </div>
               {tweets && <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4">
@@ -386,6 +392,18 @@ const Content = () => {
             </div>
           </div>
         </div>
+      </section>
+
+      <div id="partners" className="pt-24 invisible -mt-24"></div>
+      <section className="mx-auto max-w-[1920px] overflow-hidden">
+        <div className="container mx-auto relative flex">
+          <img src={satellite.src} alt="" className="ml-auto opacity-50 md:opacity-100" />
+          <div className="absolute inset-0 md:left-auto md:right-40 flex items-center justify-center text-3xl lg:text-5xl uppercase font-bold"><span className="bg-black">Our Partners</span></div>
+        </div>
+
+        <Games />
+        <Communities />
+        <Guilds />
       </section>
     </div >
   </div >

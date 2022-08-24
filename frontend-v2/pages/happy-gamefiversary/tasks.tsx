@@ -363,3 +363,136 @@ const Detail = () => {
 }
 
 export default Detail
+
+const imagesProjects = {
+  'dark-country': {
+    imageVertical: require('@/assets/images/adventure/dark-country.png'),
+    imageMobile: require('@/assets/images/adventure/dark-country.png')
+  },
+  metashooter: {
+    imageVertical: require('@/assets/images/adventure/meta-shooter.png'),
+    imageMobile: require('@/assets/images/adventure/meta-shooter.png')
+  },
+  gamefi: {
+    imageVertical: '',
+    imageMobile: ''
+  },
+  'titan-hunters': {
+    imageVertical: require('@/assets/images/adventure/titan-hunters.png'),
+    imageMobile: require('@/assets/images/adventure/titan-hunters.png')
+  },
+  kucoin: {
+    imageVertical: require('@/assets/images/adventure/kucoin.jpeg'),
+    imageMobile: require('@/assets/images/adventure/kucoin-m.jpeg')
+  },
+  dvision: {
+    imageVertical: require('@/assets/images/adventure/dvision.png'),
+    imageMobile: require('@/assets/images/adventure/dvision.png')
+  },
+  'moon-strike': {
+    imageVertical: require('@/assets/images/adventure/moon-strike.png'),
+    imageMobile: require('@/assets/images/adventure/moon-strike.png')
+  },
+  isekaiverse: {
+    imageVertical: require('@/assets/images/adventure/isekai-verse.png'),
+    imageMobile: require('@/assets/images/adventure/isekai-verse.png')
+  },
+  'engine-of-fury': {
+    imageVertical: require('@/assets/images/adventure/engine-of-fury.jpeg'),
+    imageMobile: require('@/assets/images/adventure/engine-of-fury-m.jpeg')
+  },
+  monsterra: {
+    imageVertical: require('@/assets/images/adventure/monsterra.png'),
+    imageMobile: require('@/assets/images/adventure/monsterra.png')
+  },
+  codyfight: {
+    imageVertical: require('@/assets/images/adventure/codyfight.png'),
+    imageMobile: require('@/assets/images/adventure/codyfight.png')
+  },
+  'the-unfettered': {
+    imageVertical: require('@/assets/images/adventure/unfettered.png'),
+    imageMobile: require('@/assets/images/adventure/unfettered.png')
+  },
+  desports: {
+    imageVertical: require('@/assets/images/adventure/desport.png'),
+    imageMobile: require('@/assets/images/adventure/desport.png')
+  },
+  ninneko: {
+    imageVertical: require('@/assets/images/adventure/ninneko.png'),
+    imageMobile: require('@/assets/images/adventure/ninneko.png')
+  },
+  aradena: {
+    imageVertical: require('@/assets/images/adventure/aradena.png'),
+    imageMobile: require('@/assets/images/adventure/aradena.png')
+  },
+  'heroes-land': {
+    imageVertical: require('@/assets/images/adventure/heroes-land.png'),
+    imageMobile: require('@/assets/images/adventure/heroes-land.png')
+  },
+  metacity: {
+    imageVertical: require('@/assets/images/adventure/metacity.png'),
+    imageMobile: require('@/assets/images/adventure/metacity.png')
+  },
+  iguverse: {
+    imageVertical: require('@/assets/images/adventure/iguverse.png'),
+    imageMobile: require('@/assets/images/adventure/iguverse.png')
+  },
+  'dinox-world': {
+    imageVertical: require('@/assets/images/adventure/dinox.png'),
+    imageMobile: require('@/assets/images/adventure/dinox.png')
+  },
+  evermoon: {
+    imageVertical: require('@/assets/images/adventure/evermoon.png'),
+    imageMobile: require('@/assets/images/adventure/evermoon.png')
+  },
+  pikaster: {
+    imageVertical: require('@/assets/images/adventure/pikaster.png'),
+    imageMobile: require('@/assets/images/adventure/pikaster.png')
+  },
+  'moverse-run': {
+    imageVertical: require('@/assets/images/adventure/moverse.png'),
+    imageMobile: require('@/assets/images/adventure/moverse.png')
+  },
+  'aether-games': {
+    imageVertical: require('@/assets/images/adventure/aether-games.png'),
+    imageMobile: require('@/assets/images/adventure/aether-games.png')
+  },
+  'planet-sandbox': {
+    imageVertical: require('@/assets/images/adventure/psb.png'),
+    imageMobile: require('@/assets/images/adventure/psb.png')
+  },
+  'monster-era': {
+    imageVertical: require('@/assets/images/adventure/monster-era.png'),
+    imageMobile: require('@/assets/images/adventure/monster-era.png')
+  },
+  'summoners-arena': {
+    imageVertical: require('@/assets/images/adventure/summoners-arena.png'),
+    imageMobile: require('@/assets/images/adventure/summoners-arena.png')
+  },
+  'thunder-lands': {
+    imageVertical: require('@/assets/images/adventure/thunder-lands.jpeg'),
+    imageMobile: require('@/assets/images/adventure/thunder-lands.jpeg')
+  },
+  'planet-mojo': {
+    imageVertical: require('@/assets/images/adventure/planet-mojo.png'),
+    imageMobile: require('@/assets/images/adventure/planet-mojo.png')
+  },
+  'rise-of-immortals': {
+    imageVertical: require('@/assets/images/adventure/rise-of-immortals.png'),
+    imageMobile: require('@/assets/images/adventure/rise-of-immortals.png')
+  },
+  'goons-of-balatroon': {
+    imageVertical: require('@/assets/images/adventure/goons-of-balatroon.png'),
+    imageMobile: require('@/assets/images/adventure/goons-of-balatroon.png')
+  },
+  'epic-war': {
+    imageVertical: require('@/assets/images/adventure/epic-war.png'),
+    imageMobile: require('@/assets/images/adventure/epic-war.png')
+  },
+  befitter: {
+    imageVertical: require('@/assets/images/adventure/befitter.png'),
+    imageMobile: require('@/assets/images/adventure/befitter.png')
+  }
+}
+
+export { imagesProjects }

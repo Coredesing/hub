@@ -396,7 +396,7 @@ const Component = () => {
                       <input
                         className="disabled:cursor-not-allowed bg-[#303035] border border-[#3C3C42] placeholder-white placeholder-opacity-30 font-casual text-sm rounded-sm px-4 py-1.5 w-full focus-visible:border-gamefiDark-350"
                         name="email"
-                        disabled={accountHub?.confirmed}
+                        disabled={true}
                         type="email"
                         placeholder="Your email"
                         autoFocus

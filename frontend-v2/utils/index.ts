@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import useSWR, { SWRResponse } from 'swr'
 import get from 'lodash.get'
 import { API_BASE_URL } from '@/utils/constants'

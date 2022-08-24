@@ -941,7 +941,7 @@ const LandDetails = ({ land, onClose }: { land: Land; onClose: () => void }) => 
       <div className="flex-1 overflow-auto mb-4">
         {!!missions?.length && missions.map(mission =>
           <div className="flex items-center mb-2 2xl:mb-4" key={mission.id}>
-            <input type="radio" value="" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
+            <input type="radio" value="" disabled className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
             <label className="ml-2 text-xs xl:text-sm 2xl:text-base dark:text-gray-300">{mission.name}</label>
           </div>
         )}

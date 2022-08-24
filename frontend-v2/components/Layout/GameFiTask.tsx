@@ -63,7 +63,7 @@ const GameFiTaskLayout = ({ children, title, description, image, disableFooter, 
         <div>
           <Sidebar></Sidebar>
         </div>
-        <div id='layoutBody' className={`${className} w-full h-full overflow-auto relative scroll-smooth`}>
+        <div id='layoutBody' className={`${className} w-full h-full overflow-y-auto overflow-x-hidden relative scroll-smooth`}>
           {
             !hideTopBar && <Topbar absolute={extended}></Topbar>
           }

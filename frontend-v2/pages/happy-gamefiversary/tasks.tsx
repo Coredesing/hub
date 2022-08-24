@@ -281,7 +281,7 @@ const Detail = () => {
         <BaseWorld projects={middleProjects} type="middle-world" layoutBodyRef={layoutBodyRef} accountEligible={accountEligible} />
       </section>
       {/* GameFi world */}
-      <section ref={gamefiWorldRef} className="w-full bg-[#111218] mt-9">
+      <section ref={gamefiWorldRef} className="w-full bg-[#111218] mt-9 pb-20 md:pb-0">
         <div className="w-full h-fit relative z-0">
           <div className="w-full relative z-10">
             <Image src={require('@/assets/images/adventure/meow-2.png')} alt=""/>

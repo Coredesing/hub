@@ -14,6 +14,7 @@ import { useWalletContext } from '@/components/Base/WalletConnector/provider'
 import toast from 'react-hot-toast'
 import '@egjs/flicking-plugins/dist/pagination.css'
 import '@egjs/react-flicking/dist/flicking.css'
+import { useRouter } from 'next/router'
 
 type WorldType = 'top-world' | 'middle-world'
 
@@ -30,6 +31,8 @@ const BaseWorld = ({
   layoutBodyRef: any;
   accountEligible: boolean;
 }) => {
+  const ref = useRef(null)
+  const router = useRouter()
   const flickingGameRef = useRef(null)
   const flickingListGameRef = useRef(null)
   const [currentProjectIndex, setCurrentProjectIndex] = useState<number>(0)
@@ -50,6 +53,19 @@ const BaseWorld = ({
     setCurrentProjectIndex(index)
     flickingListGameRef.current?.moveTo(index).catch(() => {})
   }
+
+  useEffect(() => {
+    if (router?.query?.g) {
+      const slug = router.query.g
+      const index = projects?.findIndex(item => item.slug === slug)
+      if (index > -1) {
+        setCurrentProjectIndex(index)
+        setTimeout(() => {
+          ref?.current?.scrollIntoView()
+        }, 1000)
+      }
+    }
+  }, [projects, ref, router.query.g])
 
   useEffect(() => {
     if (!projects || !projects.length) return
@@ -99,7 +115,7 @@ const BaseWorld = ({
   return (
     <>
       {projects?.length !== 0 && (
-        <section className={clsx(className, 'relative')}>
+        <section ref={ref} className={clsx(className, 'relative')}>
           <div className="flex justify-center gap-3 sm:gap-6">
             <img src={left.src} alt="" />
             <span className="uppercase font-bold min-w-fit sm:text-2xl">

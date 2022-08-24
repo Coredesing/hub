@@ -26,15 +26,21 @@ const Detail = () => {
   const [fetchEligibleDone, setFetchEligibleDone] = useState(false)
 
   const layoutBodyRef = useRef(null)
+  const gamefiWorldRef = useRef(null)
   const router = useRouter()
 
   useEffect(() => {
+    if (router?.query?.g === 'gamefi') {
+      setTimeout(() => {
+        gamefiWorldRef?.current?.scrollIntoView()
+      }, 1000)
+    }
     if (router?.query?.team) {
       setRefferalLink(router.query.team?.toString())
       setInputTeamSlug(router.query.team?.toString())
       setShowModalJoinTeam(true)
     }
-  }, [router.query.team])
+  }, [router.query?.g, router.query.team])
 
   const fetchEligible = useCallback(async () => {
     return fetcher(`/api/adventure/${account}/checkEligible`).then(res => {
@@ -267,7 +273,7 @@ const Detail = () => {
         <BaseWorld projects={middleProjects} type="middle-world" layoutBodyRef={layoutBodyRef} accountEligible={accountEligible} />
       </section>
       {/* GameFi world */}
-      <section className="w-full bg-[#111218] mt-9">
+      <section ref={gamefiWorldRef} className="w-full bg-[#111218] mt-9">
         <div className="w-full h-fit relative z-0">
           <div className="w-full relative z-10">
             <Image src={require('@/assets/images/adventure/meow-2.png')} alt=""/>

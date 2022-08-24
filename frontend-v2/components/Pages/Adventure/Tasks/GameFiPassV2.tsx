@@ -46,6 +46,10 @@ const GameFiPassV2 = ({ listSocial, loadingSocial, accountEligible, fetchEligibl
   }, [account, accountEligible, updateEligible, listSocial, fetchEligibleDone])
 
   useEffect(() => {
+    if (accountHub?.email?.indexOf('*') > -1 && accountHub?.email?.endsWith('@gamefi.org')) {
+      setInputEmail('')
+      return
+    }
     if (accountHub && accountHub.email) {
       setInputEmail(accountHub.email)
     }

@@ -405,8 +405,8 @@ const Content = () => {
         </div>
 
         <Games />
-        <Communities />
         <Guilds />
+        <Communities />
       </section>
       <div className="container mx-auto py-8 mt-8">
         <div className="flex flex-col md:flex-row items-center justify-center relative">

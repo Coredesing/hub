@@ -5,19 +5,27 @@ import clsx from 'clsx'
 import playNow from '@/components/Pages/Adventure/images/play-now.svg'
 import { useMemo } from 'react'
 import { useMyWeb3 } from '@/components/web3/context'
+import { useHubContext } from '@/context/hubProvider'
+import { shorten } from '@/utils'
 
 const TopWorldItem = ({ data, playGame, accountEligible = false }) => {
   const canPlayNow = useMemo(() => {
     return data?.status?.toUpperCase() !== 'LOCK' && data.playUrl
   }, [data])
+
   const { account } = useMyWeb3()
+  const { accountHub } = useHubContext()
 
   return (
     <div className="flex flex-col h-[600px] md:h-auto md:flex-1 bg-[#1B1D26] relative">
       <div className="flex flex-col md:flex-row md:items-center w-full p-6 pt-8">
         <p className="font-bold text-xl p-2 md:p-0">{data?.name}</p>
-        <p className="font-casual text-sm text-white/40 md:ml-auto p-2 md:p-0">
-          Account Type: {data?.accountType}
+        <p className="font-casual text-sm text-white/40 md:ml-auto p-2 md:p-0 md:pl-10">
+          {
+            (data?.accountType && data?.accountType === 'EMAIL')
+              ? 'You must verify email'
+              : `You must use the ${data?.accountType === 'EMAIL' ? 'email' : 'wallet'} ${data?.accountType === 'EMAIL' ? accountHub?.email : shorten(account)} to play this game.`
+          }
         </p>
       </div>
       <div className="flex-1 flex flex-col overflow-y-scroll md:mr-2 gap-2 pb-30 md:pb-0">
@@ -38,10 +46,9 @@ const TopWorldItem = ({ data, playGame, accountEligible = false }) => {
                         className={clsx(
                           'h-[6px] bg-white rounded-sm',
                           task?.stages[0]?.isCompleted && 'w-full',
-                          !(task.currentRepetition / task.stages[0]?.repetition)
-                            ? 'w-0'
-                            : `w-[${(task.currentRepetition / task.stages[0]?.repetition) * 100}%]`
+                          !(task.currentRepetition / task.stages[0]?.repetition) && 'w-0'
                         )}
+                        style={{ width: `${(task.currentRepetition / task.stages[0]?.repetition) * 100}%` }}
                       />
                     </div>
                     <span className="font-casual text-xs text-white/40">
@@ -65,10 +72,9 @@ const TopWorldItem = ({ data, playGame, accountEligible = false }) => {
                             className={clsx(
                               'h-[6px] bg-white rounded-sm',
                               task.stages[1]?.isCompleted && 'w-full',
-                              !(task.currentRepetition / task.stages[1]?.repetition)
-                                ? 'w-0'
-                                : `w-[${(task.currentRepetition / task.stages[1]?.repetition) * 100}%]`
+                              !(task.currentRepetition / task.stages[1]?.repetition) && 'w-0'
                             )}
+                            style={{ width: `${(task.currentRepetition / task.stages[1]?.repetition) * 100}%` }}
                           />
                         </div>
                         <span className="font-casual text-xs text-white/40">
@@ -121,7 +127,10 @@ const TopWorldItem = ({ data, playGame, accountEligible = false }) => {
         <div className="flex flex-col md:flex-row w-full pt-8 bg-gradient-to-t from-[#1B1D26] via-[#1B1D26]/95 to-transparent">
           <div className="flex flex-col md:flex-row md:items-center px-6 py-2 text-sm font-casual">
             <span className="text-white mr-1">
-              This game has extra contribute bonus.
+              You will have more rewards from
+              <span className='font-semibold'>
+                { ` ${data?.name}` }.
+              </span>
             </span>
             <span className="text-gamefiGreen-700">View Detail</span>
           </div>

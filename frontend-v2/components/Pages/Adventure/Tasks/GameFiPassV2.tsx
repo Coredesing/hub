@@ -37,6 +37,7 @@ const GameFiPassV2 = ({ listSocial, loadingSocial, accountEligible, fetchEligibl
       })
 
       fetchEligible && fetchEligible()
+      gtagEvent('catventure_social_connect', { wallet: `${account}_`, eligible: 'all' })
     }
   }, [accountHub, listSocial, account, fetchEligible])
 
@@ -200,7 +201,7 @@ const GameFiPassV2 = ({ listSocial, loadingSocial, accountEligible, fetchEligibl
                         </div>
                         : <button className={`${!disableVerify ? 'text-gamefiGreen-700' : 'text-gamefiDark-300 cursor-text'} font-semibold text-sm`} onClick={() => {
                           handleVerifyEmail()
-                          gtagEvent('catventure_social_connect', { type: 'email' })
+                          // gtagEvent('catventure_social_connect', { wallet: `${account}_`, eligible: 'email' })
                         }}>
                           {loading ? <Spinning className="w-6 h-6" /> : (disableVerify ? 'Please check your email to confirm' : 'Verify my email')}
                         </button>

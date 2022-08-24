@@ -41,28 +41,41 @@ const BaseWorld = ({
   const { account } = useMyWeb3()
   const { setShowModal: showConnectWallet } = useWalletContext()
 
-  const next = () => {
+  const next = useCallback(() => {
     const nextIndex = currentProjectIndex + 1
     const index = nextIndex > projects.length ? projects.length - 1 : nextIndex
     setCurrentProjectIndex(index)
     flickingListGameRef.current?.moveTo(index).catch(() => {})
-  }
-  const prev = () => {
+    if (router) {
+      router.query = {
+        g: projects[index]?.slug?.toString()
+      }
+      router.push({ query: router.query }, undefined, { shallow: true })
+    }
+  }, [currentProjectIndex, projects, router])
+  const prev = useCallback(() => {
     const prevIndex = currentProjectIndex - 1
     const index = prevIndex < 0 ? 0 : prevIndex
     setCurrentProjectIndex(index)
     flickingListGameRef.current?.moveTo(index).catch(() => {})
-  }
+    if (router) {
+      router.query = {
+        g: projects[index]?.slug?.toString()
+      }
+      router.push({ query: router.query }, undefined, { shallow: true })
+    }
+  }, [currentProjectIndex, projects, router])
 
   useEffect(() => {
-    if (router?.query?.g) {
+    if (router?.query?.g && projects?.length > 0) {
       const slug = router.query.g
       const index = projects?.findIndex(item => item.slug === slug)
       if (index > -1) {
         setCurrentProjectIndex(index)
+        flickingGameRef.current?.moveTo(index).catch(() => {})
         flickingListGameRef.current?.moveTo(index).catch(() => {})
         setTimeout(() => {
-          ref?.current?.scrollIntoView()
+          ref?.current?.scrollIntoView({ behavior: 'smooth' })
         }, 1000)
       }
     }
@@ -88,8 +101,12 @@ const BaseWorld = ({
           ]
         })
       ])
-      flickingGameRef.current.change = (e) => setCurrentProjectIndex(e.index)
-      flickingListGameRef.current.change = (e) => setCurrentProjectIndex(e.index)
+      flickingGameRef.current.change = (e) => {
+        setCurrentProjectIndex(e.index)
+      }
+      flickingListGameRef.current.change = (e) => {
+        setCurrentProjectIndex(e.index)
+      }
     }, 1000)
   }, [projects])
 
@@ -120,7 +137,7 @@ const BaseWorld = ({
           <div className="flex justify-center gap-3 sm:gap-6">
             <img src={left.src} alt="" />
             <span className="uppercase font-bold min-w-fit sm:text-2xl">
-              {type === 'top-world' ? 'Top world' : 'Middle world'}
+              {type === 'top-world' ? 'Upper world' : 'Middle world'}
             </span>
             <img src={right.src} alt="" />
           </div>
@@ -134,7 +151,15 @@ const BaseWorld = ({
               bound={true}
               plugins={plugins}
               preventClickOnDrag={false}
-              onChanged={(e) => setCurrentProjectIndex(e.index)}
+              onChanged={(e) => {
+                setCurrentProjectIndex(e.index)
+                if (router) {
+                  router.query = {
+                    g: projects[e.index]?.slug?.toString()
+                  }
+                  router.push({ query: router.query }, undefined, { shallow: true })
+                }
+              }}
               interruptable={true}
             >
               {projects.map((el, i) => (
@@ -176,7 +201,15 @@ const BaseWorld = ({
             ref={flickingListGameRef}
             plugins={plugins}
             preventClickOnDrag={false}
-            onChanged={(e) => setCurrentProjectIndex(e.index)}
+            onChanged={(e) => {
+              setCurrentProjectIndex(e.index)
+              if (router) {
+                router.query = {
+                  g: projects[e.index]?.slug?.toString()
+                }
+                router.push({ query: router.query }, undefined, { shallow: true })
+              }
+            }}
             interruptable={true}
           >
             {projects.map((el, i) => (

@@ -1,5 +1,5 @@
 import { useMyWeb3 } from '@/components/web3/context'
-import { fetcher, shorten } from '@/utils'
+import { fetcher, gtagEvent, shorten } from '@/utils'
 import Tippy from '@tippyjs/react'
 import { useCallback, useEffect, useState } from 'react'
 import SocialItem from './SocialItem'
@@ -194,7 +194,10 @@ const GameFiPassV2 = ({ listSocial, loadingSocial, accountEligible, fetchEligibl
                             </svg>
                           </div>
                         </div>
-                        : <button className={`${!disableVerify ? 'text-gamefiGreen-700' : 'text-gamefiDark-300 cursor-text'} font-semibold text-sm`} onClick={() => { handleVerifyEmail() }}>
+                        : <button className={`${!disableVerify ? 'text-gamefiGreen-700' : 'text-gamefiDark-300 cursor-text'} font-semibold text-sm`} onClick={() => {
+                          handleVerifyEmail()
+                          gtagEvent('catventure_social_connect', { type: 'email' })
+                        }}>
                           {loading ? <Spinning className="w-6 h-6" /> : (disableVerify ? 'Please check your email to confirm' : 'Verify my email')}
                         </button>
                     }

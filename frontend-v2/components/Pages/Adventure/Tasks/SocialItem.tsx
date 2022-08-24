@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react'
-import { fetcher, pad } from '@/utils'
+import { fetcher, gtagEvent, pad } from '@/utils'
 import get from 'lodash.get'
 import clsx from 'clsx'
 import toast from 'react-hot-toast'
@@ -134,7 +134,10 @@ const SocialItem = ({ data }) => {
           // href={isCompleted ? 'javascript:void(0);' : link}
           // target={isCompleted ? '_self' : '_blank'}
           // rel="noreferrer"
-          onClick={doAction}
+          onClick={() => {
+            doAction()
+            gtagEvent('catventure_social_connect', { type: label.toLowerCase() })
+          }}
           className={clsx(
             styles[label],
             'w-full h-[34px] flex items-center rounded-sm overflow-hidden',

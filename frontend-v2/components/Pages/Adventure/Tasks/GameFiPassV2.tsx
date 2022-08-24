@@ -38,12 +38,12 @@ const GameFiPassV2 = ({ listSocial, loadingSocial, accountEligible, fetchEligibl
 
       fetchEligible && fetchEligible()
     }
-  }, [listSocial, accountHub?.confirmed, accountHub?.walletAddress, accountEligible, account, fetchEligible])
+  }, [accountHub, listSocial, account, fetchEligible])
 
   useEffect(() => {
-    if (!account || accountEligible) return
+    if (!account || accountEligible || !listSocial?.length) return
     updateEligible()
-  }, [account, accountEligible, updateEligible])
+  }, [account, accountEligible, updateEligible, listSocial])
 
   useEffect(() => {
     if (accountHub && accountHub.email) {

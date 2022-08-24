@@ -262,9 +262,9 @@ const Detail = () => {
           ></GameFiPassV2>
         </div>
         {/* Top world */}
-        <BaseWorld projects={topProjects} type="top-world" className="mb-20" layoutBodyRef={layoutBodyRef} accountEligible={false} />
+        <BaseWorld projects={topProjects} type="top-world" className="mb-20" layoutBodyRef={layoutBodyRef} accountEligible={accountEligible} />
         {/* Middle world */}
-        <BaseWorld projects={middleProjects} type="middle-world" layoutBodyRef={layoutBodyRef} accountEligible={false} />
+        <BaseWorld projects={middleProjects} type="middle-world" layoutBodyRef={layoutBodyRef} accountEligible={accountEligible} />
       </section>
       {/* GameFi world */}
       <section className="w-full bg-[#111218] mt-9">

@@ -19,7 +19,8 @@ export const categories = {
   ino: 'INO & Marketplace',
   learn: 'Learn',
   review: 'Game Review',
-  ama: 'AMA'
+  ama: 'AMA',
+  gamefiversary: 'Gamefiversary'
 }
 
 export const Categories = ({ active }: { active?: string }) => (

@@ -198,6 +198,22 @@ const Detail = () => {
       .catch((e) => console.debug(e))
   }, [account])
 
+  const [loadingRecheck, setLoadingRecheck] = useState(false)
+  const handleRecheck = useCallback((task) => {
+    setLoadingRecheck(true)
+    fetcher(`/api/adventure/recheckSocialTask/${task?.slug}`).then(res => {
+      if (!res) {
+        toast.error('Failed')
+        return
+      }
+
+      console.log(res)
+      fetchTasks()
+    }).catch(e => console.debug(e)).finally(() => {
+      setLoadingRecheck(false)
+    })
+  }, [fetchTasks])
+
   return <GameFiTaskLayout
     title='Happy Gamefiversary - Catventure in the Multiverse'
     description='Come along with Gafi the Catstronaut and his space clowder as they explore uncharted web3 gaming universes in hunt of the legendary Golden Gafish.'
@@ -322,7 +338,16 @@ const Detail = () => {
                       <span>+{task?.stages?.[0]?.reward}</span>
                       <Image src={require('@/components/Pages/Adventure/images/current-fish.svg')} alt="" className="w-4 h-4" />
                     </div>
-                    {task?.socialInfo?.link && task?.currentRepetition !== task?.stages?.[0]?.repetition && <button className="text-sm font-semibold text-gamefiGreen">Recheck</button>}
+                    {
+                      task?.socialInfo?.link && task?.currentRepetition !== task?.stages?.[0]?.repetition && <button onClick={() => {
+                        if (loadingRecheck) return
+                        handleRecheck(task)
+                      }}
+                      className={`text-sm font-semibold ${loadingRecheck ? 'text-gamefiDark-200' : 'text-gamefiGreen'}`}
+                      >
+                        Recheck
+                      </button>
+                    }
                   </div>
                 </div>
               </div>

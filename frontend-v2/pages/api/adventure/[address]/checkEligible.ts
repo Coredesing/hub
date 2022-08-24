@@ -18,20 +18,13 @@ export default async function handler (req, res) {
   if (req.method === 'GET') {
     try {
       const response = await callWithRest(req.query?.address)
-      const { data, error } = response || {}
-      if (isEmpty(error)) {
-        res.status(200).json(data)
+      if (response) {
+        res.status(200).json(response)
       } else {
-        res.status(500).json({
-          error: 'failed to load data',
-          err: error
-        })
+        res.status(500).json(response)
       }
     } catch (err) {
-      res.status(500).json({
-        error: 'failed to load data',
-        err
-      })
+      res.status(500).json(err)
     }
   }
 }

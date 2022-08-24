@@ -198,7 +198,6 @@ const Detail = () => {
       .catch((e) => console.debug(e))
   }, [account])
 
-<<<<<<< HEAD
   const [loadingRecheck, setLoadingRecheck] = useState(false)
   const handleRecheck = useCallback((task) => {
     setLoadingRecheck(true)
@@ -215,8 +214,6 @@ const Detail = () => {
     })
   }, [fetchTasks])
 
-=======
->>>>>>> 6888d7c8c4bdf867c14f7326b7ccf38bf24e6fa9
   return <GameFiTaskLayout
     title='Happy Gamefiversary - Catventure in the Multiverse'
     description='Come along with Gafi the Catstronaut and his space clowder as they explore uncharted web3 gaming universes in hunt of the legendary Golden Gafish.'

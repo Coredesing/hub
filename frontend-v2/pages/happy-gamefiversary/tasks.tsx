@@ -293,7 +293,7 @@ const Detail = () => {
                   <div className='flex items-center gap-4'>
                     <Image src={require('@/components/Pages/Adventure/images/smile.svg')} alt="" />
                     <div className="w-full max-w-[200px] h-2 bg-[#111218] rounded-sm overflow-hidden">
-                      {!!(Number(task?.currentRepetition) / Number(task?.stages?.[0]?.repetition)) && <div className={`w-[${(Number(task?.currentRepetition) / Number(task?.stages?.[0]?.repetition))}%] h-full bg-white`}></div>}
+                      {!!(Number(task?.currentRepetition) / Number(task?.stages?.[0]?.repetition)) && <div className={`w-[${(task?.currentRepetition / task?.stages?.[0]?.repetition) * 100}%] h-full bg-white`}></div>}
                     </div>
                     <span className="font-casual text-xs text-white/40">{ task?.currentRepetition }/{ task?.stages?.[0]?.repetition }</span>
                     <div className="ml-auto flex font-casual font-medium text-[#FFD600] gap-2">

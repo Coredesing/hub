@@ -338,11 +338,11 @@ const Content = () => {
 
       <div id="press" className="pt-24 invisible -mt-24"></div>
       <section className="mx-auto max-w-[1920px] overflow-hidden bg-repeat-x" style={{ backgroundImage: `url(${grid.src})` }}>
-        <div className="container mx-auto py-16 relative">
-          <div className="p-4">
+        <div className="container mx-auto lg:block font-atlas p-6 lg:p-12 relative">
+          <div className="py-4">
             <p className="font-spotnik text-3xl md:text-4xl lg:text-5xl font-bold uppercase">Multiverse <br /> Insight News</p>
           </div>
-          <div className="flex flex-col md:flex-row gap-16 justify-between items-start px-4 mt-8 font-spotnik">
+          <div className="flex flex-col md:flex-row gap-16 justify-between items-start mt-8 font-spotnik">
             <div className="w-full">
               <div className="flex items-center gap-8 mb-12">
                 <div className="font-bold text-7xl">1</div>

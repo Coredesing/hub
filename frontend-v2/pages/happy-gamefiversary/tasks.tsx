@@ -298,7 +298,7 @@ const Detail = () => {
                     <span className="font-casual text-xs text-white/40">{ task?.currentRepetition }/{ task?.stages?.[0]?.repetition }</span>
                     <div className="ml-auto flex font-casual font-medium text-[#FFD600] gap-2">
                       <span>+{task?.stages?.[0]?.reward}</span>
-                      <img src={require('@/components/Pages/Adventure/images/current-fish.svg')} alt="" className="w-4 h-4" />
+                      <Image src={require('@/components/Pages/Adventure/images/current-fish.svg')} alt="" className="w-4 h-4" />
                     </div>
                   </div>
                 </div>

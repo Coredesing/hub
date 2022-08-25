@@ -7,7 +7,14 @@ import HubProvider from '@/context/hubProvider'
 import { fetcher, printNumber } from '@/utils'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import { createContext, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import {
+  createContext,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState
+} from 'react'
 import toast from 'react-hot-toast'
 import logoGameFi from '@/components/Pages/Adventure/images/logo-gradient.png'
 import SocialTaskButton from '@/components/Pages/Gamefiversary/SocialTaskButton'
@@ -190,7 +197,7 @@ const Detail = () => {
         if (a?.status === 'LOCK') return 1
         return 0
       })
-    return middleWorldProjects?.map(project => {
+    return middleWorldProjects?.map((project) => {
       return {
         ...project,
         tasks: (project?.tasks || []).map((task) => {
@@ -287,6 +294,30 @@ const Detail = () => {
     [account, fetchTasks]
   )
 
+  const handleRecheckDailyCheckIn = () => {
+    if (!account) return
+
+    setLoadingRecheck(true)
+
+    fetcher(`/api/adventure/${account}/refreshDailyCheckInProgress`, {
+      method: 'GET'
+    })
+      .then((res) => {
+        if (!res) {
+          toast.error('Failed')
+          return
+        }
+
+        console.log(res)
+        toast.success('Success')
+        fetchTasks()
+      })
+      .catch((e) => console.debug(e))
+      .finally(() => {
+        setLoadingRecheck(false)
+      })
+  }
+
   return (
     <GameFiTaskLayout
       title="Happy Gamefiversary - Catventure in the Multiverse"
@@ -310,13 +341,15 @@ const Detail = () => {
         // </section>
       }
       <HubProvider>
-        <AdventureTasksContext.Provider value={{
-          fetchTasks
-        }}>
+        <AdventureTasksContext.Provider
+          value={{
+            fetchTasks
+          }}
+        >
           <div ref={layoutBodyRef} className="w-full h-full">
             <section className="max-w-[1180px] px-4 lg:px-0 mx-auto flex flex-col items-center gap-1 mb-6">
               <p className="text-center uppercase font-bold font-mechanic text-lg tracking-[0.2em] text-white/50 bg-transparent p-2">
-              Gamefiversary
+                Gamefiversary
               </p>
               <div className="">
                 <Image
@@ -325,14 +358,14 @@ const Detail = () => {
                 ></Image>
               </div>
               <p className="p-4 font-casual font-medium text-[11px] sm:text-sm flex items-center gap-1">
-              Finish all{' '}
+                Finish all{' '}
                 <Image
                   src={require('@/components/Pages/Adventure/images/smile.svg')}
                   alt=""
                   className="inline"
                 />{' '}
                 <span className="text-[#70C81B]">Easy Tasks</span> to get bonus
-              Gafish
+                Gafish
               </p>
             </section>
             <section className="max-w-[1180px] px-6 xl:px-0 mx-auto flex flex-col items-center pt-5 pb-10 md:pt-10 md:pb-20 md:flex-row md:items-center gap-7 md:gap-0">
@@ -356,7 +389,9 @@ const Detail = () => {
                       value={refferalLink}
                       onChange={(e) => {
                         setRefferalLink(e?.target?.value || '')
-                        setInputTeamSlug(parseInputJoinTeam(e?.target?.value || ''))
+                        setInputTeamSlug(
+                          parseInputJoinTeam(e?.target?.value || '')
+                        )
                       }}
                       className="focus:border-none focus:ring-0 bg-transparent border-none ring-0 w-full"
                     ></input>
@@ -370,7 +405,7 @@ const Detail = () => {
                         refferalLink && setShowModalJoinTeam(true)
                       }}
                     >
-                  Join a team
+                    Join a team
                     </button>
                   </div>
                 )}
@@ -386,10 +421,27 @@ const Detail = () => {
                 <div className="ml-5">
                   <p className="font-mechanic font-bold text-white/50 text-sm uppercase flex items-center gap-2">
                     <p>Current gafish</p>
-                    <Tippy content={<span>Gafish can be earned from 24 Aug 2022, 13:00 UTC</span>} className="font-casual text-sm leading-5 p-3">
-                      <button><svg className="w-4 h-4" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M8 0C3.6 0 0 3.6 0 8C0 12.4 3.6 16 8 16C12.4 16 16 12.4 16 8C16 3.6 12.4 0 8 0ZM9 12H7V7H9V12ZM8 6C7.4 6 7 5.6 7 5C7 4.4 7.4 4 8 4C8.6 4 9 4.4 9 5C9 5.6 8.6 6 8 6Z" fill="#858689" />
-                      </svg></button>
+                    <Tippy
+                      content={
+                        <span>
+                          Gafish can be earned from 24 Aug 2022, 13:00 UTC
+                        </span>
+                      }
+                      className="font-casual text-sm leading-5 p-3"
+                    >
+                      <button>
+                        <svg
+                          className="w-4 h-4"
+                          viewBox="0 0 16 16"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M8 0C3.6 0 0 3.6 0 8C0 12.4 3.6 16 8 16C12.4 16 16 12.4 16 8C16 3.6 12.4 0 8 0ZM9 12H7V7H9V12ZM8 6C7.4 6 7 5.6 7 5C7 4.4 7.4 4 8 4C8.6 4 9 4.4 9 5C9 5.6 8.6 6 8 6Z"
+                            fill="#858689"
+                          />
+                        </svg>
+                      </button>
                     </Tippy>
                   </p>
                   <p className="font-casual font-medium text-sm mt-auto">
@@ -445,7 +497,7 @@ const Detail = () => {
                     alt=""
                   />
                   <span className="uppercase font-bold min-w-fit sm:text-2xl">
-                  Gamefi World
+                    Gamefi World
                   </span>
                   <Image
                     src={require('@/components/Pages/Adventure/images/right.svg')}
@@ -458,77 +510,114 @@ const Detail = () => {
             </div> */}
                 <div className="max-w-[1180px] w-full pt-4 gap-1 mx-auto">
                   {gamefiTasks?.length > 0 &&
-                  gamefiTasks.map((task, i) => (
-                    <div
-                      key={`task-gamefi-${i}`}
-                      className="flex flex-col gap-2 w-full md:w-2/3 p-2 mx-auto"
-                    >
-                      <div className="flex flex-col md:flex-row items-center w-full p-4 rounded gap-2 md:gap-32 lg:gap-10 bg-gradient-to-r from-[#292B36]/0 to-[#21232E]">
-                        <div className="w-full md:w-1/6 lg:w-1/4">
-                          <span className="font-casual font-medium text-sm">
-                            {task?.name}
-                          </span>
-                        </div>
-                        <div className="w-full flex flex-col lg:flex-row gap-2 items-center">
-                          {task?.socialInfo && (
-                            <div className="flex items-center gap-4">
-                              <div><Image src={smile.src} alt="" width={16} height={16} /></div>
-                              <SocialTaskButton data={task} />
-                            </div>
-                          )}
-                          {!task?.socialInfo && (
-                            <div className="w-full">
+                    gamefiTasks.map((task, i) => (
+                      <div
+                        key={`task-gamefi-${i}`}
+                        className="flex flex-col gap-2 w-full md:w-2/3 p-2 mx-auto"
+                      >
+                        <div className="flex flex-col md:flex-row items-center w-full p-4 rounded gap-2 md:gap-32 lg:gap-10 bg-gradient-to-r from-[#292B36]/0 to-[#21232E]">
+                          <div className="w-full md:w-1/6 lg:w-1/4">
+                            <span className="font-casual font-medium text-sm">
+                              {task?.name}
+                            </span>
+                          </div>
+                          <div className="w-full flex flex-col lg:flex-row gap-2 items-center">
+                            {task?.socialInfo && (
                               <div className="flex items-center gap-4">
-                                <div><Image src={smile.src} alt="" width={16} height={16} /></div>
-                                <div className="w-full lg:w-1/2 p-[3px] h-fit bg-[#111218] rounded-sm">
-                                  <div
-                                    className={`h-[6px] bg-white rounded-sm ${task?.stages[0]?.isCompleted && 'w-full'} ${!(
-                                      task.currentRepetition /
-                                task.stages[0]?.repetition
-                                    ) && 'w-0'}`}
-                                    style={{
-                                      width: `${
-                                        (task.currentRepetition /
-                                    task.stages[0]?.repetition) *
-                                  100
-                                      }%`
-                                    }}
+                                <div>
+                                  <Image
+                                    src={smile.src}
+                                    alt=""
+                                    width={16}
+                                    height={16}
                                   />
                                 </div>
-                                <span className="font-casual text-xs text-white/40">
-                                  {task.stages[0]?.isCompleted
-                                    ? task?.stages[0]?.repetition
-                                    : task.currentRepetition}
-                            /{task.stages[0]?.repetition}
-                                </span>
+                                <SocialTaskButton data={task} />
                               </div>
+                            )}
+                            {!task?.socialInfo && (
+                              <div className="w-full">
+                                <div className="flex items-center gap-4">
+                                  <div>
+                                    <Image
+                                      src={smile.src}
+                                      alt=""
+                                      width={16}
+                                      height={16}
+                                    />
+                                  </div>
+                                  <div className="w-full lg:w-1/2 p-[3px] h-fit bg-[#111218] rounded-sm">
+                                    <div
+                                      className={`h-[6px] bg-white rounded-sm ${
+                                        task?.stages[0]?.isCompleted && 'w-full'
+                                      } ${
+                                        !(
+                                          task.currentRepetition /
+                                          task.stages[0]?.repetition
+                                        ) && 'w-0'
+                                      }`}
+                                      style={{
+                                        width: `${
+                                          (task.currentRepetition /
+                                            task.stages[0]?.repetition) *
+                                          100
+                                        }%`
+                                      }}
+                                    />
+                                  </div>
+                                  <span className="font-casual text-xs text-white/40">
+                                    {task.stages[0]?.isCompleted
+                                      ? task?.stages[0]?.repetition
+                                      : task.currentRepetition}
+                                    /{task.stages[0]?.repetition}
+                                  </span>
+                                </div>
+                              </div>
+                            )}
+                            <div className="lg:ml-auto flex font-casual font-medium text-[#FFD600] gap-2">
+                              <span>+{task.stages[0]?.reward}</span>
+                              <img
+                                src={currentFish.src}
+                                alt=""
+                                className="w-4 h-4"
+                              />
                             </div>
-                          )}
-                          <div className="lg:ml-auto flex font-casual font-medium text-[#FFD600] gap-2">
-                            <span>+{task.stages[0]?.reward}</span>
-                            <img src={currentFish.src} alt="" className="w-4 h-4" />
+                            {task?.socialInfo?.url &&
+                              task?.currentRepetition !==
+                                task?.stages?.[0]?.repetition && (
+                              <button
+                                onClick={() => {
+                                  if (loadingRecheck) return
+                                  handleRecheck(task)
+                                }}
+                                className={`text-sm font-semibold ${
+                                  loadingRecheck
+                                    ? 'text-gamefiDark-200'
+                                    : 'text-gamefiGreen'
+                                }`}
+                              >
+                                  Recheck
+                              </button>
+                            )}
+                            {task?.slug === 'daily-checkin' && (
+                              <button
+                                onClick={() => {
+                                  if (loadingRecheck) return
+                                  handleRecheckDailyCheckIn()
+                                }}
+                                className={`ml-2 text-sm font-semibold ${
+                                  loadingRecheck
+                                    ? 'text-gamefiDark-200'
+                                    : 'text-gamefiGreen'
+                                }`}
+                              >
+                                Recheck
+                              </button>
+                            )}
                           </div>
-                          {task?.socialInfo?.url &&
-                                task?.currentRepetition !==
-                                  task?.stages?.[0]?.repetition && (
-                            <button
-                              onClick={() => {
-                                if (loadingRecheck) return
-                                handleRecheck(task)
-                              }}
-                              className={`text-sm font-semibold ${
-                                loadingRecheck
-                                  ? 'text-gamefiDark-200'
-                                  : 'text-gamefiGreen'
-                              }`}
-                            >
-                          Recheck
-                            </button>
-                          )}
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
                 </div>
               </div>
               <div className="max-w-[1180px] mx-auto p-8 mt-14">
@@ -539,10 +628,10 @@ const Detail = () => {
                     className="h-5 w-auto"
                   />
                   <div className="text-sm text-white text-opacity-60 text-center my-4 flex-1 md:my-0">
-                  Crafted with love © GameFi.org 2022{' '}
+                    Crafted with love © GameFi.org 2022{' '}
                     <br className="md:hidden" />
                     <span className="hidden md:inline">–</span> All Rights
-                  Reserved.
+                    Reserved.
                   </div>
                   <div className="flex gap-4 md:gap-0">
                     <div className="cursor-pointer">

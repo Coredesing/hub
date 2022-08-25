@@ -187,7 +187,7 @@ const Detail = () => {
         if (a?.status === 'UNLOCK') return -1
         if (a?.status === 'LOCK') return 1
         return 0
-      })
+      }) || []
   }, [account, projects, tasks])
 
   const middleProjects = useMemo(() => {
@@ -210,7 +210,7 @@ const Detail = () => {
           }
         })
       }
-    })
+    }) || []
   }, [account, projects, tasks])
 
   const gamefiTasks = useMemo(() => {

@@ -902,6 +902,18 @@ const imagesProjects = {
   befitter: {
     imageVertical: require('@/assets/images/adventure/befitter.png'),
     imageMobile: require('@/assets/images/adventure/befitter.png')
+  },
+  'homie-wars': {
+    imageVertical: require('@/assets/images/adventure/homie-wars.png'),
+    imageMobile: require('@/assets/images/adventure/homie-wars.png')
+  },
+  'war-legends': {
+    imageVertical: require('@/assets/images/adventure/homie-wars.png'),
+    imageMobile: require('@/assets/images/adventure/homie-wars.png')
+  },
+  'step-app': {
+    imageVertical: require('@/assets/images/adventure/step-app.png'),
+    imageMobile: require('@/assets/images/adventure/step-app.png')
   }
 }
 

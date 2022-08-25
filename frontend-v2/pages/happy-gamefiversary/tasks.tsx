@@ -628,23 +628,6 @@ const Detail = () => {
                               </button>
                             )}
                           </div>
-                          {task?.socialInfo?.url &&
-                                task?.currentRepetition !==
-                                  task?.stages?.[0]?.repetition && (
-                            <button
-                              onClick={() => {
-                                if (loadingRecheck) return
-                                handleRecheck(task)
-                              }}
-                              className={`text-sm font-semibold ${
-                                loadingRecheck
-                                  ? 'text-gamefiDark-200'
-                                  : 'text-gamefiGreen'
-                              }`}
-                            >
-                          Recheck
-                            </button>
-                          )}
                         </div>
                       </div>
                     ))}

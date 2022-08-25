@@ -118,8 +118,9 @@ const MiddleWorldItem = ({ data, accountEligible = false }) => {
                       <img src={currentFish.src} alt="" className="w-4 h-4" />
                     </div>
                     {task?.socialInfo?.url &&
-                                task?.currentRepetition !==
-                                  task?.stages?.[0]?.repetition && (
+                      task?.currentRepetition !==
+                        task?.stages?.[0]?.repetition &&
+                          account && (
                       <button
                         onClick={() => {
                           if (loadingRecheck) return

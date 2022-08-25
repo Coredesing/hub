@@ -2,16 +2,54 @@ import smile from '@/components/Pages/Adventure/images/smile.svg'
 import angry from '@/components/Pages/Adventure/images/angry.svg'
 import currentFish from '@/components/Pages/Adventure/images/current-fish.svg'
 import clsx from 'clsx'
-import { useMemo } from 'react'
+import { useCallback, useContext, useMemo, useState } from 'react'
 import { useMyWeb3 } from '@/components/web3/context'
 import present from '@/components/Pages/Adventure/images/present.svg'
 import SocialTaskButton from './SocialTaskButton'
+import toast from 'react-hot-toast'
+import { fetcher } from '@/utils'
+import { AdventureTasksContext } from '@/pages/happy-gamefiversary/tasks'
 
 const MiddleWorldItem = ({ data, accountEligible = false }) => {
   const canPlayNow = useMemo(() => {
     return data?.status?.toUpperCase() !== 'LOCK'
   }, [data?.status])
   const { account } = useMyWeb3()
+
+  const { fetchTasks } = useContext(AdventureTasksContext)
+
+  const [loadingRecheck, setLoadingRecheck] = useState(false)
+
+  const handleRecheck = useCallback(
+    (task) => {
+      setLoadingRecheck(true)
+
+      fetcher('/api/adventure/recheckSocialTask', {
+        method: 'POST',
+        body: JSON.stringify({
+          walletAddress: account,
+          projectSlug: task.projectSlug,
+          taskSlug: task.slug
+        })
+      })
+        .then((res) => {
+          if (!res) {
+            toast.error('Failed')
+            return
+          }
+
+          console.log(res)
+          fetchTasks()
+        })
+        .catch((e) => console.debug(e))
+        .finally(() => {
+          setLoadingRecheck(false)
+        })
+
+      // fetcher(`/api/adventure/recheckSocialTask/${task}/${task?.slug}`)
+    },
+    [account, fetchTasks]
+  )
 
   return (
     <div className="flex flex-col h-[600px] md:h-auto md:flex-1 bg-[#1B1D26] relative">
@@ -77,6 +115,23 @@ const MiddleWorldItem = ({ data, accountEligible = false }) => {
                     <span>+{task.stages[0]?.reward}</span>
                     <img src={currentFish.src} alt="" className="w-4 h-4" />
                   </div>
+                  {task?.socialInfo?.url &&
+                              task?.currentRepetition !==
+                                task?.stages?.[0]?.repetition && (
+                    <button
+                      onClick={() => {
+                        if (loadingRecheck) return
+                        handleRecheck(task)
+                      }}
+                      className={`text-sm font-semibold ${
+                        loadingRecheck
+                          ? 'text-gamefiDark-200'
+                          : 'text-gamefiGreen'
+                      }`}
+                    >
+                        Recheck
+                    </button>
+                  )}
                 </div>
               </div>
             ))}

@@ -20,7 +20,7 @@ const TopWorldItem = ({ data, playGame, accountEligible = false }) => {
     <div className="flex flex-col h-[600px] md:h-auto md:flex-1 bg-[#1B1D26] relative">
       <div className="flex flex-col md:flex-row md:items-center w-full p-6 pt-8">
         <p className="font-bold text-xl p-2 md:p-0">{data?.name}</p>
-        <p className="font-casual text-sm text-white/40 md:ml-auto p-2 md:p-0 md:pl-10">
+        <p className="font-casual text-sm text-gamefiYellow md:ml-auto p-2 md:p-0 md:pl-10">
           {
             (data?.accountType && data?.accountType === 'EMAIL')
               ? 'You must verify email'

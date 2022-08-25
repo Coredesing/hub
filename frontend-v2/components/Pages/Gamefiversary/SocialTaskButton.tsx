@@ -9,7 +9,7 @@ const SocialTaskButton = ({ data }) => {
   }, [data?.socialInfo?.socialType])
 
   return (
-    <a href={data?.socialInfo?.url || null} className="flex items-center bg-[#3AACFF] rounded-sm cursor-pointer w-fit">
+    <a href={data?.socialInfo?.url || null} target="_blank" rel="noreferrer" className="flex items-center bg-[#3AACFF] rounded-sm cursor-pointer w-fit">
       <img className="pl-2" src={imgSource} alt="social" />
       <div className="flex justify-center items-center w-[195px] h-[28px]">
         <span className="font-casual text-[12px] leading-[100%] text-white">

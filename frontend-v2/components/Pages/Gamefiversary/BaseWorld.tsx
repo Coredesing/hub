@@ -196,6 +196,7 @@ const BaseWorld = ({
             </Flicking>
             <img src={circleArrow.src} alt="next" className='xl:block hidden absolute -right-16 top-44 cursor-pointer' onClick={next}/>
           </div>
+          <div className="my-2 text-right font-casual text-sm">For Gafish earned from missions, they will be updated every 4-8 hours in your Current Gafish</div>
           <Flicking
             defaultIndex={currentProjectIndex}
             ref={flickingListGameRef}

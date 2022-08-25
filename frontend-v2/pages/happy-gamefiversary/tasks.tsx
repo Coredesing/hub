@@ -272,6 +272,7 @@ const Detail = () => {
           }
 
           console.log(res)
+          toast.success('Success')
           fetchTasks()
         })
         .catch((e) => console.debug(e))
@@ -461,8 +462,7 @@ const Detail = () => {
                       className="flex flex-col gap-2 w-full md:w-2/3 p-2 mx-auto"
                     >
                       <div className="flex flex-col md:flex-row w-full p-4 rounded gap-2 md:gap-10 bg-gradient-to-r from-[#292B36]/0 to-[#21232E]">
-                        {task?.socialInfo?.url ||
-                        task?.slug === 'daily-checkin'
+                        {(task?.socialInfo?.url || task?.slug === 'daily-checkin') && !task?.stages?.[0]?.isCompleted
                           ? (
                             <a
                               href={

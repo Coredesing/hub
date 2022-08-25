@@ -697,7 +697,7 @@ const World = ({ width = 1600, height = 700, screens = 3, r = 22, items = landsD
 
   const [projects, setProjects] = useState([])
   useEffect(() => {
-    fetcher('https://catventure.gamefi.org/v1/projects')
+    fetcher(`${process.env.NEXT_PUBLIC_CATVENTURE_BASE_URL}/v1/projects`)
       .then(response => {
         setProjects(response?.data || [])
       })
@@ -968,7 +968,7 @@ const LandDetails = ({ land, onClose }: { land: Land; onClose: () => void }) => 
   const [missions, setMissions] = useState([])
 
   useEffect(() => {
-    fetcher(`https://catventure.gamefi.org/v1/projects/${land.slug}/tasks`)
+    fetcher(`${process.env.NEXT_PUBLIC_CATVENTURE_BASE_URL}/v1/projects/${land.slug}/tasks`)
       .then(response => {
         setMissions((response?.data?.tasks || []).filter(x => (x.name || '').indexOf('dummy') === -1))
       })

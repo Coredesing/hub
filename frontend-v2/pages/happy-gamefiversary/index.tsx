@@ -8,7 +8,7 @@ import planet1 from '@/components/Pages/Adventure/images/planet-1.png'
 import planet2 from '@/components/Pages/Adventure/images/planet-2.png'
 import grid from '@/components/Pages/Adventure/images/grid.png'
 import logoGameFi from '@/components/Pages/Adventure/images/logo-gradient.png'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import clsx from 'clsx'
 import Flicking, { ViewportSlot, Plugin } from '@egjs/react-flicking'
 import { Sync } from '@egjs/flicking-plugins'
@@ -24,6 +24,7 @@ import Link from 'next/link'
 import Guilds from '@/components/Pages/Adventure/Partners/guilds'
 import Communities from '@/components/Pages/Adventure/Partners/communities'
 import Games from '@/components/Pages/Adventure/Partners/games'
+import { useAppContext } from '@/context'
 
 // eslint-disable-next-line no-unused-expressions
 fonts
@@ -86,6 +87,8 @@ const history = [{
   }
 }]
 
+const spinDeadline = new Date('2022-09-01T13:00:00Z')
+
 const Content = () => {
   const [menuMobile, setMenuMobile] = useState(false)
   const [historyActive, setHistoryActive] = useState(1)
@@ -137,6 +140,10 @@ const Content = () => {
 
   const title = 'Happy Gamefiversary - Catventure in the Multiverse'
   const description = 'Come along with Gafi the Catstronaut and his space clowder as they explore uncharted web3 gaming universes in hunt of the legendary Golden Gafish.'
+  const { now } = useAppContext()
+  const spinComingSoon = useMemo(() => {
+    return now >= spinDeadline
+  }, [now])
 
   return <div className="dark overflow-hidden">
     <Head>
@@ -336,7 +343,7 @@ const Content = () => {
 
       <div id="spin" className="pt-24 invisible -mt-24"></div>
       <section className="mx-auto max-w-[1920px] overflow-hidden bg-[#111]">
-        <Spin comingsoon />
+        <Spin comingsoon={spinComingSoon} />
       </section>
 
       <div id="press" className="pt-24 invisible -mt-24"></div>

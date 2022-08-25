@@ -12,19 +12,24 @@ import { useWalletContext } from '@/components/Base/WalletConnector/provider'
 import toast from 'react-hot-toast'
 import { useBalanceToken, useTokenAllowance, useTokenApproval } from '@/components/web3/utils'
 import { GAFI, switchNetwork, Token, useWeb3Default } from '@/components/web3'
-import { printNumber } from '@/utils'
+import { fetcher, printNumber } from '@/utils'
 import { parseUnits } from '@ethersproject/units'
 import { BigNumber, constants, Contract } from 'ethers'
 import { TransactionReceipt } from '@ethersproject/providers'
 import Modal from '@/components/Base/Modal'
 import clsx from 'clsx'
 import Link from 'next/link'
+import useWalletSignature from '@/hooks/useWalletSignature'
+import { useAppContext } from '@/context'
+import { format } from 'date-fns'
 
 const CONTRACT_WHEEL = IS_TESTNET ? process.env.NEXT_PUBLIC_WHEEL_CONTRACT_97 : process.env.NEXT_PUBLIC_WHEEL_CONTRACT_56
 const CONTRACT_TICKET = IS_TESTNET ? process.env.NEXT_PUBLIC_WHEEL_TICKET_97 : process.env.NEXT_PUBLIC_WHEEL_TICKET_56
-const CONTRACT_WHEEL_ABI = '[{"inputs":[{"internalType":"address","name":"_gafi","type":"address"},{"internalType":"address","name":"_birthday_ticket","type":"address"},{"internalType":"address","name":"_link","type":"address"},{"internalType":"address","name":"_vrfCoordinator","type":"address"},{"internalType":"bytes32","name":"_keyHash","type":"bytes32"}],"stateMutability":"nonpayable","type":"constructor"},{"inputs":[{"internalType":"address","name":"have","type":"address"},{"internalType":"address","name":"want","type":"address"}],"name":"OnlyCoordinatorCanFulfill","type":"error"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"account","type":"address"}],"name":"Paused","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":true,"internalType":"uint256","name":"requestId","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"RequestCreated","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"account","type":"address"}],"name":"Unpaused","type":"event"},{"inputs":[{"internalType":"address","name":"consumerAddress","type":"address"}],"name":"addConsumer","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"buyTicket","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"receivingWallet","type":"address"}],"name":"cancelSubscription","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"chances","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint32","name":"_gas","type":"uint32"}],"name":"changeGas","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes32","name":"_keyHash","type":"bytes32"}],"name":"changeKeyHash","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bool","name":"state","type":"bool"}],"name":"changePauseState","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"price","type":"uint256"}],"name":"changeTicketPriceByGAFI","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"token","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"emergencyWithdraw","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"emergencyWithdrawAll","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"requestId","type":"uint256"}],"name":"getTicketsByRequestId","outputs":[{"internalType":"bool","name":"status","type":"bool"},{"components":[{"internalType":"uint256","name":"createdAt","type":"uint256"},{"internalType":"address","name":"user","type":"address"},{"internalType":"uint256","name":"prizeId","type":"uint256"},{"internalType":"uint8","name":"status","type":"uint8"}],"internalType":"struct Wheel.Ticket[]","name":"result","type":"tuple[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"user","type":"address"}],"name":"getTotalSpin","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"requestId","type":"uint256"}],"name":"getTotalTicketsByRequestId","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"user","type":"address"},{"internalType":"uint256","name":"offset","type":"uint256"},{"internalType":"uint256","name":"limit","type":"uint256"}],"name":"getUserHistory","outputs":[{"internalType":"uint256","name":"","type":"uint256"},{"components":[{"internalType":"uint256","name":"createdAt","type":"uint256"},{"internalType":"address","name":"user","type":"address"},{"internalType":"uint256","name":"prizeId","type":"uint256"},{"internalType":"uint8","name":"status","type":"uint8"}],"internalType":"struct Wheel.Ticket[]","name":"result","type":"tuple[]"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"maxPerTurn","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"paused","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"requestId","type":"uint256"},{"internalType":"uint256[]","name":"randomWords","type":"uint256[]"}],"name":"rawFulfillRandomWords","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"consumerAddress","type":"address"}],"name":"removeConsumer","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"},{"internalType":"uint256","name":"","type":"uint256"}],"name":"requestToTickets","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"spin","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"subscriptionId","outputs":[{"internalType":"uint64","name":"","type":"uint64"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"tickets","outputs":[{"internalType":"uint256","name":"createdAt","type":"uint256"},{"internalType":"address","name":"user","type":"address"},{"internalType":"uint256","name":"prizeId","type":"uint256"},{"internalType":"uint8","name":"status","type":"uint8"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"topUpSubscription","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"withdrawLink","outputs":[],"stateMutability":"nonpayable","type":"function"}]'
+const CONTRACT_WHEEL_ABI = '[{"inputs":[{"internalType":"address","name":"_gafi","type":"address"},{"internalType":"address","name":"_birthday_ticket","type":"address"},{"internalType":"address","name":"_link","type":"address"},{"internalType":"address","name":"_vrfCoordinator","type":"address"},{"internalType":"bytes32","name":"_keyHash","type":"bytes32"}],"stateMutability":"nonpayable","type":"constructor"},{"inputs":[{"internalType":"address","name":"have","type":"address"},{"internalType":"address","name":"want","type":"address"}],"name":"OnlyCoordinatorCanFulfill","type":"error"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"account","type":"address"}],"name":"Paused","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":true,"internalType":"uint256","name":"requestId","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"RequestCreated","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"account","type":"address"}],"name":"Unpaused","type":"event"},{"inputs":[],"name":"LOCK_DURATION","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"SIGNER","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"consumerAddress","type":"address"}],"name":"addConsumer","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"buyTicket","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"requestId","type":"uint256"},{"internalType":"uint256","name":"timestamp","type":"uint256"},{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"bytes","name":"signature","type":"bytes"}],"name":"buyTicketByFish","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"receivingWallet","type":"address"}],"name":"cancelSubscription","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint32","name":"_gas","type":"uint32"}],"name":"changeGas","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes32","name":"_keyHash","type":"bytes32"}],"name":"changeKeyHash","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"lockDuration","type":"uint256"}],"name":"changeLockDuration","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bool","name":"state","type":"bool"}],"name":"changePauseState","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"signer","type":"address"}],"name":"changeSigner","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"price","type":"uint256"}],"name":"changeTicketPriceByGAFI","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"token","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"emergencyWithdraw","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"emergencyWithdrawAll","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"requestId","type":"uint256"}],"name":"getTicketsByRequestId","outputs":[{"internalType":"bool","name":"status","type":"bool"},{"components":[{"internalType":"uint256","name":"createdAt","type":"uint256"},{"internalType":"address","name":"user","type":"address"},{"internalType":"uint256","name":"prizeId","type":"uint256"},{"internalType":"uint8","name":"status","type":"uint8"}],"internalType":"struct Wheel.Ticket[]","name":"result","type":"tuple[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"user","type":"address"}],"name":"getTotalSpin","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"requestId","type":"uint256"}],"name":"getTotalTicketsByRequestId","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"user","type":"address"}],"name":"getTotalTransactions","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"user","type":"address"},{"internalType":"uint256","name":"offset","type":"uint256"},{"internalType":"uint256","name":"limit","type":"uint256"}],"name":"getTransactionHistory","outputs":[{"internalType":"uint256","name":"","type":"uint256"},{"components":[{"internalType":"uint256","name":"timestamp","type":"uint256"},{"internalType":"address","name":"user","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"uint8","name":"transactionType","type":"uint8"}],"internalType":"struct Wheel.TicketTransaction[]","name":"result","type":"tuple[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"user","type":"address"},{"internalType":"uint256","name":"offset","type":"uint256"},{"internalType":"uint256","name":"limit","type":"uint256"}],"name":"getUserHistory","outputs":[{"internalType":"uint256","name":"","type":"uint256"},{"components":[{"internalType":"uint256","name":"createdAt","type":"uint256"},{"internalType":"address","name":"user","type":"address"},{"internalType":"uint256","name":"prizeId","type":"uint256"},{"internalType":"uint8","name":"status","type":"uint8"}],"internalType":"struct Wheel.Ticket[]","name":"result","type":"tuple[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"lockingTicketByFish","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"maxPerTurn","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"paused","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"requestId","type":"uint256"},{"internalType":"uint256[]","name":"randomWords","type":"uint256[]"}],"name":"rawFulfillRandomWords","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"consumerAddress","type":"address"}],"name":"removeConsumer","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"},{"internalType":"uint256","name":"","type":"uint256"}],"name":"requestToTickets","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"spin","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"subscriptionId","outputs":[{"internalType":"uint64","name":"","type":"uint64"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"ticketPriceByGAFI","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"tickets","outputs":[{"internalType":"uint256","name":"createdAt","type":"uint256"},{"internalType":"address","name":"user","type":"address"},{"internalType":"uint256","name":"prizeId","type":"uint256"},{"internalType":"uint8","name":"status","type":"uint8"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"topUpSubscription","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"uint256","name":"","type":"uint256"}],"name":"transactionIds","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"transactions","outputs":[{"internalType":"uint256","name":"timestamp","type":"uint256"},{"internalType":"address","name":"user","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"uint8","name":"transactionType","type":"uint8"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_signer","type":"address"},{"internalType":"address","name":"_user","type":"address"},{"internalType":"uint256","name":"_requestFishID","type":"uint256"},{"internalType":"string","name":"_method","type":"string"},{"internalType":"uint256","name":"_timestamp","type":"uint256"},{"internalType":"uint256","name":"_amount","type":"uint256"},{"internalType":"bytes","name":"signature","type":"bytes"}],"name":"verify","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"pure","type":"function"},{"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"withdrawLink","outputs":[],"stateMutability":"nonpayable","type":"function"}]'
 
 const TICKET_PRICE_IN_GAFI = 0.2
+const TICKET_PRICE_IN_FISH = IS_TESTNET ? 5 : 5000
+const MAX_TICKET_IN_FISH = 99
 
 export const TICKET: Token = {
   name: 'Birthday Ticket',
@@ -89,11 +94,12 @@ const pie = Pie(slots, {
 })
 
 const Spin = ({ className, comingsoon }: { className?: string; comingsoon?: boolean }) => {
+  const { now } = useAppContext()
   const { library: libraryDefault } = useWeb3Default()
   const { account, library, chainID } = useMyWeb3()
   const { setShowModal: showConnectWallet } = useWalletContext()
   const { balance: balanceGAFI, balanceShort: balanceGAFIShort } = useBalanceToken(GAFI)
-  const { balance: balanceTICKET, balanceShort: balanceTICKETShort, updateBalance: updateTICKETBalance } = useBalanceToken(TICKET)
+  const { balance: balanceTICKET, balanceShort: balanceTICKETShort, updateBalance: updateBalanceTICKET } = useBalanceToken(TICKET)
   const [confirming, setConfirming] = useState<boolean>(false)
   const [amount, setAmount] = useState<string>('1')
   const [amountPurchase, setAmountPurchase] = useState<string>('5')
@@ -154,13 +160,13 @@ const Spin = ({ className, comingsoon }: { className?: string; comingsoon?: bool
     return allowanceTICKET instanceof BigNumber && allowanceTICKET.gte(valueInWeiTICKET)
   }, [allowanceTICKET, valueInWeiTICKET])
 
-  const formatAmountTicket = useCallback((str) => {
+  const formatAmountTicket = useCallback((str, max = 1_000_000) => {
     const v = parseInt(str)
     if (v <= 0 || !v) {
       return 0
     }
 
-    if (v > 1_000_000) {
+    if (v > max) {
       return 0
     }
 
@@ -398,7 +404,7 @@ const Spin = ({ className, comingsoon }: { className?: string; comingsoon?: bool
         throw new Error('Unable to fetch spin result. Please try again later')
       }
 
-      updateTICKETBalance()
+      updateBalanceTICKET()
       if (prizes.length === 1) {
         setPrizeID(prizes?.[0]?.prizeId?.toNumber())
         return
@@ -421,7 +427,7 @@ const Spin = ({ className, comingsoon }: { className?: string; comingsoon?: bool
 
       toast.error(err.message)
     }
-  }, [account, amount, confirming, contract, networkIncorrect, spinning, syncRotationFromDom, updateTICKETBalance])
+  }, [account, amount, confirming, contract, networkIncorrect, spinning, syncRotationFromDom, updateBalanceTICKET])
 
   const prizesFromID = useMemo(() => {
     if (prizeID instanceof Array) {
@@ -533,6 +539,10 @@ const Spin = ({ className, comingsoon }: { className?: string; comingsoon?: bool
       return
     }
 
+    if (networkIncorrect) {
+      return
+    }
+
     if (purchasing) {
       return
     }
@@ -545,11 +555,154 @@ const Spin = ({ className, comingsoon }: { className?: string; comingsoon?: bool
     } catch (err) {
       toast.error('Unable to purchase tickets')
     } finally {
-      updateTICKETBalance()
+      updateBalanceTICKET()
       setPurchasing(false)
       setShowModal(false)
     }
-  }, [allowanceGAFIEnough, amountPurchase, approveAndReloadGAFI, balanceGAFIEnough, contract, formatAmountTicket, loadingAllowanceGAFI, loadingApprovalGAFI, purchasing, updateTICKETBalance, valueInWeiGAFI])
+  }, [allowanceGAFIEnough, amountPurchase, approveAndReloadGAFI, balanceGAFIEnough, contract, formatAmountTicket, loadingAllowanceGAFI, loadingApprovalGAFI, networkIncorrect, purchasing, updateBalanceTICKET, valueInWeiGAFI])
+
+  const { signMessage } = useWalletSignature()
+  const [balanceFISH, setBalanceFISH] = useState<number | null>(0)
+  const updateBalanceFISH = useCallback(() => {
+    if (!account) {
+      setBalanceFISH(0)
+      return
+    }
+
+    fetcher(`${process.env.NEXT_PUBLIC_CATVENTURE_BASE_URL}/v1/users/${account}/points`)
+      .then(response => {
+        if (!response?.data?.currentPoint) {
+          setBalanceFISH(0)
+          return
+        }
+
+        setBalanceFISH(Number(response?.data?.currentPoint))
+      })
+      .catch(() => {
+        setBalanceFISH(0)
+      })
+  }, [account])
+  useEffect(() => {
+    updateBalanceFISH()
+  }, [updateBalanceFISH])
+
+  const [timeoutFISH, setTimeoutFISH] = useState<number>(0)
+  const timeoutFISHInDate = useMemo<Date | null>(() => {
+    if (!timeoutFISH) {
+      return null
+    }
+
+    return new Date(timeoutFISH)
+  }, [timeoutFISH])
+  const updateTimeoutFISH = useCallback(async () => {
+    if (!account) {
+      setTimeoutFISH(0)
+      return
+    }
+
+    if (!contract) {
+      setTimeoutFISH(0)
+      return
+    }
+
+    if (networkIncorrect) {
+      setTimeoutFISH(0)
+      return
+    }
+
+    const timeout = await contract.lockingTicketByFish(account)
+    if (!(timeout instanceof BigNumber)) {
+      setTimeoutFISH(0)
+      return
+    }
+
+    setTimeoutFISH(timeout.toNumber() * 1000)
+  }, [account, contract, networkIncorrect])
+  useEffect(() => {
+    updateTimeoutFISH()
+  }, [updateTimeoutFISH])
+
+  const [purchaseInFISH, setPurchaseInFISH] = useState<boolean>(true)
+  const valueFISH = useMemo(() => {
+    const v = formatAmountTicket(amountPurchase)
+    return v * TICKET_PRICE_IN_FISH
+  }, [amountPurchase, formatAmountTicket])
+
+  const purchaseWithFISH = useCallback(async () => {
+    if (valueFISH > MAX_TICKET_IN_FISH) {
+      return
+    }
+
+    if (valueFISH > balanceFISH) {
+      return
+    }
+
+    if (!contract) {
+      return
+    }
+
+    if (purchasing) {
+      return
+    }
+
+    if (timeoutFISH > now) {
+      return
+    }
+
+    if (networkIncorrect) {
+      return
+    }
+
+    setPurchasing(true)
+    try {
+      const signature = await signMessage()
+      if (!signature) {
+        throw new Error('Unable to sign your transaction')
+      }
+
+      const response = await fetcher(`${process.env.NEXT_PUBLIC_CATVENTURE_BASE_URL}/v1/gashapons/requests`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          'x-signature': signature,
+          'x-wallet-address': account
+        },
+        body: JSON.stringify({
+          amount: amountPurchase
+        })
+      })
+
+      if (!response?.amount || !response?.requestId || !response?.signature || !response?.timestamp || !response.userWallet) {
+        if (response?.statusCode && response?.message) {
+          throw new Error(response.message)
+        }
+
+        throw new Error('Unable to verify your transaction')
+      }
+
+      await new Promise(resolve => {
+        setTimeout(resolve, 4000)
+      })
+      const tx = await contract.buyTicketByFish(BigInt(response.requestId).toString(), response.timestamp, response.amount, response.signature)
+      await tx.wait(1)
+      toast.success('Tickets purchased successfully')
+    } catch (err) {
+      toast.error(err?.message || 'Unable to purchase tickets')
+    } finally {
+      updateBalanceTICKET()
+      updateBalanceFISH()
+      updateTimeoutFISH()
+      setPurchasing(false)
+      setShowModal(false)
+    }
+  }, [account, amountPurchase, balanceFISH, contract, networkIncorrect, now, purchasing, signMessage, timeoutFISH, updateBalanceFISH, updateBalanceTICKET, updateTimeoutFISH, valueFISH])
+  const purchaseTickets = useCallback(async () => {
+    if (!purchaseInFISH) {
+      return approveOrPurchase()
+    }
+
+    return purchaseWithFISH()
+  }, [approveOrPurchase, purchaseWithFISH, purchaseInFISH])
 
   return (
     <div className={clsx('container mx-auto lg:block font-atlas p-6 lg:p-12', className)}>
@@ -578,7 +731,7 @@ const Spin = ({ className, comingsoon }: { className?: string; comingsoon?: bool
                   <Image src={iconFish} alt="gamefi-fish" className="flex-none"></Image>
                   <div className="ml-4 flex-1">
                     <p className="text-sm text-white text-opacity-60">Gafish</p>
-                    <p className="text-[20px] leading-none font-spotnik font-bold">-</p>
+                    <p className="text-[20px] leading-none font-spotnik font-bold">{printNumber(balanceFISH)}</p>
                   </div>
                   <Link href="/happy-gamefiversary/tasks" passHref>
                     <a className="font-casual uppercase text-xs tracking-wide font-semibold px-3 py-2 border rounded-sm border-white">
@@ -733,11 +886,23 @@ const Spin = ({ className, comingsoon }: { className?: string; comingsoon?: bool
         <div className="bg-gamefiDark-650">
           <div className="p-6 pt-10 flex justify-center">
             <div className="w-full flex justify-center flex-col">
-              <div>
+              <div className="flex w-full text-sm text-center mt-4">
+                <div onClick={() => setPurchaseInFISH(false)} className={`p-2 leading-1 flex items-center justify-center flex-1 rounded cursor-pointer ${purchaseInFISH ? 'hover:underline underline-offset-8' : 'bg-gamefiGreen-500 text-black font-medium'}`}>Pay with ${GAFI.symbol}</div>
+                <div onClick={() => setPurchaseInFISH(true)} className={`p-2 leading-1 flex items-center justify-center flex-1 rounded cursor-pointer ${!purchaseInFISH ? 'hover:underline underline-offset-8' : 'bg-gamefiGreen-500 text-black font-medium'}`}>Pay with Gafish</div>
+              </div>
+              <div className="mt-4">
+                <label className="block text-sm font-bold mb-2">
+                  Balance
+                </label>
+                {purchaseInFISH && <input className="appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gamefiDark-650" type="text" readOnly value={`${balanceFISH} Gafish`} />}
+                {!purchaseInFISH && <input className="appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gamefiDark-650" type="text" readOnly value={`${balanceGAFIShort} GAFI`} />}
+              </div>
+              <div className="mt-4">
                 <label className="block text-sm font-bold mb-2">
                   Price
                 </label>
-                <input className="appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gamefiDark-650" type="text" readOnly value={`${TICKET_PRICE_IN_GAFI} GAFI`} />
+                {purchaseInFISH && <input className="appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gamefiDark-650" type="text" readOnly value={`${TICKET_PRICE_IN_FISH} Gafish`} />}
+                {!purchaseInFISH && <input className="appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gamefiDark-650" type="text" readOnly value={`${TICKET_PRICE_IN_GAFI} GAFI`} />}
               </div>
               <div className="mt-4">
                 <label className="block text-sm font-bold mb-2">
@@ -751,28 +916,48 @@ const Spin = ({ className, comingsoon }: { className?: string; comingsoon?: bool
                 <label className="block text-sm font-bold mb-2">
                   Total
                 </label>
-                <input className="appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gamefiDark-650" type="text" readOnly value={`${valueGAFI} GAFI`} />
+                {purchaseInFISH && <input className="appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gamefiDark-650" type="text" readOnly value={`${valueFISH} Gafish`} />}
+                {!purchaseInFISH && <input className="appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gamefiDark-650" type="text" readOnly value={`${valueGAFI} GAFI`} />}
               </div>
-              <button
-                className='mt-6 py-2 px-4 md:py-3 md:px-8 bg-gamefiGreen-500 text-gamefiDark-900 font-bold text-[13px] uppercase rounded-xs hover:opacity-95 cursor-pointer clipped-b-l-t-r'
-                onClick={() => {
-                  approveOrPurchase()
-                }}
+              {networkIncorrect && <div className="mt-6 py-2 px-4 md:py-3 md:px-8 bg-gamefiGreen-500 text-gamefiDark-900 font-bold text-[13px] uppercase rounded-xs hover:opacity-95 cursor-pointer clipped-b-l-t-r text-center" onClick={() => switchNetwork(library?.provider, chainIDCorrect)}>
+                Switch Network
+              </div>}
+              {purchaseInFISH && timeoutFISH > now && timeoutFISHInDate && <span className="text-xs mt-2 text-center">
+                Available at {format(timeoutFISHInDate, 'HH:mm:ss')}
+              </span>}
+              {!networkIncorrect && <button
+                className='mt-6 py-2 px-4 md:py-3 md:px-8 bg-gamefiGreen-500 text-gamefiDark-900 font-bold text-[13px] uppercase rounded-xs hover:opacity-95 cursor-pointer clipped-b-l-t-r text-center'
+                onClick={() => { purchaseTickets() }}
               >
-                {(loadingAllowanceGAFI || loadingApprovalGAFI)
-                  ? 'Loading...'
-                  : (
-                    !balanceGAFIEnough
-                      ? 'Insufficient GAFI'
+                {purchaseInFISH && <span>{
+                  valueFISH > MAX_TICKET_IN_FISH
+                    ? `Maximum ${MAX_TICKET_IN_FISH} tickets`
+                    : (valueFISH > balanceFISH
+                      ? 'Insufficient Gafish'
                       : (
-                        !allowanceGAFIEnough
-                          ? 'Approve'
+                        timeoutFISH > now
+                          ? 'Cooldown'
                           : (
                             purchasing ? 'Confirming...' : 'Purchase'
                           )
-                      )
-                  )}
-              </button>
+                      ))
+                }</span>}
+                {!purchaseInFISH && <span>
+                  {(loadingAllowanceGAFI || loadingApprovalGAFI)
+                    ? 'Loading...'
+                    : (
+                      !balanceGAFIEnough
+                        ? 'Insufficient GAFI'
+                        : (
+                          !allowanceGAFIEnough
+                            ? 'Approve'
+                            : (
+                              purchasing ? 'Confirming...' : 'Purchase'
+                            )
+                        )
+                    )}
+                </span>}
+              </button>}
             </div>
           </div>
         </div>

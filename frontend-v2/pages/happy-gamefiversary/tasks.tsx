@@ -478,7 +478,11 @@ const Detail = () => {
                         <div className="flex-1">
                           <div className="flex items-center gap-4">
                             {task?.socialInfo && (
-                              <div className="p-4">
+                              <div className="p-4 flex gap-2">
+                                <Image
+                                  src={require('@/components/Pages/Adventure/images/smile.svg')}
+                                  alt=""
+                                />
                                 <SocialTaskButton data={task} />
                               </div>
                             )}

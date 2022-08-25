@@ -36,26 +36,28 @@ const TopWorldItem = ({ data, playGame, accountEligible = false }) => {
                     {task?.name}
                   </span>
                 </div>
-                <div className="flex-1">
-                  <div className="flex items-center pb-5 gap-4">
-                    <img src={smile.src} alt="" />
-                    <div className="w-1/3 sm:w-1/2 p-[3px] h-fit bg-[#1A1C25] rounded-sm">
-                      <div
-                        className={clsx(
-                          'h-[6px] bg-white rounded-sm',
-                          task?.stages[0]?.isCompleted && 'w-full',
-                          !(task.currentRepetition / task.stages[0]?.repetition) && 'w-0'
-                        )}
-                        style={{ width: `${(task.currentRepetition / task.stages[0]?.repetition) * 100}%` }}
-                      />
+                <div className="w-full lg:flex-1 gap-4">
+                  <div className="flex flex-col lg:flex-row w-full pb-5 items-center gap-4">
+                    <div className="w-full flex items-center gap-4">
+                      <img src={smile.src} alt="" />
+                      <div className="w-full lg:w-1/2 p-[3px] h-fit bg-[#1A1C25] rounded-sm">
+                        <div
+                          className={clsx(
+                            'h-[6px] bg-white rounded-sm',
+                            task?.stages[0]?.isCompleted && 'w-full',
+                            !(task.currentRepetition / task.stages[0]?.repetition) && 'w-0'
+                          )}
+                          style={{ width: `${(task.currentRepetition / task.stages[0]?.repetition) * 100}%` }}
+                        />
+                      </div>
+                      <span className="font-casual text-xs text-white/40">
+                        {task.stages[0]?.isCompleted
+                          ? task?.stages[0]?.repetition
+                          : task.currentRepetition}
+                        /{task.stages[0]?.repetition}
+                      </span>
                     </div>
-                    <span className="font-casual text-xs text-white/40">
-                      {task.stages[0]?.isCompleted
-                        ? task?.stages[0]?.repetition
-                        : task.currentRepetition}
-                      /{task.stages[0]?.repetition}
-                    </span>
-                    <div className="ml-auto flex font-casual font-medium text-[#FFD600] gap-2">
+                    <div className="lg:ml-auto flex justify-center font-casual font-medium text-[#FFD600] gap-2">
                       <span>+{task.stages[0]?.reward}</span>
                       <img src={currentFish.src} alt="" className="w-4 h-4" />
                     </div>
@@ -63,25 +65,27 @@ const TopWorldItem = ({ data, playGame, accountEligible = false }) => {
                   {task.stages[1] && (
                     <>
                       <div className="h-[1px] bg-gradient-to-r from-[#303342]/0 to-[#2A2D3D]" />
-                      <div className="flex items-center pt-5 gap-4">
-                        <img src={angry.src} alt="" />
-                        <div className="w-1/3 sm:w-1/2 p-[3px] h-fit bg-[#1A1C25] rounded-sm">
-                          <div
-                            className={clsx(
-                              'h-[6px] bg-white rounded-sm',
-                              task.stages[1]?.isCompleted && 'w-full',
-                              !(task.currentRepetition / task.stages[1]?.repetition) && 'w-0'
-                            )}
-                            style={{ width: `${(task.currentRepetition / task.stages[1]?.repetition) * 100}%` }}
-                          />
+                      <div className="flex flex-col lg:flex-row w-full items-center pt-5 gap-4">
+                        <div className="w-full flex items-center gap-4">
+                          <img src={angry.src} alt="" />
+                          <div className="w-full lg:w-1/2 p-[3px] h-fit bg-[#1A1C25] rounded-sm">
+                            <div
+                              className={clsx(
+                                'h-[6px] bg-white rounded-sm',
+                                task.stages[1]?.isCompleted && 'w-full',
+                                !(task.currentRepetition / task.stages[1]?.repetition) && 'w-0'
+                              )}
+                              style={{ width: `${(task.currentRepetition / task.stages[1]?.repetition) * 100}%` }}
+                            />
+                          </div>
+                          <span className="font-casual text-xs text-white/40">
+                            {task.stages[1]?.isCompleted
+                              ? task?.stages[1]?.repetition
+                              : task?.currentRepetition}
+                            /{task?.stages[1]?.repetition}
+                          </span>
                         </div>
-                        <span className="font-casual text-xs text-white/40">
-                          {task.stages[1]?.isCompleted
-                            ? task?.stages[1]?.repetition
-                            : task?.currentRepetition}
-                          /{task?.stages[1]?.repetition}
-                        </span>
-                        <div className="ml-auto flex font-casual font-medium text-[#FFD600] gap-2">
+                        <div className="lg:ml-auto flex font-casual font-medium text-[#FFD600] gap-2">
                           <span>+{task?.stages[1]?.reward}</span>
                           <img
                             src={currentFish.src}
@@ -138,7 +142,7 @@ const TopWorldItem = ({ data, playGame, accountEligible = false }) => {
                 account && accountEligible
                   ? <a
                     className={clsx(
-                      'cursor-pointer bg-gradient-to-tl from-[#6CDB00] via-[#6CDB00] to-[#C9DB00] ml-auto flex items-center gap-2 justify-center w-2/3 sm:w-1/3 md:w-1/4 aspect-6 md:aspect-[5/1.1] 2xl:aspect-6 uppercase text-sm text-black font-bold tracking-[0.02em] rounded-br'
+                      'cursor-pointer bg-gradient-to-tl from-[#6CDB00] via-[#6CDB00] to-[#C9DB00] ml-auto flex items-center gap-2 justify-center w-2/3 sm:w-1/3 md:w-1/5 aspect-6 md:aspect-[5/1.1] 2xl:aspect-6 uppercase text-sm text-black font-bold tracking-[0.02em] rounded-br'
                     )}
                     style={{
                       clipPath: 'polygon(14% 0, 100% 0, 100% 100%, 0% 100%)'
@@ -150,7 +154,7 @@ const TopWorldItem = ({ data, playGame, accountEligible = false }) => {
                     target="_blank"
                     rel="noreferrer"
                   >
-                  Start Get Gafish
+                  Get Gafish
                     <div className="flex items-center">
                       <Tippy content={<span>You need to click this button once only to start tracking progress and earning gafish</span>} className="font-casual text-sm leading-5 p-3">
                         <button><svg className="w-4 h-4" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -161,7 +165,7 @@ const TopWorldItem = ({ data, playGame, accountEligible = false }) => {
                   </a>
                   : <button
                     className={clsx(
-                      'cursor-pointer bg-gradient-to-tl from-[#6CDB00] via-[#6CDB00] to-[#C9DB00] ml-auto flex items-center gap-2 justify-center w-2/3 sm:w-1/3 md:w-1/4 aspect-6 md:aspect-[5/1.1] 2xl:aspect-6 uppercase text-sm text-black font-bold tracking-[0.02em] rounded-br'
+                      'cursor-pointer bg-gradient-to-tl from-[#6CDB00] via-[#6CDB00] to-[#C9DB00] ml-auto flex items-center gap-2 justify-center w-2/3 sm:w-1/3 md:w-1/5 aspect-6 md:aspect-[5/1.1] 2xl:aspect-6 uppercase text-sm text-black font-bold tracking-[0.02em] rounded-br'
                     )}
                     style={{
                       clipPath: 'polygon(14% 0, 100% 0, 100% 100%, 0% 100%)'
@@ -170,7 +174,7 @@ const TopWorldItem = ({ data, playGame, accountEligible = false }) => {
                       playGame(data.id)
                     }}
                   >
-                  Start Get Gafish
+                  Get Gafish
                     <div className="flex items-center">
                       <Tippy content={<span>You need to click this button once only to start tracking progress and earning gafish</span>} className="font-casual text-sm leading-5 p-3">
                         <button><svg className="w-4 h-4" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">

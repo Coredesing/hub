@@ -9,6 +9,7 @@ import SocialTaskButton from './SocialTaskButton'
 import toast from 'react-hot-toast'
 import { fetcher } from '@/utils'
 import { AdventureTasksContext } from '@/pages/happy-gamefiversary/tasks'
+import Image from 'next/image'
 
 const MiddleWorldItem = ({ data, accountEligible = false }) => {
   const canPlayNow = useMemo(() => {
@@ -74,17 +75,17 @@ const MiddleWorldItem = ({ data, accountEligible = false }) => {
                       {task?.name}
                     </span>
                   </div>
-                  <div className="flex-1 flex gap-2 items-center">
+                  <div className="w-full lg:flex-1 flex flex-col lg:flex-row gap-2 items-center">
                     {task?.socialInfo && (
                       <div>
                         <SocialTaskButton data={task} />
                       </div>
                     )}
                     {!task?.socialInfo && (
-                      <div className="flex-1">
-                        <div className="flex items-center pb-5 gap-4">
-                          <img src={smile.src} alt="" />
-                          <div className="w-1/3 sm:w-1/2 p-[3px] h-fit bg-[#1A1C25] rounded-sm">
+                      <div className="w-full">
+                        <div className="flex items-center gap-4">
+                          <div><Image src={smile.src} alt="" width={16} height={16} /></div>
+                          <div className="w-full lg:w-1/2 p-[3px] h-fit bg-[#1A1C25] rounded-sm">
                             <div
                               className={clsx(
                                 'h-[6px] bg-white rounded-sm',
@@ -112,7 +113,7 @@ const MiddleWorldItem = ({ data, accountEligible = false }) => {
                         </div>
                       </div>
                     )}
-                    <div className="ml-auto flex font-casual font-medium text-[#FFD600] gap-2">
+                    <div className="lg:ml-auto flex font-casual font-medium text-[#FFD600] gap-2">
                       <span>+{task.stages[0]?.reward}</span>
                       <img src={currentFish.src} alt="" className="w-4 h-4" />
                     </div>

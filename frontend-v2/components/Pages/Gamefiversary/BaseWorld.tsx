@@ -46,25 +46,25 @@ const BaseWorld = ({
     const index = nextIndex > projects.length ? projects.length - 1 : nextIndex
     setCurrentProjectIndex(index)
     flickingListGameRef.current?.moveTo(index).catch(() => {})
-    if (router) {
-      router.query = {
-        g: projects[index]?.slug?.toString()
-      }
-      router.push({ query: router.query }, undefined, { shallow: true })
-    }
-  }, [currentProjectIndex, projects, router])
+    // if (router) {
+    //   router.query = {
+    //     g: projects[index]?.slug?.toString()
+    //   }
+    //   router.push({ query: router.query }, undefined, { shallow: true })
+    // }
+  }, [currentProjectIndex, projects])
   const prev = useCallback(() => {
     const prevIndex = currentProjectIndex - 1
     const index = prevIndex < 0 ? 0 : prevIndex
     setCurrentProjectIndex(index)
     flickingListGameRef.current?.moveTo(index).catch(() => {})
-    if (router) {
-      router.query = {
-        g: projects[index]?.slug?.toString()
-      }
-      router.push({ query: router.query }, undefined, { shallow: true })
-    }
-  }, [currentProjectIndex, projects, router])
+    // if (router) {
+    //   router.query = {
+    //     g: projects[index]?.slug?.toString()
+    //   }
+    //   router.push({ query: router.query }, undefined, { shallow: true })
+    // }
+  }, [currentProjectIndex])
 
   useEffect(() => {
     if (router?.query?.g && projects?.length > 0) {
@@ -153,16 +153,16 @@ const BaseWorld = ({
               preventClickOnDrag={false}
               onChanged={(e) => {
                 setCurrentProjectIndex(e.index)
-                if (router) {
-                  router.query = {
-                    g: projects[e.index]?.slug?.toString()
-                  }
-                  router.push({ query: router.query }, undefined, { shallow: true })
-                }
+                // if (router) {
+                //   router.query = {
+                //     g: projects[e.index]?.slug?.toString()
+                //   }
+                //   router.push({ query: router.query }, undefined, { shallow: true })
+                // }
               }}
               interruptable={true}
             >
-              {projects.map((el, i) => (
+              {projects && projects.map((el, i) => (
                 <div key={`top-world-${i}`} className="w-1/3 md:w-1/6">
                   <div
                     className={clsx(
@@ -208,16 +208,16 @@ const BaseWorld = ({
             preventClickOnDrag={false}
             onChanged={(e) => {
               setCurrentProjectIndex(e.index)
-              if (router) {
-                router.query = {
-                  g: projects[e.index]?.slug?.toString()
-                }
-                router.push({ query: router.query }, undefined, { shallow: true })
-              }
+              // if (router) {
+              //   router.query = {
+              //     g: projects[e.index]?.slug?.toString()
+              //   }
+              //   router.push({ query: router.query }, undefined, { shallow: true })
+              // }
             }}
             interruptable={true}
           >
-            {projects.map((el, i) => (
+            {projects && projects.map((el, i) => (
               <div
                 key={`top-world-info-${i}`}
                 className="flex md:h-96 flex-col md:flex-row w-full border border-[#303342] rounded-[4px] overflow-hidden"

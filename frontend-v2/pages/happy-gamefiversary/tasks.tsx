@@ -37,6 +37,7 @@ const Detail = () => {
   const [showModalJoinTeam, setShowModalJoinTeam] = useState(false)
   const [gafish, setGafish] = useState(0)
   const [projects, setProjects] = useState([])
+  const [tasks, setTasks] = useState([])
 
   const [loadingSocial, setLoadingSocial] = useState(false)
   const [listSocial, setListSocial] = useState([])
@@ -148,10 +149,10 @@ const Detail = () => {
   }, [account, fetchJoinedTeam, parseInputJoinTeam, refferalLink])
 
   const fetchTasks = useCallback(async () => {
-    return fetcher(`/api/adventure/project/${account}`)
+    return account && fetcher(`/api/adventure/project/${account}`)
       .then((res) => {
         if (res) {
-          setProjects(res)
+          setTasks(res)
         }
       })
       .catch((e) => console.debug(e))
@@ -168,29 +169,31 @@ const Detail = () => {
   }, [])
 
   useEffect(() => {
-    if (!account) {
-      fetchProjects()
-    } else {
+    fetchProjects()
+  }, [fetchProjects])
+
+  useEffect(() => {
+    if (account) {
       fetchTasks()
     }
-  }, [account, fetchProjects, fetchTasks])
+  }, [account, fetchTasks])
 
   const topProjects = useMemo(() => {
-    if (!projects?.length || !projects) return []
+    if (!projects?.length && !tasks?.length) return []
 
-    return projects
+    return (account ? tasks : projects)
       .find((el) => el?.name === 'TOP_WORLD')
       ?.projects.sort((a, b) => {
         if (a?.status === 'UNLOCK') return -1
         if (a?.status === 'LOCK') return 1
         return 0
       })
-  }, [projects])
+  }, [account, projects, tasks])
 
   const middleProjects = useMemo(() => {
-    if (!projects?.length || !projects) return []
+    if (!projects?.length && !tasks?.length) return []
 
-    const middleWorldProjects = projects
+    const middleWorldProjects = (account ? tasks : projects)
       .find((el) => el?.name === 'MIDDLE_WORLD')
       ?.projects.sort((a, b) => {
         if (a?.status === 'UNLOCK') return -1
@@ -208,11 +211,11 @@ const Detail = () => {
         })
       }
     })
-  }, [projects])
+  }, [account, projects, tasks])
 
   const gamefiTasks = useMemo(() => {
-    if (!projects?.length) return []
-    const gamefiWorldProject = projects.find(
+    if (!projects?.length && !tasks?.length) return []
+    const gamefiWorldProject = (account ? tasks : projects).find(
       (el) => el?.name?.toUpperCase() === 'GAMEFI_WORLD'
     )?.projects?.[0]
 
@@ -223,7 +226,7 @@ const Detail = () => {
       }
     })
     // return ?.projects?.[0]?.tasks
-  }, [projects])
+  }, [account, projects, tasks])
 
   useEffect(() => {
     if (account) {
@@ -250,7 +253,10 @@ const Detail = () => {
   }, [account])
 
   useEffect(() => {
-    if (!account) return
+    if (!account) {
+      setGafish(0)
+      return
+    }
 
     fetcher(`/api/adventure/${account}/points`)
       .then((res) => {
@@ -419,8 +425,8 @@ const Detail = () => {
                   alt=""
                 />
                 <div className="ml-5">
-                  <p className="font-mechanic font-bold text-white/50 text-sm uppercase flex items-center gap-2">
-                    <p>Current gafish</p>
+                  <div className="font-mechanic font-bold text-white/50 text-sm uppercase flex items-center gap-2">
+                    <div>Current gafish</div>
                     <Tippy
                       content={
                         <span>
@@ -429,7 +435,7 @@ const Detail = () => {
                       }
                       className="font-casual text-sm leading-5 p-3"
                     >
-                      <button>
+                      <div>
                         <svg
                           className="w-4 h-4"
                           viewBox="0 0 16 16"
@@ -441,9 +447,9 @@ const Detail = () => {
                             fill="#858689"
                           />
                         </svg>
-                      </button>
+                      </div>
                     </Tippy>
-                  </p>
+                  </div>
                   <p className="font-casual font-medium text-sm mt-auto">
                     {printNumber(gafish)}
                   </p>
@@ -572,6 +578,12 @@ const Detail = () => {
                                     /{task.stages[0]?.repetition}
                                   </span>
                                 </div>
+                                <span className="font-casual text-xs text-white/40">
+                                  {task.stages[0]?.isCompleted
+                                    ? task?.stages[0]?.repetition
+                                    : task.currentRepetition}
+                            /{task.stages[0]?.repetition}
+                                </span>
                               </div>
                             )}
                             <div className="lg:ml-auto flex font-casual font-medium text-[#FFD600] gap-2">
@@ -616,6 +628,23 @@ const Detail = () => {
                               </button>
                             )}
                           </div>
+                          {task?.socialInfo?.url &&
+                                task?.currentRepetition !==
+                                  task?.stages?.[0]?.repetition && (
+                            <button
+                              onClick={() => {
+                                if (loadingRecheck) return
+                                handleRecheck(task)
+                              }}
+                              className={`text-sm font-semibold ${
+                                loadingRecheck
+                                  ? 'text-gamefiDark-200'
+                                  : 'text-gamefiGreen'
+                              }`}
+                            >
+                          Recheck
+                            </button>
+                          )}
                         </div>
                       </div>
                     ))}

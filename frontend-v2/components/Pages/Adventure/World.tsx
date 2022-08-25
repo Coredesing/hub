@@ -78,6 +78,7 @@ import imgStepApp from '@/components/Pages/Adventure/images/lands/step-app.png'
 import clsx from 'clsx'
 import { fetcher, gtagEvent } from '@/utils'
 import Link from 'next/link'
+import shuffle from 'lodash.shuffle'
 
 enum LandShape {
   ONE = 1,
@@ -362,7 +363,7 @@ const landsDefault: LandRaw[] = [{
   positions: [11, 27],
   name: 'Step App',
   categories: ['Metaverse', 'Sports', 'Move2Earn'],
-  description: 'Take your fitness habits and aspirations to the next level with Step App. You and your metaverse avatar advance together through filling daily fitness quests and PvP challenges. Step App\'s celebrity-endorsed augmented reality tech merges the metaverse with the physical world. Step App is the first application on the FitFi protocol, built by the core team on its own Avalanche subnet.',
+  description: 'Move. Socialize. Compete. Earn. Take your fitness aspirations to the next level with Step App. Its celebrity-endorsed augmented reality tech merges the metaverse with the physical world, through the use of NFTs and geo-location. Step App is the first application on the FitFi protocol, built on its own Avalanche subnet.',
   img: imgStepApp,
   logo: logoStepApp,
   tooltipPlacement: TooltipPlacement.BOTTOM_LEFT,
@@ -509,7 +510,7 @@ const landsDefault: LandRaw[] = [{
   positions: [16, 61],
   name: 'Metacity',
   categories: ['Metaverse', 'Simulation', 'NFT'],
-  description: 'Metacity is the most aesthetic Build2Earn Citiverse ecosystem, powered by House3D and Icetea Labs. It is a striking 3D city simulated metaverse developed as a co-creation platform that allows everyone to express their aesthetic and uniqueness by easily creating their dream living spaces. Here, you can enjoy your free time with exciting built-in Build2Earn and Design2Earn gameplay, as well as a variety of third party games in Citiverse games, and immerse in spectacular 3D/VR experiences with friends.',
+  description: 'Metacity is the most aesthetic Build2Earn Citiverse ecosystem, powered by House3D and Icetea Labs.',
   img: imgMetacity,
   logo: logoMetacity,
   ping: 5
@@ -683,7 +684,8 @@ const landsDefault: LandRaw[] = [{
 }]
 
 const World = ({ width = 1600, height = 750, screens = 3, r = 22, items = landsDefault, className = '' }) => {
-  const ref = useRef<SVGSVGElement | undefined>()
+  const refRoot = useRef<HTMLDivElement | undefined>()
+  const refSVG = useRef<SVGSVGElement | undefined>()
   const [translate, setTranslate] = useState<{ x: number; y: number; k: number }>({ x: 0, y: 0, k: 1 })
   const widthMax = useMemo(() => width * screens, [width, screens])
   const hexbin = useMemo(() => d3Hexbin().radius(r).extent([[0, 0], [widthMax - r, height]]), [height, r, widthMax])
@@ -795,21 +797,21 @@ const World = ({ width = 1600, height = 750, screens = 3, r = 22, items = landsD
   const zoomRef = useRef(zoom)
 
   useEffect(() => {
-    if (!ref.current) {
+    if (!refSVG.current) {
       return
     }
 
-    select(ref.current).call(zoomRef.current)
+    select(refSVG.current).call(zoomRef.current)
   }, [height, width, widthMax])
 
   const resetZoom = useCallback(() => {
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    select(ref.current).transition().duration(300).call(zoomRef.current.scaleTo, 1)
+    select(refSVG.current).transition().duration(300).call(zoomRef.current.scaleTo, 1)
   }, [])
 
   const zoomIn = useCallback((k = 1.5) => {
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    select(ref.current).transition().duration(300).call(zoomRef.current.scaleTo, k)
+    select(refSVG.current).transition().duration(300).call(zoomRef.current.scaleTo, k)
   }, [])
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -824,13 +826,8 @@ const World = ({ width = 1600, height = 750, screens = 3, r = 22, items = landsD
     })
   }, [])
 
-  useEffect(() => {
-    if (!landActive) {
-      resetZoom()
-      return
-    }
-
-    const center = landActive.hexagons?.[landActive.ping] || landActive.hexagons?.[0]
+  const zoomToLand = useCallback((land, k = isLargeScreen() ? 1 : 1.5) => {
+    const center = land?.hexagons?.[land?.ping] || land?.hexagons?.[0]
     if (!center) {
       resetZoom()
       return
@@ -842,23 +839,58 @@ const World = ({ width = 1600, height = 750, screens = 3, r = 22, items = landsD
       return
     }
 
-    select(ref.current)
+    select(refSVG.current)
       // eslint-disable-next-line @typescript-eslint/unbound-method
-      .call(zoomRef.current.scaleTo, isLargeScreen() ? 1 : 1.5)
+      .call(zoomRef.current.scaleTo, k)
       // eslint-disable-next-line @typescript-eslint/unbound-method
       .transition().duration(400).call(zoomRef.current.translateTo, x, y)
-  }, [height, landActive, resetZoom, width])
+  }, [resetZoom])
 
   useEffect(() => {
-    select(ref.current)
+    if (!landActive) {
+      resetZoom()
+      return
+    }
+
+    zoomToLand(landActive)
+  }, [landActive, resetZoom, zoomToLand])
+
+  useEffect(() => {
+    select(refSVG.current)
       // eslint-disable-next-line @typescript-eslint/unbound-method
       .transition().duration(300).call(zoomRef.current.translateTo, (width * 3 / 4), (height * 3 / 4))
   }, [height, width])
 
+  const [rand, setRand] = useState<Land[]>([])
+  useEffect(() => {
+    setRand(shuffle(lands))
+  }, [lands])
+
+  const [highlight, setHighlight] = useState<Land | null>(null)
+  useEffect(() => {
+    setHighlight(landActive)
+  }, [landActive])
+
   return (
-    <div className={clsx('mx-auto', className)}>
+    <div className={clsx('mx-auto', className)} ref={refRoot}>
+      <div className="flex w-full flex-wrap items-center justify-center py-6">
+        {rand.map(item => <a key={item.slug} className="flex-none relative" href={`/happy-gamefiversary/tasks?g=${item.slug}`} onClick={e => {
+          e.preventDefault()
+          zoomToLand(item)
+          setHighlight(item)
+          if (refRoot.current?.scrollIntoView instanceof Function) {
+            refRoot.current?.scrollIntoView()
+          }
+        }}>
+          <img src={item.logo.src} alt="" className="h-6 md:h-8 lg:h-10 hover:bg-gamefiDark-900" />
+          {item.status !== 'LOCK' && <span className="flex h-2 w-2 absolute top-1 right-1">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#70C81B] opacity-10"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-[#70C81B] opacity-70"></span>
+          </span>}
+        </a>)}
+      </div>
       <div className="w-full h-full flex justify-center relative overflow-hidden">
-        <svg viewBox={`0 0 ${width} ${height}`} className="w-full overflow-hidden cursor-move" strokeWidth={1.5} ref={ref}>
+        <svg viewBox={`0 0 ${width} ${height}`} className="w-full overflow-hidden cursor-move" strokeWidth={1.5} ref={refSVG}>
           <g transform={`translate(${translate.x}, ${translate.y}) scale(${translate.k})`} className="stroke-gamefiDark-650">
             <path d={hexbin.mesh()} fill="none"></path>
           </g>
@@ -869,7 +901,7 @@ const World = ({ width = 1600, height = 750, screens = 3, r = 22, items = landsD
           {lands.map(land => (
             <g onClick={(e) => {
               onLandsClicked(land, e)
-            }} key={land.slug} transform={`translate(${translate.x}, ${translate.y}) scale(${translate.k})`} className={`transition-colors cursor-pointer fill-[#BEBEBE] hover:fill-[#00FFFF] hover:[fill-opacity:0.1] stroke-[#FFFFFF] hover:stroke-[#ABFFFF] ${landActive?.slug === land.slug && 'fill-[#93FF61] stroke-[#93FF61]'}`} fillOpacity={0.15} strokeOpacity={0.4}>
+            }} key={land.slug} transform={`translate(${translate.x}, ${translate.y}) scale(${translate.k})`} className={`transition-colors cursor-pointer fill-[#BEBEBE] hover:fill-[#00FFFF] hover:[fill-opacity:0.1] stroke-[#FFFFFF] hover:stroke-[#ABFFFF] ${highlight?.slug === land.slug && 'fill-[#FFC700] stroke-[#FFC700]'}`} fillOpacity={0.15} strokeOpacity={0.4}>
               {land.hexagons.map((p, i) => !!p && <path key={i} d={`M${p[0]},${p[1]}${hexbin.hexagon()}`}></path>)}
 
               <LandTooltip land={land}></LandTooltip>
@@ -949,19 +981,21 @@ const LandDetails = ({ land, onClose }: { land: Land; onClose: () => void }) => 
     <div className="p-4 flex-1 flex flex-col overflow-hidden z-10 md:pt-28 lg:pt-36 xl:pt-4">
       <p className="text-xs xl:text-sm 2xl:text-base text-white xl:text-gamefiDark-300 mb-2" style={{ textShadow: '0px 0px 4px black' }}>{land.categories.join(', ')}</p>
       <Link href={`/happy-gamefiversary/tasks/?g=${land?.slug}`} passHref={true}><a className="font-spotnik text-xl xl:text-2xl 2xl:text-[32px] leading-none uppercase font-bold hover:underline underline-offset-8" style={{ textShadow: '0px 0px 4px black' }}>{land.name}</a></Link>
-      <p className="leading-normal my-4 xl:my-6 2xl:my-8 text-sm 2xl:text-base line-clamp-4 lg:line-clamp-3 xl:line-clamp-4 2xl:line-clamp-none" style={{ textShadow: '0px 0px 4px black' }}>
-        {land.status !== 'INTRO' ? land.description : <>GameFi.org is a one-stop destination for Web3 gaming. We aim to build digital communities and manage virtual economies for mainstream adoption with <strong>ONE</strong> digital platform, <strong>ONE</strong> virtual identity requiring <strong>ZERO</strong> blockchain knowledge.</>}
-      </p>
-      <p className="font-bold mb-2 text-sm 2xl:text-base 2xl:mb-4">Missions</p>
-      <div className="flex-1 overflow-auto mb-4">
-        {!!missions?.length && missions.map(mission =>
-          <div className="flex items-center mb-2 2xl:mb-4" key={mission.id}>
-            <input type="radio" value="" disabled className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
-            <label className="ml-2 text-xs xl:text-sm 2xl:text-base dark:text-gray-300">{mission.name}</label>
-          </div>
-        )}
+      <div className="flex-1 overflow-auto">
+        <p className="leading-normal my-4 xl:my-6 2xl:my-8 text-sm 2xl:text-base line-clamp-4 lg:line-clamp-3 xl:line-clamp-4 2xl:line-clamp-none" style={{ textShadow: '0px 0px 4px black' }}>
+          {land.status !== 'INTRO' ? land.description : <>GameFi.org is a one-stop destination for Web3 gaming. We aim to build digital communities and manage virtual economies for mainstream adoption with <strong>ONE</strong> digital platform, <strong>ONE</strong> virtual identity requiring <strong>ZERO</strong> blockchain knowledge.</>}
+        </p>
+        <p className="font-bold mb-2 text-sm 2xl:text-base 2xl:mb-4">Missions</p>
+        <div className="mb-4">
+          {!!missions?.length && missions.map(mission =>
+            <div className="flex items-center mb-2 2xl:mb-4" key={mission.id}>
+              <input type="radio" value="" disabled className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
+              <label className="ml-2 text-xs xl:text-sm 2xl:text-base dark:text-gray-300">{mission.name}</label>
+            </div>
+          )}
 
-        {!missions?.length && 'Coming Soon'}
+          {!missions?.length && 'Coming Soon'}
+        </div>
       </div>
       <Link href={`/happy-gamefiversary/tasks/?g=${land?.slug}`} passHref={true}>
         <a className="mt-auto bg-gradient-to-r from-[#93FF61] to-[#FAFF00] text-black font-casual font-semibold text-[12px] uppercase block w-full clipped-t-r py-3 mb-2 lg:mb-4 text-center" onClick={() => {

@@ -557,7 +557,7 @@ const Spin = ({ className, comingsoon }: { className?: string; comingsoon?: bool
         <div className="w-full flex flex-col items-center md:block">
           <div className="font-spotnik text-4xl 2xl:text-5xl font-bold uppercase w-full">
             <h3>GameFi.org</h3>
-            <h4 className="text-3xl md:text-3xl xl:text-4xl flex items-center mt-2 gap-2">
+            <h4 className="text-2xl md:text-3xl xl:text-4xl flex items-center mt-2 gap-2">
               <Image src={f2gf} alt="fish to gafi"></Image> Lucky Spin
             </h4>
           </div>
@@ -566,7 +566,7 @@ const Spin = ({ className, comingsoon }: { className?: string; comingsoon?: bool
           <p className="text-base mt-8">Connect your wallet to start spinning. Good luck, Catstronaut!</p>
           {account && <div className="mt-12 w-full max-w-sm">
             <div className="clipped-b-l-t-r bg-gamefiDark-400 p-px">
-              <div className="clipped-b-l-t-r bg-[#141414]">
+              <div className="clipped-b-l-t-r bg-[#111]">
                 <div className="flex items-center p-4 border-b border-gamefiDark-400">
                   <Image src={iconGF} alt="gafi" className="flex-none"></Image>
                   <div className="ml-4 flex-1">

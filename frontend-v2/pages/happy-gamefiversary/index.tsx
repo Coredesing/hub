@@ -335,7 +335,7 @@ const Content = () => {
       </section>
 
       <div id="spin" className="pt-24 invisible -mt-24"></div>
-      <section className="mx-auto max-w-[1920px] overflow-hidden bg-[#141414]">
+      <section className="mx-auto max-w-[1920px] overflow-hidden bg-[#111]">
         <Spin comingsoon />
       </section>
 

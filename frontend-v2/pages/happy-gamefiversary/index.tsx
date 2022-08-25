@@ -410,7 +410,7 @@ const Content = () => {
         <Guilds />
         <Communities />
       </section>
-      <div className="container mx-auto py-8 mt-8">
+      <div className="container mx-auto py-8 mt-20">
         <div className="flex flex-col md:flex-row items-center justify-center relative">
           <img src={logoGameFi.src} alt="GameFi.org" className="h-5 w-auto" />
           <div className="text-sm text-white text-opacity-60 text-center my-4 flex-1 md:my-0">Crafted with love © GameFi.org 2022 <br className="md:hidden" /><span className="hidden md:inline">–</span> All Rights Reserved.</div>

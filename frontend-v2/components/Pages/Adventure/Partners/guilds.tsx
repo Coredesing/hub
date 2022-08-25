@@ -50,7 +50,7 @@ const Guilds = () => {
     <div className="text-3xl mb-3 lg:mb-6 text-center">
       <span className="bg-gradient-to-r from-[#93FF61] to-[#FAFF00] bg-clip-text text-transparent">Guilds</span>
     </div>
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
       { items.map(item => <a key={item.name} href={item.url} target="_blank" rel="noopenner noreferrer" className="grayscale hover:grayscale-0 flex justify-center">
         <Image src={item.img} alt={item.name}></Image>
       </a>) }

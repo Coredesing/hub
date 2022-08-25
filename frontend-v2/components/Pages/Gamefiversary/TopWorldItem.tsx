@@ -21,11 +21,8 @@ const TopWorldItem = ({ data, playGame, accountEligible = false }) => {
       <div className="flex flex-col md:flex-row md:items-center w-full p-6 pt-8">
         <p className="font-bold text-xl p-2 md:p-0">{data?.name}</p>
         <p className="font-casual text-sm text-gamefiYellow md:ml-auto p-2 md:p-0 md:pl-10">
-          {
-            (data?.accountType && data?.accountType === 'EMAIL')
-              ? 'You must verify email'
-              : `You must use the ${data?.accountType === 'EMAIL' ? 'email' : 'wallet'} ${data?.accountType === 'EMAIL' ? accountHub?.email : shorten(account)} to play this game.`
-          }
+          {data?.accountType === 'EMAIL' ? !accountHub?.email ? 'You must verify email' : `You must use the email ${accountHub?.email} to play this game.` : ''}
+          {data?.accountType === 'WALLET' ? !account ? 'Connect wallet' : `You must use the wallet ${shorten(account)} to play this game.` : ''}
         </p>
       </div>
       <div className="flex-1 flex flex-col overflow-y-scroll md:mr-2 gap-2 pb-30 md:pb-0">

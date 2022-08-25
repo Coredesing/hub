@@ -876,6 +876,11 @@ const World = ({ width = 1600, height = 700, screens = 3, r = 22, items = landsD
       <div className="flex w-full flex-wrap items-center justify-center">
         {rand.map(item => <a key={item.slug} className="flex-none relative" href={`/happy-gamefiversary/tasks?g=${item.slug}`} onClick={e => {
           e.preventDefault()
+          if (landActive) {
+            setLandActive(item)
+            return
+          }
+
           zoomToLand(item)
           setHighlight(item)
           if (refRoot.current?.scrollIntoView instanceof Function) {

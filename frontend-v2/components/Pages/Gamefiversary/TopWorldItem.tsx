@@ -20,7 +20,10 @@ const TopWorldItem = ({ data, playGame, accountEligible = false }) => {
   return (
     <div className="flex flex-col h-[600px] md:h-auto md:flex-1 bg-[#1B1D26] relative">
       <div className="flex flex-col md:flex-row md:items-center w-full p-6 pt-8">
-        <p className="font-bold text-xl p-2 md:p-0">{data?.name}</p>
+        <div className='flex items-center'>
+          <p className="font-bold text-xl p-2 md:p-0">{data?.name}</p>
+          {data?.tutorialUrl && <a href={data?.tutorialUrl || null} className="text-gamefiGreen-700 p-2 md:px-5 cursor-pointer font-medium hover:underline" target='_blank' rel="noreferrer" >Guideline</a>}
+        </div>
         <p className="font-casual text-sm text-gamefiYellow md:ml-auto p-2 md:p-0 md:pl-10">
           {data?.accountType === 'EMAIL' ? !accountHub?.email ? 'You must verify email' : `You must use the email ${accountHub?.email} to play this game.` : ''}
           {data?.accountType === 'WALLET' ? !account ? 'Connect wallet' : `You must use the wallet ${shorten(account)} to play this game.` : ''}

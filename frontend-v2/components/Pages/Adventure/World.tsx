@@ -320,7 +320,7 @@ const universe = (matrix: (number) => number[][], perRow: number, top = 1, left 
 const landsDefault: LandRaw[] = [{
   slug: 'gamefi',
   shape: LandShape.ONE,
-  positions: [4, 12],
+  positions: [3, 12],
   name: 'GameFi.org',
   categories: ['Hub', 'Launchpad', 'Community', 'Marketplace'],
   description: '',
@@ -330,7 +330,7 @@ const landsDefault: LandRaw[] = [{
 }, {
   slug: 'moon-strike',
   shape: LandShape.SEVEN,
-  positions: [18, 12],
+  positions: [17, 12],
   name: 'Moon Strike',
   categories: ['FPS', 'Strategy'],
   description: 'A Sci-Fi NFTs multiplayer with shooter and development based on AAA quality from Unreal Engine.',
@@ -340,7 +340,7 @@ const landsDefault: LandRaw[] = [{
 }, {
   slug: 'kucoin',
   shape: LandShape.TWO,
-  positions: [16, 18],
+  positions: [15, 18],
   name: 'Kucoin',
   categories: ['Exchange', 'CEX'],
   description: 'KuCoin is a global crypto currency exchange for numerous digital assets and crypto currencies. Launched in September2017, KuCoin has grown into one of the most popular crypto exchanges and already has over 20 million registered users across 207 countries and regions around the world.',
@@ -350,7 +350,7 @@ const landsDefault: LandRaw[] = [{
 }, {
   slug: 'isekaiverse',
   shape: LandShape.EIGHT,
-  positions: [10, 18],
+  positions: [9, 18],
   name: 'Isekaiverse',
   categories: ['Strategy', 'NFT', 'Card'],
   description: 'Isekai battle game is a real-time, head-to-head battle game set in Isekai Island. Build your battle deck and outsmart the enemy in a fast paced real-time battle starring your favourite Isekai Island characters and more. Start battling against players from around the world!',
@@ -360,7 +360,7 @@ const landsDefault: LandRaw[] = [{
 }, {
   slug: 'step-app',
   shape: LandShape.NINE,
-  positions: [11, 27],
+  positions: [10, 27],
   name: 'Step App',
   categories: ['Metaverse', 'Sports', 'Move2Earn'],
   description: 'Move. Socialize. Compete. Earn. Take your fitness aspirations to the next level with Step App. Its celebrity-endorsed augmented reality tech merges the metaverse with the physical world, through the use of NFTs and geo-location. Step App is the first application on the FitFi protocol, built on its own Avalanche subnet.',
@@ -371,7 +371,7 @@ const landsDefault: LandRaw[] = [{
 }, {
   slug: 'dvision',
   shape: LandShape.THREE,
-  positions: [3, 22],
+  positions: [2, 22],
   name: 'Dvision Network',
   categories: ['Action', 'NFT', 'Metaverse'],
   description: 'Dvision Network is a multichain metaverse platform that is built on top of the Ethereum Network and Binance Smart Chain and is powered by the DVI utility and governance token across its all platform pillars, which powers the robust and diversified NFT marketplace within its augmented reality. Dvision is based on three primary platform features, which are known as NFT Market, Meta-Space, and Meta-City.',
@@ -382,18 +382,18 @@ const landsDefault: LandRaw[] = [{
 }, {
   slug: 'epic-war',
   shape: LandShape.FOUR,
-  positions: [16, 27],
+  positions: [14, 27],
   name: 'Epic War',
   categories: ['FPS', 'Strategy', 'Role Playing'],
   description: 'Epic War is a 3D Blockchain Cinematic Game that is free-to-play-to-earn (F2P2E). It is a massively multiplayer real-time strategy game (MMORTS) and social network based on blockchain technology. Epic War offers gamers the thrill of first-person shooter action in a cutting-edge gaming environment.',
   img: imgEpicwar,
   logo: logoEpicwar,
-  tooltipPlacement: TooltipPlacement.TOP_LEFT,
+  tooltipPlacement: TooltipPlacement.BOTTOM_LEFT,
   ping: 5
 }, {
   slug: 'engine-of-fury',
   shape: LandShape.TEN,
-  positions: [3, 31],
+  positions: [2, 31],
   name: 'Engines of Fury',
   categories: ['Role Playing', 'MOBA', 'NFT'],
   description: 'Engines of Fury is a battle arena game built on Unity with rich 3D visuals and numerous addictive single & multiplayer gameplay modes. It has a 1-token deflationary in-game economy where FURY is at the center of the game with lots of utility & ever-increasing demand.',
@@ -403,7 +403,7 @@ const landsDefault: LandRaw[] = [{
 }, {
   slug: 'ninneko',
   shape: LandShape.FIVE,
-  positions: [7, 34],
+  positions: [6, 34],
   name: 'Ninneko',
   categories: ['Idol', 'RPG', 'NFT'],
   description: 'Ninneko is an idle-rpg game, based on a japanese theme. With a wide variety of skills and strategy, Ninneko will surely bring you a new gaming experience with unpredictable gameplay. Dive in and become the strongest.',
@@ -424,7 +424,7 @@ const landsDefault: LandRaw[] = [{
 }, {
   slug: 'monsterra',
   shape: LandShape.TWELVE,
-  positions: [4, 40],
+  positions: [4, 39],
   name: 'Monsterra',
   categories: ['Adventure', 'NFT', 'Strategy'],
   description: 'Monsterra is a multi-chain game run on BNB, Avalanche and Terra networks inspired by the Axie Infinity game\'s pet world and the gameplay in Clash of Clan or Boom Beach of Supercell.',
@@ -435,7 +435,7 @@ const landsDefault: LandRaw[] = [{
 }, {
   slug: 'codyfight',
   shape: LandShape.THIRTEEN,
-  positions: [14, 40],
+  positions: [13, 39],
   name: 'Codyfight',
   categories: ['Strategy', 'Turn-based', 'Metaverse'],
   description: 'Codyfight is a turn-based strategy metaverse for AI and Humans that leverages NFTs and rewards creativity in a scalable Create2Earn model. Codyfight features 1v1 robot battles and enables players to move away from grinding by allowing scaling automation via AI robot farms.',
@@ -445,7 +445,7 @@ const landsDefault: LandRaw[] = [{
 }, {
   slug: 'titan-hunters',
   shape: LandShape.SIX,
-  positions: [16, 44],
+  positions: [15, 43],
   name: 'Titan Hunters',
   categories: ['NFT', 'Casual', 'Adventure'],
   description: 'Titan Hunters is a rogue-like mobile game where you hunt ferocious Titans and earn real money with the power of NFTs. Titan Hunters is the first popular GameFi in Japan with impressive achievements: ranked 3rd in Japan’s App Store, gone viral on Twitter Japan, and appeared in 50+ big Japanese newspapers.',
@@ -455,7 +455,7 @@ const landsDefault: LandRaw[] = [{
 }, {
   slug: 'desports',
   shape: LandShape.FIFTEEN,
-  positions: [8, 49],
+  positions: [7, 48],
   name: 'DESports',
   categories: ['eSports', 'Tournament', 'Organizer'],
   description: 'Desports, powered by Icetea Labs - leading blockchain incubator in the world & 500Bros - top SEA eSports organisers, is Decentralised Esports Platform which is the pioneer & revolution for Web3 Gaming.',
@@ -466,14 +466,14 @@ const landsDefault: LandRaw[] = [{
 }, {
   slug: 'aradena',
   shape: LandShape.SIXTEEN,
-  positions: [3, 52],
+  positions: [2, 50],
   name: 'Aradena',
   categories: ['Card', 'Strategy', 'Turn-based'],
   description: 'Free-to-play and insanely fun, Aradena: Battlegrounds is a PvP trading card hex-battler launching in Q1 2023. Aradena: Battlegrounds is a TCG where players can build their deck, trade their cards, and compete for rewards on an immersive 3D battlefield. Trade, Battle, and Earn in the next generation of strategy gaming.',
   img: imgAradena,
   logo: logoAradena,
   tooltipPlacement: TooltipPlacement.BOTTOM_LEFT,
-  ping: 2
+  ping: 1
 }, {
   slug: 'the-unfettered',
   shape: LandShape.NINE,
@@ -497,7 +497,7 @@ const landsDefault: LandRaw[] = [{
 }, {
   slug: 'heroes-land',
   shape: LandShape.FIVE,
-  positions: [3, 61],
+  positions: [2, 58],
   name: 'Heroes Land',
   categories: ['Casual', 'Role Playing', 'Puzzle'],
   description: 'Heroes Land is a match-3 puzzle RPG game with a unique dual-gameplay model combining both traditional gameplay mode and blockchain game mode. There are various game activities where users can enjoy and utilize their skills, from evolving and summoning heroes, and upgrading lands to Daily Quests, Tower Conquest, PvE, PvP, and Clan to earn game tokens.',
@@ -507,7 +507,7 @@ const landsDefault: LandRaw[] = [{
 }, {
   slug: 'metacity',
   shape: LandShape.THREE,
-  positions: [16, 61],
+  positions: [14, 61],
   name: 'Metacity',
   categories: ['Metaverse', 'Simulation', 'NFT'],
   description: 'Metacity is the most aesthetic Build2Earn Citiverse ecosystem, powered by House3D and Icetea Labs.',
@@ -517,18 +517,18 @@ const landsDefault: LandRaw[] = [{
 }, {
   slug: 'dinox-world',
   shape: LandShape.SEVENTEEN,
-  positions: [7, 66],
+  positions: [5, 65],
   name: 'DINOX WORLD',
   categories: ['NFT', 'Strategy', 'Turn-based'],
   description: 'DINOX World is the ultimate dinosaur-themed NFT combat & strategy game. Own, battle, & level up your very own NFT dinosaurs or play for free with in-game non-NFT dinos. Hatch your own unique dino and use specialized Action Cards to strategize & defeat wopponents in this entertaining, turn-based tactical game!',
   img: imgDinox,
   logo: logoDinox,
-  tooltipPlacement: TooltipPlacement.BOTTOM_LEFT,
+  tooltipPlacement: TooltipPlacement.TOP_LEFT,
   ping: 9
 }, {
   slug: 'evermoon',
   shape: LandShape.THIRTEEN,
-  positions: [3, 70],
+  positions: [2, 70],
   name: 'Evermoon',
   categories: ['Action', 'Strategy', 'MOBA'],
   description: 'Evermoon is The First Free-To-Play-To-Earn Multiplayer Online Battle Arena (MOBA) NFT game. Evermoon offers a thrilling & fun 3-lanes 5v5 fighting mechanics, sustainable economy, and many in-game DeFi features that will entertain, empower, and enrich players around the world emotionally, physically, and financially.',
@@ -538,7 +538,7 @@ const landsDefault: LandRaw[] = [{
 }, {
   slug: 'metashooter',
   shape: LandShape.TWO,
-  positions: [16, 70],
+  positions: [15, 70],
   name: 'MetaShooter',
   categories: ['Action', 'PvP', 'Strategy'],
   description: 'MetaShooter is the first decentralized blockchain-based hunting metaverse. MetaShooter joins millions of gaming enthusiasts in a community where they can experience realistic hunting in the open world and develop many activities with monetization opportunities.',
@@ -549,18 +549,18 @@ const landsDefault: LandRaw[] = [{
 }, {
   slug: 'iguverse',
   shape: LandShape.EIGHT,
-  positions: [11, 74],
+  positions: [10, 74],
   name: 'IguVerse',
   categories: ['NFT', 'Socialize-to-earn', 'Move-to-earn'],
   description: 'IguVerse app redefines the whole concept of NFT using AI / ML technologies. In our App, we introduce an innovative game mechanic Socialize to Earn, Move to Earn, and Play to Earn.',
   img: imgIguVerse,
   logo: logoIguVerse,
-  tooltipPlacement: TooltipPlacement.BOTTOM_LEFT,
+  tooltipPlacement: TooltipPlacement.TOP_LEFT,
   ping: 1
 }, {
   slug: 'befitter',
   shape: LandShape.FIFTEEN,
-  positions: [3, 79],
+  positions: [2, 79],
   name: 'beFITTER',
   categories: ['Move-to-earn', 'SocialFi', 'FitnessFi'],
   description: 'beFITTER is a web3 fitnessfi and socialfi app that aims to build a healthier ecosystem helping users balance their lives, improve their mental & physical health, gain achievements, and still get monetary incentives.',
@@ -571,7 +571,7 @@ const landsDefault: LandRaw[] = [{
 }, {
   slug: 'moverse-run',
   shape: LandShape.EIGHTEEN,
-  positions: [20, 79],
+  positions: [19, 79],
   name: 'Moverse.run',
   categories: ['Move-to-earn', 'FitnessFi', 'NFT'],
   description: 'Moverse is a web3.0 fitness and social lifestyle app presenting Move To Earn and Engage To Earn activities to make one healthy physically, mentally, and financially. Moverse is powered by BNB Chain.',
@@ -581,7 +581,7 @@ const landsDefault: LandRaw[] = [{
 }, {
   slug: 'aether-games',
   shape: LandShape.NINE,
-  positions: [14, 79],
+  positions: [13, 79],
   name: 'Aether Games',
   categories: ['Card', 'Digital Collectibles', 'NFT'],
   description: 'Cards of Ethernity is a digital collectible competitive PC card game with P2E and F2P options, developed by Aether Games Inc. Players are able to trade, rent and sell their finest quality 2D Dark Fantasy NFTs freely, with the same level of ownership as if they were real, tangible cards.',
@@ -591,7 +591,7 @@ const landsDefault: LandRaw[] = [{
 }, {
   slug: 'planet-sandbox',
   shape: LandShape.SIX,
-  positions: [16, 86],
+  positions: [15, 86],
   name: 'Planet Sandbox',
   categories: ['TPS', 'Action', 'NFT'],
   description: 'Planet Sandbox is a physics-powered TPS sandbox shooting NFT game that allows players to build and own arenas to fight other players in different game modes using their own NFT weapons and accessories. Powered by the $PSB tokens, Planet Sandbox has created multiple play-to-earn opportunities within their Metaverse.',
@@ -601,7 +601,7 @@ const landsDefault: LandRaw[] = [{
 }, {
   slug: 'dark-country',
   shape: LandShape.FOUR,
-  positions: [8, 87],
+  positions: [7, 87],
   name: 'Dark Country',
   categories: ['MMO', 'Card', 'NFT'],
   description: 'Dark Country is a PlayAndEarn American Gothic NFT Trading Card and Strategy Game in a somber Wild West setting with rangers, cowboys, haunted Indians, zombies, ghosts, and demons. The main game idea & mechanics are inspired by classic CCGs like Magic: the Gathering and HearthStone.',
@@ -612,7 +612,7 @@ const landsDefault: LandRaw[] = [{
 }, {
   slug: 'monster-era',
   shape: LandShape.TEN,
-  positions: [3, 88],
+  positions: [2, 88],
   name: 'Monster Era',
   categories: ['Puzzle', 'NFT', 'Casual'],
   description: 'The opening product of Hubgame\'s gamefi ecosystem, the puzzle genre is suitable for all audiences and focuses on NFT development.',
@@ -622,7 +622,7 @@ const landsDefault: LandRaw[] = [{
 }, {
   slug: 'summoners-arena',
   shape: LandShape.FIVE,
-  positions: [9, 96],
+  positions: [8, 96],
   name: 'Summoners Arena',
   categories: ['Idol', 'NFT', 'Strategy'],
   description: 'Summoners Arena is set out to be a multi-game universe of various genres made into a franchise supported by Onechain Technology. Summoners Arena Idle is the franchise flagship where players collect, upgrade, evolve Heroes, and forge Items to compete in different game modes.',
@@ -632,7 +632,7 @@ const landsDefault: LandRaw[] = [{
 }, {
   slug: 'rise-of-immortals',
   shape: LandShape.THIRTEEN,
-  positions: [4, 100],
+  positions: [3, 99],
   name: 'Rise of Immortals',
   categories: ['Strategy', 'Turn-based', 'Metaverse'],
   description: 'Rise of Immortals is an AAA hero-based strategy game powered by NFTs on the Ethereum blockchain (Layer 2 Immutable X).',
@@ -643,7 +643,7 @@ const landsDefault: LandRaw[] = [{
 }, {
   slug: 'thunder-lands',
   shape: LandShape.SEVEN,
-  positions: [19, 94],
+  positions: [18, 94],
   name: 'Thunder Lands',
   categories: ['FPS', 'Strategy'],
   description: 'Thunder Lands is a virtual gaming metaverse set in the Dark Fantasy genre - where players have to engage in a never-ending struggle for resources, territorial conquest and political domination.',
@@ -683,7 +683,7 @@ const landsDefault: LandRaw[] = [{
   ping: 1
 }]
 
-const World = ({ width = 1600, height = 750, screens = 3, r = 22, items = landsDefault, className = '' }) => {
+const World = ({ width = 1600, height = 700, screens = 3, r = 22, items = landsDefault, className = '' }) => {
   const refRoot = useRef<HTMLDivElement | undefined>()
   const refSVG = useRef<SVGSVGElement | undefined>()
   const [translate, setTranslate] = useState<{ x: number; y: number; k: number }>({ x: 0, y: 0, k: 1 })
@@ -873,13 +873,13 @@ const World = ({ width = 1600, height = 750, screens = 3, r = 22, items = landsD
 
   return (
     <div className={clsx('mx-auto', className)} ref={refRoot}>
-      <div className="flex w-full flex-wrap items-center justify-center py-6">
+      <div className="flex w-full flex-wrap items-center justify-center">
         {rand.map(item => <a key={item.slug} className="flex-none relative" href={`/happy-gamefiversary/tasks?g=${item.slug}`} onClick={e => {
           e.preventDefault()
           zoomToLand(item)
           setHighlight(item)
           if (refRoot.current?.scrollIntoView instanceof Function) {
-            refRoot.current?.scrollIntoView()
+            refRoot.current?.scrollIntoView(false)
           }
         }}>
           <img src={item.logo.src} alt="" className="h-6 md:h-8 lg:h-10 hover:bg-gamefiDark-900" />

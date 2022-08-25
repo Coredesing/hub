@@ -1020,8 +1020,8 @@ const imagesProjects = {
     imageMobile: require('@/assets/images/adventure/homie-wars.png')
   },
   'war-legends': {
-    imageVertical: require('@/assets/images/adventure/homie-wars.png'),
-    imageMobile: require('@/assets/images/adventure/homie-wars.png')
+    imageVertical: require('@/assets/images/adventure/war-legends.png'),
+    imageMobile: require('@/assets/images/adventure/war-legends.png')
   },
   'step-app': {
     imageVertical: require('@/assets/images/adventure/step-app.png'),

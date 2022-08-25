@@ -181,13 +181,24 @@ const Detail = () => {
   const middleProjects = useMemo(() => {
     if (!projects?.length || !projects) return []
 
-    return projects
+    const middleWorldProjects = projects
       .find((el) => el?.name === 'MIDDLE_WORLD')
       ?.projects.sort((a, b) => {
         if (a?.status === 'UNLOCK') return -1
         if (a?.status === 'LOCK') return 1
         return 0
       })
+    return middleWorldProjects?.map(project => {
+      return {
+        ...project,
+        tasks: (project?.tasks || []).map((task) => {
+          return {
+            ...task,
+            projectSlug: project.slug
+          }
+        })
+      }
+    })
   }, [projects])
 
   const gamefiTasks = useMemo(() => {

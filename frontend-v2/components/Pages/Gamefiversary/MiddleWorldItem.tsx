@@ -68,70 +68,72 @@ const MiddleWorldItem = ({ data, accountEligible = false }) => {
             .filter((e) => !e.name.includes('dummy'))
             .map((task, iTask) => (
               <div key={`task-${iTask}`} className="gap-1 md:gap-0 mr-2 ml-4">
-                <div className="flex flex-col md:flex-row w-full p-4 rounded gap-2 md:gap-32 lg:gap-10 bg-gradient-to-r from-[#292B36]/0 to-[#21232E]">
-                  <div className="w-full md:w-1/12 lg:w-1/6">
+                <div className="flex flex-col md:flex-row items-center w-full p-4 rounded gap-2 md:gap-32 lg:gap-10 bg-gradient-to-r from-[#292B36]/0 to-[#21232E]">
+                  <div className="w-full md:w-1/6 lg:w-1/4">
                     <span className="font-casual font-medium text-sm">
                       {task?.name}
                     </span>
                   </div>
-                  {task?.socialInfo && (
-                    <div className="flex-1 flex justify-center h-fit">
-                      <SocialTaskButton data={task} />
-                    </div>
-                  )}
-                  {!task?.socialInfo && (
-                    <div className="flex-1">
-                      <div className="flex items-center pb-5 gap-4">
-                        <img src={smile.src} alt="" />
-                        <div className="w-1/3 sm:w-1/2 p-[3px] h-fit bg-[#1A1C25] rounded-sm">
-                          <div
-                            className={clsx(
-                              'h-[6px] bg-white rounded-sm',
-                              task?.stages[0]?.isCompleted && 'w-full',
-                              !(
-                                task.currentRepetition /
-                                task.stages[0]?.repetition
-                              ) && 'w-0'
-                            )}
-                            style={{
-                              width: `${
-                                (task.currentRepetition /
-                                  task.stages[0]?.repetition) *
-                                100
-                              }%`
-                            }}
-                          />
-                        </div>
-                        <span className="font-casual text-xs text-white/40">
-                          {task.stages[0]?.isCompleted
-                            ? task?.stages[0]?.repetition
-                            : task.currentRepetition}
-                          /{task.stages[0]?.repetition}
-                        </span>
+                  <div className="flex-1 flex gap-2 items-center">
+                    {task?.socialInfo && (
+                      <div>
+                        <SocialTaskButton data={task} />
                       </div>
+                    )}
+                    {!task?.socialInfo && (
+                      <div className="flex-1">
+                        <div className="flex items-center pb-5 gap-4">
+                          <img src={smile.src} alt="" />
+                          <div className="w-1/3 sm:w-1/2 p-[3px] h-fit bg-[#1A1C25] rounded-sm">
+                            <div
+                              className={clsx(
+                                'h-[6px] bg-white rounded-sm',
+                                task?.stages[0]?.isCompleted && 'w-full',
+                                !(
+                                  task.currentRepetition /
+                                  task.stages[0]?.repetition
+                                ) && 'w-0'
+                              )}
+                              style={{
+                                width: `${
+                                  (task.currentRepetition /
+                                    task.stages[0]?.repetition) *
+                                  100
+                                }%`
+                              }}
+                            />
+                          </div>
+                          <span className="font-casual text-xs text-white/40">
+                            {task.stages[0]?.isCompleted
+                              ? task?.stages[0]?.repetition
+                              : task.currentRepetition}
+                            /{task.stages[0]?.repetition}
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                    <div className="ml-auto flex font-casual font-medium text-[#FFD600] gap-2">
+                      <span>+{task.stages[0]?.reward}</span>
+                      <img src={currentFish.src} alt="" className="w-4 h-4" />
                     </div>
-                  )}
-                  <div className="ml-auto flex font-casual font-medium text-[#FFD600] gap-2">
-                    <span>+{task.stages[0]?.reward}</span>
-                    <img src={currentFish.src} alt="" className="w-4 h-4" />
+                    {task?.socialInfo?.url &&
+                                task?.currentRepetition !==
+                                  task?.stages?.[0]?.repetition && (
+                      <button
+                        onClick={() => {
+                          if (loadingRecheck) return
+                          handleRecheck(task)
+                        }}
+                        className={`text-sm font-semibold ${
+                          loadingRecheck
+                            ? 'text-gamefiDark-200'
+                            : 'text-gamefiGreen'
+                        }`}
+                      >
+                          Recheck
+                      </button>
+                    )}
                   </div>
-                  {task?.socialInfo?.url &&
-                              task?.currentRepetition !==
-                                task?.stages?.[0]?.repetition && (
-                    <button
-                      onClick={() => {
-                        if (loadingRecheck) return
-                        handleRecheck(task)
-                      }}
-                      className={`text-sm font-semibold ${
-                        loadingRecheck
-                          ? 'text-gamefiDark-200'
-                          : 'text-gamefiGreen'
-                      }`}
-                    >
-                        Recheck
-                    </button>
-                  )}
                 </div>
               </div>
             ))}

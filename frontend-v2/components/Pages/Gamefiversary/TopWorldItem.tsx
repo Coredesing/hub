@@ -30,8 +30,8 @@ const TopWorldItem = ({ data, playGame, accountEligible = false }) => {
         {data?.tasks?.length > 0 &&
           data?.tasks.map((task, iTask) => (
             <div key={`task-${iTask}`} className="gap-1 md:gap-0 mr-2 ml-4">
-              <div className="flex flex-col md:flex-row w-full p-4 rounded gap-2 md:gap-32 lg:gap-10 bg-gradient-to-r from-[#292B36]/0 to-[#21232E]">
-                <div className="w-full md:w-1/12 lg:w-1/6">
+              <div className="flex flex-col md:flex-row items-center w-full p-4 rounded gap-2 md:gap-32 lg:gap-10 bg-gradient-to-r from-[#292B36]/0 to-[#21232E]">
+                <div className="w-full md:w-1/6 lg:w-1/4">
                   <span className="font-casual font-medium text-sm">
                     {task?.name}
                   </span>

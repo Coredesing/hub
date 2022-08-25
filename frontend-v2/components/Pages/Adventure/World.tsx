@@ -998,7 +998,7 @@ const LandDetails = ({ land, onClose }: { land: Land; onClose: () => void }) => 
         </div>
       </div>
       <Link href={`/happy-gamefiversary/tasks/?g=${land?.slug}`} passHref={true}>
-        <a className="mt-auto bg-gradient-to-r from-[#93FF61] to-[#FAFF00] text-black font-casual font-semibold text-[12px] uppercase block w-full clipped-t-r py-3 mb-2 lg:mb-4 text-center" onClick={() => {
+        <a className="mt-auto bg-gradient-to-r from-[#93FF61] to-[#FAFF00] text-black font-casual font-semibold text-[12px] uppercase block w-full clipped-t-r py-3 text-center" onClick={() => {
           gtagEvent('catventure_join', { land: land.slug })
         }}>
           Join Now

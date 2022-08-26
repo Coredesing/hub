@@ -700,7 +700,7 @@ const World = ({ width = 1600, height = 700, screens = 3, r = 22, items = landsD
   useEffect(() => {
     fetcher('/api/adventure/projects')
       .then(response => {
-        setProjects(response?.data || [])
+        setProjects(response?.data || response || [])
       })
       .catch(() => {
         setProjects([])

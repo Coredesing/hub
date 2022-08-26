@@ -571,7 +571,7 @@ const Spin = ({ className, comingsoon }: { className?: string; comingsoon?: bool
 
     fetcher(`/api/adventure/${account}/points`)
       .then(response => {
-        if (!response?.data?.currentPoint) {
+        if (!response?.currentPoint) {
           setBalanceFISH(0)
           return
         }

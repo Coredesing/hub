@@ -19,7 +19,7 @@ import imgDarkCountry from '@/components/Pages/Adventure/images/lands/dark-count
 import logoDinox from '@/components/Pages/Adventure/images/lands/dinox-logo.png'
 import imgDinox from '@/components/Pages/Adventure/images/lands/dinox.png'
 import logoIguVerse from '@/components/Pages/Adventure/images/lands/iguverse-logo.png'
-import imgIguVerse from '@/components/Pages/Adventure/images/lands/iguverse.png'
+import imgIguVerse from '@/components/Pages/Adventure/images/lands/iguverse.jpeg'
 import imgGameFi from '@/components/Pages/Adventure/images/lands/gamefi.jpeg'
 import logoGameFi from '@/components/Pages/Adventure/images/lands/gamefi-logo.png'
 import imgEpicwar from '@/components/Pages/Adventure/images/lands/epic-war.png'
@@ -47,7 +47,7 @@ import imgPlanetSandbox from '@/components/Pages/Adventure/images/lands/planet-s
 import logoTitanHunters from '@/components/Pages/Adventure/images/lands/titan-hunters-logo.png'
 import imgTitanHunters from '@/components/Pages/Adventure/images/lands/titan-hunters.png'
 import logoBeFitter from '@/components/Pages/Adventure/images/lands/befitter-logo.png'
-import imgBeFitter from '@/components/Pages/Adventure/images/lands/befitter.png'
+import imgBeFitter from '@/components/Pages/Adventure/images/lands/befitter.jpeg'
 import logoMetashooter from '@/components/Pages/Adventure/images/lands/metashooter-logo.png'
 import imgMetashooter from '@/components/Pages/Adventure/images/lands/metashooter.png'
 import logoMoonStrike from '@/components/Pages/Adventure/images/lands/moon-strike-logo.png'
@@ -339,14 +339,15 @@ const landsDefault: LandRaw[] = [{
   ping: 2
 }, {
   slug: 'kucoin',
-  shape: LandShape.TWO,
+  shape: LandShape.SEVENTEEN,
   positions: [15, 18],
   name: 'Kucoin',
   categories: ['Exchange', 'CEX'],
   description: 'KuCoin is a global crypto currency exchange for numerous digital assets and crypto currencies. Launched in September2017, KuCoin has grown into one of the most popular crypto exchanges and already has over 20 million registered users across 207 countries and regions around the world.',
   img: imgKucoin,
   logo: logoKucoin,
-  ping: 4
+  tooltipPlacement: TooltipPlacement.TOP_LEFT,
+  ping: 2
 }, {
   slug: 'isekaiverse',
   shape: LandShape.EIGHT,
@@ -697,7 +698,7 @@ const World = ({ width = 1600, height = 700, screens = 3, r = 22, items = landsD
 
   const [projects, setProjects] = useState([])
   useEffect(() => {
-    fetcher('/catventure/v1/projects')
+    fetcher('/api/adventure/projects')
       .then(response => {
         setProjects(response?.data || [])
       })
@@ -973,7 +974,7 @@ const LandDetails = ({ land, onClose }: { land: Land; onClose: () => void }) => 
   const [missions, setMissions] = useState([])
 
   useEffect(() => {
-    fetcher(`/catventure/v1/projects/${land.slug}/tasks`)
+    fetcher(`/api/adventure/projects/${land.slug}/tasks`)
       .then(response => {
         setMissions((response?.data?.tasks || []).filter(x => (x.name || '').indexOf('dummy') === -1))
       })

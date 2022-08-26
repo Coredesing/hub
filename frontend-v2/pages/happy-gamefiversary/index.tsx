@@ -25,6 +25,7 @@ import Guilds from '@/components/Pages/Adventure/Partners/guilds'
 import Communities from '@/components/Pages/Adventure/Partners/communities'
 import Games from '@/components/Pages/Adventure/Partners/games'
 import { useAppContext } from '@/context'
+import Leaderboard from '@/components/Pages/Adventure/Leaderboard'
 
 // eslint-disable-next-line no-unused-expressions
 fonts
@@ -229,14 +230,14 @@ const Content = () => {
         </div>
       </section>
 
-      {/* <section className="mx-auto max-w-[1920px] overflow-hidden">
-        <div className="relative pb-40 pt-20">
+      <section className="mx-auto max-w-[1920px] overflow-hidden">
+        <div className="relative pb-40 pt-20 my-8">
           <div className="flex items-center bg-white border-8 border-black py-2 md:py-4 absolute rotate-[4deg] left-1/2 transform -translate-x-1/2">
-            {[1, 2, 3, 4, 5, 6, 7].map((e) => {
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((e) => {
               return (
                 <div key={e} className="flex flex-none items-center">
                   <span className="font-bold text-base lg:text-2xl 2xl:text-4xl leading-none text-black uppercase -mb-1">
-                    Event Leaderboard
+                    Up to $100,000
                   </span>
                   <img src={fish.src} alt="icon-fish" className="mx-4" />
                 </div>
@@ -244,11 +245,11 @@ const Content = () => {
             })}
           </div>
           <div className="flex items-center bg-white border-8 border-black py-2 md:py-4 absolute -rotate-[4deg] left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-[#93FF61] to-[#FAFF00]">
-            {[1, 2, 3, 4, 5, 6, 7].map((e) => {
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((e) => {
               return (
                 <div key={e} className="flex flex-none items-center">
                   <span className="font-bold text-base lg:text-2xl 2xl:text-4xl leading-none text-black uppercase -mb-1">
-                    Event Leaderboard
+                    Up to $100,000
                   </span>
                   <img src={fish.src} alt="icon-fish" className="mx-4" />
                 </div>
@@ -256,12 +257,13 @@ const Content = () => {
             })}
           </div>
         </div>
-      </section> */}
+        <Leaderboard />
+      </section>
 
       <div id="history" className="pt-24 invisible"></div>
       <section className="mx-auto max-w-[1920px]">
         <div className="md:container mx-auto p-8">
-          <span className="text-transparent bg-gradient-to-br from-[#93FF61] to-[#FAFF00] bg-clip-text font-spotnik text-lg md:text-2xl font-bold uppercase">
+          <span className="text-transparent bg-gradient-to-br from-[#93FF61] to-[#FAFF00] bg-clip-text text-lg md:text-2xl font-bold uppercase">
             [ GameFi.org History ]
           </span>
         </div>

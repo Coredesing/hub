@@ -11,7 +11,7 @@ import Tippy from '@tippyjs/react'
 
 const TopWorldItem = ({ data, playGame, accountEligible = false }) => {
   const canPlayNow = useMemo(() => {
-    return data?.status?.toUpperCase() !== 'LOCK' && data.playUrl
+    return data?.status?.toUpperCase() !== 'LOCK' && data?.playUrl
   }, [data])
 
   const { account } = useMyWeb3()
@@ -153,7 +153,7 @@ const TopWorldItem = ({ data, playGame, accountEligible = false }) => {
                     onClick={() => {
                       playGame(data.id)
                     }}
-                    href={data.playUrl}
+                    href={data?.playUrl}
                     target="_blank"
                     rel="noreferrer"
                   >

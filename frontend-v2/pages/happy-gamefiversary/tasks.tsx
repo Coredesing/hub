@@ -297,6 +297,10 @@ const Detail = () => {
             toast.error('Failed')
             return
           }
+          if (res.error) {
+            toast.error(res.error)
+            return
+          }
 
           fetchTasks()
           fetchGafish()
@@ -306,8 +310,6 @@ const Detail = () => {
         .finally(() => {
           setLoadingRecheck(false)
         })
-
-      // fetcher(`/api/adventure/recheckSocialTask/${task}/${task?.slug}`)
     },
     [account, fetchGafish, fetchTasks]
   )

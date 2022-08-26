@@ -22,6 +22,7 @@ import Tippy from '@tippyjs/react'
 import smile from '@/components/Pages/Adventure/images/smile.svg'
 import currentFish from '@/components/Pages/Adventure/images/current-fish.svg'
 import Link from 'next/link'
+import angry from '@/components/Pages/Adventure/images/angry.svg'
 
 export const AdventureTasksContext = createContext<{
   fetchTasks:() => Promise<any>;
@@ -547,7 +548,7 @@ const Detail = () => {
                               <div className="flex items-center gap-4">
                                 <div>
                                   <Image
-                                    src={smile.src}
+                                    src={task.stages[0].difficulty === 'HARD' ? angry.src : smile.src}
                                     alt=""
                                     width={16}
                                     height={16}
@@ -561,7 +562,7 @@ const Detail = () => {
                                 <div className="flex items-center gap-4">
                                   <div>
                                     <Image
-                                      src={smile.src}
+                                      src={task.stages[0].difficulty === 'HARD' ? angry.src : smile.src}
                                       alt=""
                                       width={16}
                                       height={16}

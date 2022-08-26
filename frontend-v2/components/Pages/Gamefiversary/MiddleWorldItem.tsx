@@ -79,40 +79,20 @@ const MiddleWorldItem = ({ data, accountEligible = false }) => {
                   </div>
                   <div className="w-full lg:flex-1 flex flex-col lg:flex-row gap-2 items-center">
                     {task?.socialInfo && (
-                      <div>
-                        <SocialTaskButton data={task} />
-                      </div>
-                    )}
-                    {!task?.socialInfo && (
-                      <div className="w-full">
-                        <div className="flex items-center gap-4">
-                          <div><Image src={smile.src} alt="" width={16} height={16} /></div>
-                          <div className="w-full lg:w-1/2 p-[3px] h-fit bg-[#1A1C25] rounded-sm">
-                            <div
-                              className={clsx(
-                                'h-[6px] bg-white rounded-sm',
-                                task?.stages[0]?.isCompleted && 'w-full',
-                                !(
-                                  task.currentRepetition /
-                                  task.stages[0]?.repetition
-                                ) && 'w-0'
-                              )}
-                              style={{
-                                width: `${
-                                  (task.currentRepetition /
-                                    task.stages[0]?.repetition) *
-                                  100
-                                }%`
-                              }}
-                            />
-                          </div>
-                          <span className="font-casual text-xs text-white/40">
-                            {task.stages[0]?.isCompleted
-                              ? task?.stages[0]?.repetition
-                              : task.currentRepetition}
-                            /{task.stages[0]?.repetition}
-                          </span>
+                      <div className="flex gap-4 items-center">
+                        <div>
+                          <Image
+                            src={
+                              task.stages[0].difficulty === 'HARD'
+                                ? angry.src
+                                : smile.src
+                            }
+                            alt=""
+                            width={16}
+                            height={16}
+                          />
                         </div>
+                        <SocialTaskButton data={task} />
                       </div>
                     )}
                     <div className="lg:ml-auto flex font-casual font-medium text-[#FFD600] gap-2">
@@ -122,7 +102,7 @@ const MiddleWorldItem = ({ data, accountEligible = false }) => {
                     {task?.socialInfo?.url &&
                       task?.currentRepetition !==
                         task?.stages?.[0]?.repetition &&
-                          account && (
+                      account && (
                       <button
                         onClick={() => {
                           if (loadingRecheck) return
@@ -141,28 +121,6 @@ const MiddleWorldItem = ({ data, accountEligible = false }) => {
                 </div>
               </div>
             ))}
-        {(!data?.tasks?.length || data?.status === 'LOCK') && (
-          <>
-            <div className="gap-1 md:gap-0 mr-2 ml-4">
-              <div className="flex flex-col md:flex-row w-full p-4 rounded gap-2 md:gap-32 lg:gap-10 bg-gradient-to-r from-[#292B36]/0 to-[#21232E]">
-                <div className="w-full">
-                  <span className="font-casual font-medium text-sm">
-                    Like on GameHub
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div className="gap-1 md:gap-0 mr-2 ml-4">
-              <div className="flex flex-col md:flex-row w-full p-4 rounded gap-2 md:gap-32 lg:gap-10 bg-gradient-to-r from-[#292B36]/0 to-[#21232E]">
-                <div className="w-full">
-                  <span className="font-casual font-medium text-sm">
-                    Review on GameHub
-                  </span>
-                </div>
-              </div>
-            </div>
-          </>
-        )}
       </div>
     </div>
   )

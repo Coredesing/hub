@@ -17,7 +17,7 @@ export const GAME_HUB_GG_CALENDAR_EVENT = process.env.NEXT_PUBLIC_GAME_HUB_GG_CA
 export const INTERNAL_BASE_URL = process.env.NEXT_BASE_URL
 export const NEXT_TRACKING_SERVICE_URL = process.env.NEXT_TRACKING_SERVICE_URL
 export const CATVENTURE_GG_CALENDAR_EVENT = process.env.NEXT_PUBLIC_CATVENTURE_GG_CALENDAR_EVENT
-export const CATVENTURE_API_BASE_URL = process.env.NEXT_PUBLIC_CATVENTURE_BASE_URL + '/v1'
+export const CATVENTURE_API_BASE_URL = process.env.NEXT_CATVENTURE_BASE_URL + '/v1'
 
 export const CLAIM_TYPE = {
   0: 'On GameFi.org',

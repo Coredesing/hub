@@ -595,6 +595,12 @@ const Detail = () => {
                                     </Link>
                                   )}
                                 </div>
+                                <span className="font-casual text-xs text-white/40">
+                                  {task.stages[0]?.isCompleted
+                                    ? task?.stages[0]?.repetition
+                                    : task.currentRepetition}
+                            /{task.stages[0]?.repetition}
+                                </span>
                               </div>
                             )}
                             <div className="lg:ml-auto flex font-casual font-medium text-[#FFD600] gap-2">
@@ -639,6 +645,23 @@ const Detail = () => {
                               </button>
                             )}
                           </div>
+                          {task?.socialInfo?.url &&
+                                task?.currentRepetition !==
+                                  task?.stages?.[0]?.repetition && (
+                            <button
+                              onClick={() => {
+                                if (loadingRecheck) return
+                                handleRecheck(task)
+                              }}
+                              className={`text-sm font-semibold ${
+                                loadingRecheck
+                                  ? 'text-gamefiDark-200'
+                                  : 'text-gamefiGreen'
+                              }`}
+                            >
+                          Recheck
+                            </button>
+                          )}
                         </div>
                       </div>
                     ))}

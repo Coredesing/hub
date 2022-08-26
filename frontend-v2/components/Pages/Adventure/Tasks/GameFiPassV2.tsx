@@ -110,7 +110,7 @@ const GameFiPassV2 = ({ listSocial, loadingSocial, accountEligible, fetchEligibl
           })
         }
         if (response?.err) {
-          toast.error(response?.err?.message || 'Something went Wrong')
+          toast.error(response?.err?.message || 'Something went wrong')
           setLoading(false)
           return
         } else {
@@ -129,6 +129,7 @@ const GameFiPassV2 = ({ listSocial, loadingSocial, accountEligible, fetchEligibl
         } else {
           router.replace(router.asPath)
           toast.success('send successfully')
+          gtagEvent('catventure_email_verify', { wallet: `${account}_`, email: emailToVerify })
         }
       } catch (err) {
         setLoading(false)
@@ -138,7 +139,7 @@ const GameFiPassV2 = ({ listSocial, loadingSocial, accountEligible, fetchEligibl
       setLoading(false)
       toast.error(err?.toString() || 'Could not sign the authentication message')
     })
-  }, [connectWallet, disableVerify, getEmail, inputEmail, loading, router])
+  }, [account, connectWallet, disableVerify, getEmail, inputEmail, loading, router])
 
   return <div
     className={`w-full h-[500px] md:h-64 overflow-hidden rounded-[4px] pl-6 sm:pl-10 pr-6 md:pl-[280px] xl:pl-80 md:pr-2 pt-6 md:pt-20 relative max-w-[1180px] mx-auto ${styles.gamefiPass}`}
@@ -201,7 +202,6 @@ const GameFiPassV2 = ({ listSocial, loadingSocial, accountEligible, fetchEligibl
                         </div>
                         : <button className={`${!disableVerify ? 'text-gamefiGreen-700' : 'text-gamefiDark-300 cursor-text'} font-semibold text-sm`} onClick={() => {
                           handleVerifyEmail()
-                          // gtagEvent('catventure_social_connect', { wallet: `${account}_`, eligible: 'email' })
                         }}>
                           {loading ? <Spinning className="w-6 h-6" /> : (disableVerify ? 'Please check your email to confirm' : 'Verify my email')}
                         </button>

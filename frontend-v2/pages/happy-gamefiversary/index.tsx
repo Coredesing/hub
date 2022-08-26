@@ -142,7 +142,7 @@ const Content = () => {
   const description = 'Come along with Gafi the Catstronaut and his space clowder as they explore uncharted web3 gaming universes in hunt of the legendary Golden Gafish.'
   const { now } = useAppContext()
   const spinComingSoon = useMemo(() => {
-    return now >= spinDeadline
+    return now < spinDeadline
   }, [now])
 
   return <div className="dark overflow-hidden">

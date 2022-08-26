@@ -576,7 +576,7 @@ const Spin = ({ className, comingsoon }: { className?: string; comingsoon?: bool
           return
         }
 
-        setBalanceFISH(Number(response?.data?.currentPoint))
+        setBalanceFISH(Number(response?.currentPoint))
       })
       .catch(() => {
         setBalanceFISH(0)

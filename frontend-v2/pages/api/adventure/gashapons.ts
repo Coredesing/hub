@@ -1,21 +1,24 @@
 import { fetcher } from '@/utils'
 import { CATVENTURE_API_BASE_URL } from '@/utils/constants'
 
-const bearer = `bearer ${process.env.NEXT_CATVENTURE_API_KEY}`
-
-export function callWithRest (body: any) {
+export function callWithRest (body: any, headers: any) {
   return fetcher(`${CATVENTURE_API_BASE_URL}/gashapons/requests`, {
     method: 'POST',
-    body,
+    body: JSON.stringify(body),
     headers: {
       'Content-Type': 'application/json',
-      Authorization: bearer
+      'x-wallet-address': headers?.['x-wallet-address'],
+      'x-signature': headers?.['x-signature']
     }
   })
 }
 
-export default async function handler (req) {
+export default async function handler (req, res) {
   if (req.method === 'POST') {
-    return callWithRest(req.body)
+    const response = await callWithRest(req.body, req.headers)
+    res.status(response?.statusCode || 200).json(response)
+    return
   }
+
+  res.status(404)
 }

@@ -557,7 +557,7 @@ const Detail = () => {
                               </div>
                             )}
                             {!task?.socialInfo && (
-                              <div className="w-full">
+                              <div className="w-2/3">
                                 <div className="flex items-center gap-4">
                                   <div>
                                     <Image
@@ -596,7 +596,7 @@ const Detail = () => {
                                   {task?.slug === 'daily-checkin' &&
                                     !task.stages[0]?.isCompleted && (
                                     <Link href="/account/gxp" passHref>
-                                      <a className="rounded-sm p-2 bg-[#3AACFF] font-casual text-[12px] leading-[100%] text-white hover:underline">
+                                      <a className="ml-2 rounded-sm p-2 bg-[#3AACFF] font-casual text-[12px] leading-[100%] text-white hover:underline">
                                           Checkin
                                       </a>
                                     </Link>
@@ -646,23 +646,6 @@ const Detail = () => {
                               </button>
                             )}
                           </div>
-                          {task?.socialInfo?.url &&
-                                task?.currentRepetition !==
-                                  task?.stages?.[0]?.repetition && (
-                            <button
-                              onClick={() => {
-                                if (loadingRecheck) return
-                                handleRecheck(task)
-                              }}
-                              className={`text-sm font-semibold ${
-                                loadingRecheck
-                                  ? 'text-gamefiDark-200'
-                                  : 'text-gamefiGreen'
-                              }`}
-                            >
-                          Recheck
-                            </button>
-                          )}
                         </div>
                       </div>
                     ))}

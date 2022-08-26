@@ -21,6 +21,7 @@ import SocialTaskButton from '@/components/Pages/Gamefiversary/SocialTaskButton'
 import Tippy from '@tippyjs/react'
 import smile from '@/components/Pages/Adventure/images/smile.svg'
 import currentFish from '@/components/Pages/Adventure/images/current-fish.svg'
+import Link from 'next/link'
 
 export const AdventureTasksContext = createContext<{
   fetchTasks:() => Promise<any>;
@@ -149,13 +150,16 @@ const Detail = () => {
   }, [account, fetchJoinedTeam, parseInputJoinTeam, refferalLink])
 
   const fetchTasks = useCallback(async () => {
-    return account && fetcher(`/api/adventure/project/${account}`)
-      .then((res) => {
-        if (res) {
-          setTasks(res)
-        }
-      })
-      .catch((e) => console.debug(e))
+    return (
+      account &&
+      fetcher(`/api/adventure/project/${account}`)
+        .then((res) => {
+          if (res) {
+            setTasks(res)
+          }
+        })
+        .catch((e) => console.debug(e))
+    )
   }, [account])
 
   const fetchProjects = useCallback(async () => {
@@ -181,13 +185,15 @@ const Detail = () => {
   const topProjects = useMemo(() => {
     if (!projects?.length && !tasks?.length) return []
 
-    return (account ? tasks : projects)
-      .find((el) => el?.name === 'TOP_WORLD')
-      ?.projects.sort((a, b) => {
-        if (a?.status === 'UNLOCK') return -1
-        if (a?.status === 'LOCK') return 1
-        return 0
-      }) || []
+    return (
+      (account ? tasks : projects)
+        .find((el) => el?.name === 'TOP_WORLD')
+        ?.projects.sort((a, b) => {
+          if (a?.status === 'UNLOCK') return -1
+          if (a?.status === 'LOCK') return 1
+          return 0
+        }) || []
+    )
   }, [account, projects, tasks])
 
   const middleProjects = useMemo(() => {
@@ -200,17 +206,19 @@ const Detail = () => {
         if (a?.status === 'LOCK') return 1
         return 0
       })
-    return middleWorldProjects?.map((project) => {
-      return {
-        ...project,
-        tasks: (project?.tasks || []).map((task) => {
-          return {
-            ...task,
-            projectSlug: project.slug
-          }
-        })
-      }
-    }) || []
+    return (
+      middleWorldProjects?.map((project) => {
+        return {
+          ...project,
+          tasks: (project?.tasks || []).map((task) => {
+            return {
+              ...task,
+              projectSlug: project.slug
+            }
+          })
+        }
+      }) || []
+    )
   }, [account, projects, tasks])
 
   const gamefiTasks = useMemo(() => {
@@ -577,13 +585,16 @@ const Detail = () => {
                                       : task.currentRepetition}
                                     /{task.stages[0]?.repetition}
                                   </span>
+
+                                  {task?.slug === 'daily-checkin' &&
+                                    !task.stages[0]?.isCompleted && (
+                                    <Link href="/account/gxp" passHref>
+                                      <a className="rounded-sm p-2 bg-[#3AACFF] font-casual text-[12px] leading-[100%] text-white hover:underline">
+                                          Checkin
+                                      </a>
+                                    </Link>
+                                  )}
                                 </div>
-                                <span className="font-casual text-xs text-white/40">
-                                  {task.stages[0]?.isCompleted
-                                    ? task?.stages[0]?.repetition
-                                    : task.currentRepetition}
-                            /{task.stages[0]?.repetition}
-                                </span>
                               </div>
                             )}
                             <div className="lg:ml-auto flex font-casual font-medium text-[#FFD600] gap-2">
@@ -597,7 +608,7 @@ const Detail = () => {
                             {task?.socialInfo?.url &&
                               task?.currentRepetition !==
                                 task?.stages?.[0]?.repetition &&
-                                  account && (
+                              account && (
                               <button
                                 onClick={() => {
                                   if (loadingRecheck) return

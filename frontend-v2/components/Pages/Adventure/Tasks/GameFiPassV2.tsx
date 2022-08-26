@@ -89,7 +89,6 @@ const GameFiPassV2 = ({ listSocial, loadingSocial, accountEligible, fetchEligibl
       return
     }
     setLoading(true)
-    setDisableVerify(true)
     connectWallet(false, emailToVerify).then(async (res: any) => {
       if (res.error) {
         setLoading(false)
@@ -125,16 +124,20 @@ const GameFiPassV2 = ({ listSocial, loadingSocial, accountEligible, fetchEligibl
               'X-Signature': signature,
               'X-Wallet-Address': walletAddress
             }
+          }).catch(e => {
+            setLoading(false)
           })
         }
         setLoading(false)
         if (responseSendMail?.error) {
-          toast.error('Something went Wrong')
+          toast.error(responseSendMail?.err?.message || 'Something went wrong')
         } else {
           router.replace(router.asPath)
+          setDisableVerify(true)
           toast.success('send successfully')
           gtagEvent('catventure_email_verify', { wallet: `${account}_`, email: emailToVerify })
         }
+        setLoading(false)
       } catch (err) {
         setLoading(false)
         toast.error(err.message || 'Something went Wrong')

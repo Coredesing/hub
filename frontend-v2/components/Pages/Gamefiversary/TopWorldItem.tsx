@@ -34,7 +34,7 @@ const TopWorldItem = ({ data, playGame, accountEligible = false }) => {
         </div>
         <p className="font-casual text-sm text-gamefiYellow md:ml-auto p-2 md:p-0 md:pl-10">
           {data?.accountType === 'EMAIL'
-            ? !accountHub?.email
+            ? !accountHub?.email || (accountHub?.email?.indexOf('*') > -1 && accountHub?.email?.endsWith('@gamefi.org'))
               ? 'You must verify email'
               : `You must use the email ${accountHub?.email} to play this game.`
             : ''}

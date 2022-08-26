@@ -189,9 +189,8 @@ const Detail = () => {
     if (!projects?.length && !tasks?.length) return []
 
     return (
-      (account ? tasks : projects)
-        .find((el) => el?.name === 'TOP_WORLD')
-        ?.projects.sort((a, b) => {
+      (account ? tasks : projects)?.find((el) => el?.name === 'TOP_WORLD')
+        ?.projects?.sort((a, b) => {
           if (a?.status === 'UNLOCK') return -1
           if (a?.status === 'LOCK') return 1
           return 0
@@ -202,9 +201,8 @@ const Detail = () => {
   const middleProjects = useMemo(() => {
     if (!projects?.length && !tasks?.length) return []
 
-    const middleWorldProjects = (account ? tasks : projects)
-      .find((el) => el?.name === 'MIDDLE_WORLD')
-      ?.projects.sort((a, b) => {
+    const middleWorldProjects = (account ? tasks : projects)?.find((el) => el?.name === 'MIDDLE_WORLD')
+      ?.projects?.sort((a, b) => {
         if (a?.status === 'UNLOCK') return -1
         if (a?.status === 'LOCK') return 1
         return 0
@@ -226,7 +224,7 @@ const Detail = () => {
 
   const gamefiTasks = useMemo(() => {
     if (!projects?.length && !tasks?.length) return []
-    const gamefiWorldProject = (account ? tasks : projects).find(
+    const gamefiWorldProject = (account ? tasks : projects)?.find(
       (el) => el?.name?.toUpperCase() === 'GAMEFI_WORLD'
     )?.projects?.[0]
 

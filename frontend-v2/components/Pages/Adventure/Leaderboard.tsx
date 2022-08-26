@@ -37,12 +37,18 @@ const Leaderboard = () => {
   }, [tab])
 
   useEffect(() => {
-    const pool = {
+    const poolPlayer = {
       1: 2000,
       5: 1000,
       10: 500,
       50: 100,
       100: 50
+    }
+
+    const poolTeam = {
+      1: 9000,
+      5: 3000,
+      10: 2000
     }
 
     if (account === null) {
@@ -61,10 +67,10 @@ const Leaderboard = () => {
       }
 
       const top10 = top.slice(0, 10).map((x, i) => {
-        for (const k of Object.keys(pool)) {
+        for (const k of Object.keys(poolPlayer)) {
           const kInt = parseInt(k)
           if (kInt >= i + 1) {
-            x.prize = pool[k]
+            x.prize = poolPlayer[k]
             break
           }
         }
@@ -96,14 +102,61 @@ const Leaderboard = () => {
         me
       })
     })
+
+    fetcher(`/api/adventure/leaderboards/teams?walletAddress=${account || ''}`).then(response => {
+      if (!response) {
+        return
+      }
+
+      const { top, me }: { top: Team[]; me?: Team } = response
+      if (!top) {
+        return
+      }
+
+      const top10 = top.slice(0, 10).map((x, i) => {
+        for (const k of Object.keys(poolTeam)) {
+          const kInt = parseInt(k)
+          if (kInt >= i + 1) {
+            x.prize = poolTeam[k]
+            break
+          }
+        }
+
+        return x
+      })
+
+      if (!me) {
+        setTeams({
+          top: top10
+        })
+        return
+      }
+
+      const position = top.findIndex(x => x.name === me.name)
+      if (position === -1) {
+        setTeams({
+          top: top10,
+          me
+        })
+        return
+      }
+
+      me.rank = position + 1
+      me.prize = top[position]?.prize
+
+      setTeams({
+        top: top10,
+        me
+      })
+    })
   }, [account])
 
-  const from = new Date('2022-08-24T13:00:00Z')
-  const to = new Date('2022-09-08T13:00:00Z')
+  const from = '24 Aug 2022 20:00'
+  const to = '08 Sep 2022 20:00'
 
   return <div className="container mx-auto max-w-[1000px]">
     <div className="text-center font-spotnik text-2xl sm:text-4xl xl:text-5xl font-bold uppercase leading-none mb-6">Event Leaderboards</div>
-    <div className="text-center">From <strong>{format(new Date(from), 'dd MMM yyyy HH:ss')}</strong> to <strong>{format(new Date(to), 'dd MMM yyyy HH:ss')}</strong></div>
+    <div className="text-center text-sm sm:text-base"><span className="hidden sm:inline">From</span> <strong>{format(new Date(from), 'dd MMM yyyy HH:ss')}</strong> <span className="hidden sm:inline">to</span><span className="inline sm:hidden">-</span> <strong>{format(new Date(to), 'dd MMM yyyy HH:ss (O)')}</strong></div>
     <div className="flex mx-2 mb-6 relative items-center justify-center bg-center bg-no-repeat bg-contain py-8" style={{
       backgroundImage: `url(${leaderboardFrame.src})`
     }}>
@@ -218,7 +271,6 @@ const TableTeam = ({ items }: {
   };
 }) => {
   return <>
-    <p className="text-center">Coming Soon</p>
     <table className="table-auto w-full mt-6">
       <thead className="font-spotnik">
         <tr>

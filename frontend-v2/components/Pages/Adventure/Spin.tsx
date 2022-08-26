@@ -660,7 +660,7 @@ const Spin = ({ className, comingsoon }: { className?: string; comingsoon?: bool
         throw new Error('Unable to sign your transaction')
       }
 
-      const response = await fetcher('/catventure/v1/gashapons/requests', {
+      const response = await fetcher('/api/adventure/gashapons', {
         method: 'POST',
         headers: {
           'content-type': 'application/json',

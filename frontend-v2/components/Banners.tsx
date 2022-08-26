@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useAppContext } from '../context'
 import { useRouter } from 'next/router'
-import banner from '@/assets/images/banner.png'
+import banner from '@/assets/images/ads/catventure.png'
 import banner2 from '@/assets/images/banner2.png'
 import orbitau from '@/assets/images/ads/orbitau.png'
 import gunstar from '@/assets/images/ads/gunstar.png'

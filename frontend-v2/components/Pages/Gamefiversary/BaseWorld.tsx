@@ -4,7 +4,6 @@ import circleArrow from '@/components/Pages/Adventure/images/circle-arrow.svg'
 import Flicking, { Plugin } from '@egjs/react-flicking'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import clsx from 'clsx'
-import { imagesProjects } from '@/pages/happy-gamefiversary/tasks'
 import { Sync } from '@egjs/flicking-plugins'
 import { fetcher } from '@/utils'
 import { useMyWeb3 } from '@/components/web3/context'
@@ -171,16 +170,7 @@ const BaseWorld = ({
                     )}
                   >
                     <div className="w-full rounded-xl overflow-hidden aspect-[158/213]">
-                      {imagesProjects[`${el?.slug}`]?.imageVertical && (
-                        <img
-                          src={
-                            imagesProjects[`${el?.slug}`]?.imageVertical
-                              ?.default?.src
-                          }
-                          alt=""
-                          className="w-full h-full object-cover"
-                        />
-                      )}
+                      {el?.imageUrl && <img src={el.imageUrl.toString()} className="w-full h-full object-cover" alt="" />}
                     </div>
                   </div>
                   <div
@@ -223,13 +213,7 @@ const BaseWorld = ({
                 className="flex md:h-96 flex-col md:flex-row w-full border border-[#303342] rounded-[4px] overflow-hidden"
               >
                 <div className="aspect-[158/213] hidden md:block relative">
-                  <img
-                    src={
-                      imagesProjects[`${el?.slug}`]?.imageVertical?.default?.src
-                    }
-                    className="object-cover w-full h-full"
-                    alt=""
-                  />
+                  {el?.imageUrl && <img src={el.imageUrl.toString()} className="object-cover w-full h-full" alt="" />}
                   <div
                     className="absolute top-0 left-0 w-full h-full"
                     style={{
@@ -238,11 +222,7 @@ const BaseWorld = ({
                     }}
                   ></div>
                 </div>
-                <img
-                  src={imagesProjects[`${el?.slug}`]?.imageMobile?.default?.src}
-                  className="aspect-[2/1] object-cover md:hidden"
-                  alt=""
-                />
+                {el?.mobileImageUrl && <img src={el.mobileImageUrl.toString()} className="md:hidden aspect-[2/1] object-cover" alt="" />}
                 {type === 'top-world' && (
                   <TopWorldItem data={el} playGame={playGame} accountEligible={accountEligible}/>
                 )}

@@ -17,7 +17,7 @@ const MiddleWorldItem = ({ data, accountEligible = false }) => {
   }, [data?.status])
   const { account } = useMyWeb3()
 
-  const { fetchTasks } = useContext(AdventureTasksContext)
+  const { fetchTasks, fetchGafish } = useContext(AdventureTasksContext)
 
   const [loadingRecheck, setLoadingRecheck] = useState(false)
 
@@ -39,8 +39,8 @@ const MiddleWorldItem = ({ data, accountEligible = false }) => {
             return
           }
 
-          console.log(res)
           fetchTasks()
+          fetchGafish()
         })
         .catch((e) => console.debug(e))
         .finally(() => {
@@ -49,7 +49,7 @@ const MiddleWorldItem = ({ data, accountEligible = false }) => {
 
       // fetcher(`/api/adventure/recheckSocialTask/${task}/${task?.slug}`)
     },
-    [account, fetchTasks]
+    [account, fetchGafish, fetchTasks]
   )
 
   return (

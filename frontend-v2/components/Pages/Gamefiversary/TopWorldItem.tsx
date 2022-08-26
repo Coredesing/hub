@@ -22,7 +22,7 @@ const TopWorldItem = ({ data, playGame, accountEligible = false }) => {
       <div className="flex flex-col md:flex-row md:items-center w-full p-6 pt-8">
         <div className='flex items-center'>
           <p className="font-bold text-xl p-2 md:p-0">{data?.name}</p>
-          {data?.tutorialUrl && <a href={data?.tutorialUrl || null} className="text-gamefiGreen-700 p-2 md:px-5 cursor-pointer font-medium hover:underline" target='_blank' rel="noreferrer" >Guideline</a>}
+          {data?.tutorialUrl && <a href={data.tutorialUrl} className="text-gamefiGreen-700 p-2 md:px-5 cursor-pointer font-medium hover:underline" target='_blank' rel="noreferrer" >Guideline</a>}
         </div>
         <p className="font-casual text-sm text-gamefiYellow md:ml-auto p-2 md:p-0 md:pl-10">
           {data?.accountType === 'EMAIL' ? !accountHub?.email ? 'You must verify email' : `You must use the email ${accountHub?.email} to play this game.` : ''}
@@ -142,7 +142,7 @@ const TopWorldItem = ({ data, playGame, accountEligible = false }) => {
           {canPlayNow
             ? <>
               {(
-                account && accountEligible
+                account && accountEligible && data.playUrl
                   ? <a
                     className={clsx(
                       'cursor-pointer bg-gradient-to-tl from-[#6CDB00] via-[#6CDB00] to-[#C9DB00] ml-auto flex items-center gap-2 justify-center w-2/3 sm:w-1/3 md:w-1/5 aspect-6 md:aspect-[5/1.1] 2xl:aspect-6 uppercase text-sm text-black font-bold tracking-[0.02em] rounded-br'
@@ -153,7 +153,7 @@ const TopWorldItem = ({ data, playGame, accountEligible = false }) => {
                     onClick={() => {
                       playGame(data.id)
                     }}
-                    href={data?.playUrl}
+                    href={data.playUrl}
                     target="_blank"
                     rel="noreferrer"
                   >

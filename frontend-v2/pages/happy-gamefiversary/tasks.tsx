@@ -25,8 +25,10 @@ import Link from 'next/link'
 
 export const AdventureTasksContext = createContext<{
   fetchTasks:() => Promise<any>;
+  fetchGafish:() => Promise<any>;
     }>({
-      fetchTasks: null
+      fetchTasks: null,
+      fetchGafish: null
     })
 
 const Detail = () => {
@@ -260,20 +262,22 @@ const Detail = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account])
 
+  const fetchGafish = useCallback(async () => {
+    return fetcher(`/api/adventure/${account}/points`)
+      .then((res) => {
+        if (res?.currentPoint) {
+          setGafish(res.currentPoint)
+        }
+      }).catch(e => console.debug(e))
+  }, [account])
+
   useEffect(() => {
     if (!account) {
       setGafish(0)
       return
     }
-
-    fetcher(`/api/adventure/${account}/points`)
-      .then((res) => {
-        if (res?.currentPoint) {
-          setGafish(res.currentPoint)
-        }
-      })
-      .catch((e) => console.debug(e))
-  }, [account])
+    fetchGafish()
+  }, [account, fetchGafish])
 
   const [loadingRecheck, setLoadingRecheck] = useState(false)
   const handleRecheck = useCallback(
@@ -294,9 +298,9 @@ const Detail = () => {
             return
           }
 
-          console.log(res)
-          toast.success('Success')
           fetchTasks()
+          fetchGafish()
+          toast.success('Success')
         })
         .catch((e) => console.debug(e))
         .finally(() => {
@@ -305,7 +309,7 @@ const Detail = () => {
 
       // fetcher(`/api/adventure/recheckSocialTask/${task}/${task?.slug}`)
     },
-    [account, fetchTasks]
+    [account, fetchGafish, fetchTasks]
   )
 
   const handleRecheckDailyCheckIn = () => {
@@ -322,9 +326,9 @@ const Detail = () => {
           return
         }
 
-        console.log(res)
-        toast.success('Success')
         fetchTasks()
+        fetchGafish()
+        toast.success('Success')
       })
       .catch((e) => console.debug(e))
       .finally(() => {
@@ -357,7 +361,8 @@ const Detail = () => {
       <HubProvider>
         <AdventureTasksContext.Provider
           value={{
-            fetchTasks
+            fetchTasks,
+            fetchGafish
           }}
         >
           <div ref={layoutBodyRef} className="w-full h-full">
@@ -372,12 +377,12 @@ const Detail = () => {
                 ></Image>
               </div>
               <p className="p-4 font-casual font-medium text-[11px] sm:text-sm flex items-center gap-1">
-                Finish all{' '}
+                Finish all
                 <Image
                   src={require('@/components/Pages/Adventure/images/smile.svg')}
                   alt=""
                   className="inline"
-                />{' '}
+                />
                 <span className="text-[#70C81B]">Easy Tasks</span> to get bonus
                 Gafish
               </p>

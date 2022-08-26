@@ -700,7 +700,7 @@ const World = ({ width = 1600, height = 700, screens = 3, r = 22, items = landsD
   useEffect(() => {
     fetcher('/api/adventure/projects')
       .then(response => {
-        setProjects(response || [])
+        setProjects(response?.data || [])
       })
       .catch(() => {
         setProjects([])
@@ -713,7 +713,10 @@ const World = ({ width = 1600, height = 700, screens = 3, r = 22, items = landsD
         return undefined
       }
 
-      const project = projects.find(x => x.slug === land.slug)
+      const project = (projects || []).find(x => x.slug === land.slug)
+      if (!project) {
+        return undefined
+      }
 
       let points = []
       points = universe(landShapes[land.shape], hexagonsPerRow, land.positions[0], land.positions[1])
@@ -735,7 +738,7 @@ const World = ({ width = 1600, height = 700, screens = 3, r = 22, items = landsD
       }
 
       return item
-    })
+    }).filter(x => !!x)
   }, [centers, hexagonsPerRow, items, projects])
 
   const [landActive, setLandActive] = useState(null)

@@ -964,8 +964,8 @@ const imagesProjects = {
     imageMobile: require('@/assets/images/adventure/desport.png')
   },
   ninneko: {
-    imageVertical: require('@/assets/images/adventure/ninneko.png'),
-    imageMobile: require('@/assets/images/adventure/ninneko.png')
+    imageVertical: require('@/assets/images/adventure/ninneko.jpg'),
+    imageMobile: require('@/assets/images/adventure/ninneko.jpg')
   },
   aradena: {
     imageVertical: require('@/assets/images/adventure/aradena.png'),

@@ -22,6 +22,7 @@ import Link from 'next/link'
 import useWalletSignature from '@/hooks/useWalletSignature'
 import { useAppContext } from '@/context'
 import { format } from 'date-fns'
+import { CATVENTURE_API_BASE_URL } from '@/utils/constants'
 
 const CONTRACT_WHEEL = IS_TESTNET ? process.env.NEXT_PUBLIC_WHEEL_CONTRACT_97 : process.env.NEXT_PUBLIC_WHEEL_CONTRACT_56
 const CONTRACT_TICKET = IS_TESTNET ? process.env.NEXT_PUBLIC_WHEEL_TICKET_97 : process.env.NEXT_PUBLIC_WHEEL_TICKET_56
@@ -569,7 +570,7 @@ const Spin = ({ className, comingsoon }: { className?: string; comingsoon?: bool
       return
     }
 
-    fetcher(`${process.env.NEXT_PUBLIC_CATVENTURE_BASE_URL}/v1/users/${account}/points`)
+    fetcher(`${CATVENTURE_API_BASE_URL}/users/${account}/points`)
       .then(response => {
         if (!response?.data?.currentPoint) {
           setBalanceFISH(0)
@@ -660,7 +661,7 @@ const Spin = ({ className, comingsoon }: { className?: string; comingsoon?: bool
         throw new Error('Unable to sign your transaction')
       }
 
-      const response = await fetcher(`${process.env.NEXT_PUBLIC_CATVENTURE_BASE_URL}/v1/gashapons/requests`, {
+      const response = await fetcher(`${CATVENTURE_API_BASE_URL}/gashapons/requests`, {
         method: 'POST',
         headers: {
           'content-type': 'application/json',

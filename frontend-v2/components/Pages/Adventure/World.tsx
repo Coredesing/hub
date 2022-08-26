@@ -79,6 +79,7 @@ import clsx from 'clsx'
 import { fetcher, gtagEvent } from '@/utils'
 import Link from 'next/link'
 import shuffle from 'lodash.shuffle'
+import { CATVENTURE_API_BASE_URL } from '@/utils/constants'
 
 enum LandShape {
   ONE = 1,
@@ -697,7 +698,7 @@ const World = ({ width = 1600, height = 700, screens = 3, r = 22, items = landsD
 
   const [projects, setProjects] = useState([])
   useEffect(() => {
-    fetcher(`${process.env.NEXT_PUBLIC_CATVENTURE_BASE_URL}/v1/projects`)
+    fetcher(`${CATVENTURE_API_BASE_URL}/projects`)
       .then(response => {
         setProjects(response?.data || [])
       })
@@ -973,7 +974,7 @@ const LandDetails = ({ land, onClose }: { land: Land; onClose: () => void }) => 
   const [missions, setMissions] = useState([])
 
   useEffect(() => {
-    fetcher(`${process.env.NEXT_PUBLIC_CATVENTURE_BASE_URL}/v1/projects/${land.slug}/tasks`)
+    fetcher(`${CATVENTURE_API_BASE_URL}/projects/${land.slug}/tasks`)
       .then(response => {
         setMissions((response?.data?.tasks || []).filter(x => (x.name || '').indexOf('dummy') === -1))
       })

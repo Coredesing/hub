@@ -51,9 +51,13 @@ const GameFiPassV2 = ({ listSocial, loadingSocial, accountEligible, fetchEligibl
       setInputEmail('')
       return
     }
-    if (accountHub && accountHub.email) {
-      setInputEmail(accountHub.email)
+
+    if (!accountHub?.email) {
+      setInputEmail('')
+      return
     }
+
+    setInputEmail(accountHub.email)
   }, [accountHub])
 
   const getEmail = useCallback(async () => {

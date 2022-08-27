@@ -128,7 +128,7 @@ const Detail = () => {
     }
 
     const toasting = toast.loading('Processing')
-    fetcher(`/api/adventure/project/${account}?slug=${slug}`, {
+    fetcher(`/api/adventure/project/${account}?slug=${slug?.toLowerCase()}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json'

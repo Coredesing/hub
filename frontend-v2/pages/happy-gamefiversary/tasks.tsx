@@ -614,7 +614,7 @@ const Detail = () => {
                             {task?.socialInfo?.url &&
                               task?.currentRepetition !==
                                 task?.stages?.[0]?.repetition &&
-                              account && (
+                              account && accountEligible && (
                               <button
                                 onClick={() => {
                                   if (loadingRecheck) return
@@ -629,7 +629,7 @@ const Detail = () => {
                                   Recheck
                               </button>
                             )}
-                            {task?.slug === 'daily-checkin' && account && (
+                            {task?.slug === 'daily-checkin' && account && accountEligible && (
                               <button
                                 onClick={() => {
                                   if (loadingRecheck) return

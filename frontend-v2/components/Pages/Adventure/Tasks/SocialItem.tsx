@@ -5,12 +5,14 @@ import clsx from 'clsx'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/router'
 import { useMyWeb3 } from '@/components/web3/context'
+import useConnectWallet from '@/hooks/useConnectWallet'
 import { useCountdown } from '@/components/Pages/Hub/Countdown'
 import styles from './tasks.module.scss'
 
 const SocialItem = ({ data }) => {
   const { account: walletId } = useMyWeb3()
   const router = useRouter()
+  const { connectWallet } = useConnectWallet()
 
   const [isLoading, setLoading] = useState(false)
 
@@ -125,6 +127,20 @@ const SocialItem = ({ data }) => {
       })
   }
 
+  const handleSync = () => {
+    connectWallet().then((res: any) => {
+      if (res.error) {
+        setLoading(false)
+        toast.error('Could not update info')
+        return
+      }
+      doAction()
+    }).catch(err => {
+      setLoading(false)
+      toast.error(err?.toString() || 'Could not sign the authentication message')
+    })
+  }
+
   return (
     <div className="items-center grid grid-cols-8 mb-3 md:mb-3 gap-7">
       <div className="font-semibold font-casual text-sm col-span-2 hidden md:block">{label}</div>
@@ -135,7 +151,7 @@ const SocialItem = ({ data }) => {
           // target={isCompleted ? '_self' : '_blank'}
           // rel="noreferrer"
           onClick={() => {
-            doAction()
+            handleSync()
             gtagEvent('catventure_social_connect', { type: label.toLowerCase() })
           }}
           className={clsx(

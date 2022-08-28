@@ -1,11 +1,13 @@
 import left from '@/components/Pages/Adventure/images/left.svg'
 import right from '@/components/Pages/Adventure/images/right.svg'
+import VerifyMail from '@/components/Pages/Adventure/Tasks/VerifyMail'
 import circleArrow from '@/components/Pages/Adventure/images/circle-arrow.svg'
 import Flicking, { Plugin } from '@egjs/react-flicking'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import clsx from 'clsx'
 import { Sync } from '@egjs/flicking-plugins'
 import { fetcher } from '@/utils'
+import { useHubContext } from '@/context/hubProvider'
 import { useMyWeb3 } from '@/components/web3/context'
 import TopWorldItem from './TopWorldItem'
 import MiddleWorldItem from './MiddleWorldItem'
@@ -36,6 +38,7 @@ const BaseWorld = ({
   const flickingListGameRef = useRef(null)
   const [currentProjectIndex, setCurrentProjectIndex] = useState<number>(0)
   const [plugins, setPlugins] = useState<Plugin[]>([])
+  const { accountHub } = useHubContext()
 
   const { account } = useMyWeb3()
   const { setShowModal: showConnectWallet } = useWalletContext()
@@ -44,7 +47,7 @@ const BaseWorld = ({
     const nextIndex = currentProjectIndex + 1
     const index = nextIndex > projects.length ? projects.length - 1 : nextIndex
     setCurrentProjectIndex(index)
-    flickingListGameRef.current?.moveTo(index).catch(() => {})
+    flickingListGameRef.current?.moveTo(index).catch(() => { })
     // if (router) {
     //   router.query = {
     //     g: projects[index]?.slug?.toString()
@@ -56,7 +59,7 @@ const BaseWorld = ({
     const prevIndex = currentProjectIndex - 1
     const index = prevIndex < 0 ? 0 : prevIndex
     setCurrentProjectIndex(index)
-    flickingListGameRef.current?.moveTo(index).catch(() => {})
+    flickingListGameRef.current?.moveTo(index).catch(() => { })
     // if (router) {
     //   router.query = {
     //     g: projects[index]?.slug?.toString()
@@ -71,8 +74,8 @@ const BaseWorld = ({
       const index = projects?.findIndex(item => item.slug === slug)
       if (index > -1) {
         setCurrentProjectIndex(index)
-        flickingGameRef.current?.moveTo(index).catch(() => {})
-        flickingListGameRef.current?.moveTo(index).catch(() => {})
+        flickingGameRef.current?.moveTo(index).catch(() => { })
+        flickingListGameRef.current?.moveTo(index).catch(() => { })
         setTimeout(() => {
           ref?.current?.scrollIntoView({ behavior: 'smooth' })
         }, 1000)
@@ -110,15 +113,20 @@ const BaseWorld = ({
   }, [projects])
 
   const playGame = useCallback(
-    async (id) => {
+    async (id, needMail) => {
       if (!account) {
         showConnectWallet(true)
         return
         // return layoutBodyRef?.current?.scrollTo({ top: 0, behavior: 'smooth' })
       }
       if (!accountEligible) {
-        toast.error('You should register your GameFi Pass first')
+        toast.error('You should register your GameFi Pass and verify mail first')
         return layoutBodyRef?.current?.scrollTo({ top: 0, behavior: 'smooth' })
+      }
+
+      if (accountEligible && (needMail && !accountHub?.confirmed)) {
+        toast.error('You should verify your mail first')
+        return document.getElementById('newEmail').focus()
       }
 
       return fetcher(`/api/adventure/${account}/connect?id=${id}`, {
@@ -126,7 +134,7 @@ const BaseWorld = ({
       })
         .catch((e) => console.debug(e))
     },
-    [account, accountEligible, layoutBodyRef, showConnectWallet]
+    [account, accountEligible, layoutBodyRef, showConnectWallet, accountHub]
   )
 
   return (
@@ -140,10 +148,13 @@ const BaseWorld = ({
             </span>
             <img src={right.src} alt="" />
           </div>
+
+          {(type === 'top-world' && account && !accountHub?.confirmed) && <VerifyMail />}
+
           <div
-            className={clsx('my-5 mt-10')}
+            className={clsx('my-5 mt-10 relative')}
           >
-            <img src={circleArrow.src} alt="prev" className='xl:block hidden absolute -left-16 top-44 rotate-180 cursor-pointer' onClick={prev}/>
+            <img src={circleArrow.src} alt="prev" className='xl:block hidden absolute -left-16 top-28 rotate-180 cursor-pointer' onClick={prev} />
             <Flicking
               defaultIndex={currentProjectIndex}
               ref={flickingGameRef}
@@ -184,7 +195,7 @@ const BaseWorld = ({
                 </div>
               ))}
             </Flicking>
-            <img src={circleArrow.src} alt="next" className='xl:block hidden absolute -right-16 top-44 cursor-pointer' onClick={next}/>
+            <img src={circleArrow.src} alt="next" className='xl:block hidden absolute -right-16 top-28 cursor-pointer' onClick={next} />
           </div>
           {
             type === 'top-world' && <div className="my-2 text-right font-casual text-sm">
@@ -224,10 +235,10 @@ const BaseWorld = ({
                 </div>
                 {el?.mobileImageUrl && <img src={el.mobileImageUrl.toString()} className="md:hidden aspect-[2/1] object-cover" alt="" />}
                 {type === 'top-world' && (
-                  <TopWorldItem data={el} playGame={playGame} accountEligible={accountEligible}/>
+                  <TopWorldItem data={el} playGame={playGame} accountEligible={accountEligible} confirmed={accountHub?.confirmed} />
                 )}
                 {type === 'middle-world' && (
-                  <MiddleWorldItem data={el} accountEligible={accountEligible}/>
+                  <MiddleWorldItem data={el} accountEligible={accountEligible} />
                 )}
               </div>
             ))}

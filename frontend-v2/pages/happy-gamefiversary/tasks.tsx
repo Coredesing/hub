@@ -266,7 +266,7 @@ const Detail = () => {
       .then((res) => {
         if (res?.currentPoint) {
           setGafish(res.currentPoint)
-        }
+        } setGafish(0)
       }).catch(e => console.debug(e))
   }, [account])
 
@@ -481,18 +481,18 @@ const Detail = () => {
                   fetchEligibleDone={fetchEligibleDone}
                 ></GameFiPassV2>
               </div>
-              {/* Top world */}
-              <BaseWorld
-                projects={topProjects}
-                type="top-world"
-                className="mb-20"
-                layoutBodyRef={layoutBodyRef}
-                accountEligible={accountEligible}
-              />
               {/* Middle world */}
               <BaseWorld
                 projects={middleProjects}
                 type="middle-world"
+                className="mb-20"
+                layoutBodyRef={layoutBodyRef}
+                accountEligible={accountEligible}
+              />
+              {/* Top world */}
+              <BaseWorld
+                projects={topProjects}
+                type="top-world"
                 layoutBodyRef={layoutBodyRef}
                 accountEligible={accountEligible}
               />

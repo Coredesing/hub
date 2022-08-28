@@ -8,7 +8,7 @@ import { useHubContext } from '@/context/hubProvider'
 import { shorten } from '@/utils'
 import Tippy from '@tippyjs/react'
 
-const TopWorldItem = ({ data, playGame, accountEligible = false }) => {
+const TopWorldItem = ({ data, playGame, accountEligible = false, confirmed = false }) => {
   const canPlayNow = useMemo(() => {
     return data?.status?.toUpperCase() !== 'LOCK' && data?.playUrl
   }, [data])
@@ -169,7 +169,7 @@ const TopWorldItem = ({ data, playGame, accountEligible = false }) => {
           {canPlayNow
             ? (
               <>
-                {account && accountEligible && data.playUrl
+                {account && accountEligible && (data.accountType !== 'EMAIL' || confirmed) && data.playUrl
                   ? (
                     <a
                       className={clsx(
@@ -222,7 +222,7 @@ const TopWorldItem = ({ data, playGame, accountEligible = false }) => {
                         clipPath: 'polygon(14% 0, 100% 0, 100% 100%, 0% 100%)'
                       }}
                       onClick={() => {
-                        playGame(data.id)
+                        playGame(data.id, data.accountType === 'EMAIL')
                       }}
                     >
                   Get Gafish

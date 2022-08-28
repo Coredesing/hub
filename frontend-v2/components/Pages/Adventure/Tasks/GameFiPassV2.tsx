@@ -8,8 +8,8 @@ import { Spinning } from '@/components/Base/Animation'
 import toast from 'react-hot-toast'
 import useConnectWallet from '@/hooks/useConnectWallet'
 import { useRouter } from 'next/router'
-import styles from './tasks.module.scss'
 import useWalletSignature from '@/hooks/useWalletSignature'
+import styles from './tasks.module.scss'
 
 const GameFiPassV2 = ({ listSocial, loadingSocial, accountEligible, fetchEligible, fetchEligibleDone = false }) => {
   const { account } = useMyWeb3()
@@ -18,7 +18,6 @@ const GameFiPassV2 = ({ listSocial, loadingSocial, accountEligible, fetchEligibl
   const [loading, setLoading] = useState(false)
   const [disableVerify, setDisableVerify] = useState(false)
   const { accountHub } = useHubContext()
-
   const { connectWallet } = useConnectWallet()
 
   const router = useRouter()
@@ -28,7 +27,7 @@ const GameFiPassV2 = ({ listSocial, loadingSocial, accountEligible, fetchEligibl
     if (!accountHub || !listSocial?.length) {
       return
     }
-    if (listSocial.every((v: { isCompleted: any }) => v.isCompleted) && accountHub?.confirmed) {
+    if (listSocial.every((v: { isCompleted: any }) => v.isCompleted)) {
       await fetcher('/api/adventure/updateEligible', {
         method: 'PATCH',
         body: JSON.stringify({
@@ -150,8 +149,8 @@ const GameFiPassV2 = ({ listSocial, loadingSocial, accountEligible, fetchEligibl
 
   return <div
     className={`w-full h-[500px] md:h-64 overflow-hidden rounded-[4px] pl-6 sm:pl-10 pr-6 md:pl-[280px] xl:pl-80 md:pr-2 pt-6 md:pt-20 relative max-w-[1180px] mx-auto ${styles.gamefiPass}`}
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    // style={{ backgroundImage: `url(${require('@/assets/images/adventure/meowo.png').default.src})`, backgroundSize: 'cover', backgroundPosition: 'top left', backgroundRepeat: 'no-repeat' }}
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  // style={{ backgroundImage: `url(${require('@/assets/images/adventure/meowo.png').default.src})`, backgroundSize: 'cover', backgroundPosition: 'top left', backgroundRepeat: 'no-repeat' }}
   >
     <div className="flex items-center gap-1">
       <div className="text-2xl uppercase font-medium mr-2">{accountEligible ? 'Your' : 'Register'} <span className="font-bold">GameFi Pass</span></div>
@@ -173,13 +172,13 @@ const GameFiPassV2 = ({ listSocial, loadingSocial, accountEligible, fetchEligibl
                 <div className="">
                   <div className="mb-1 md:mb-5 flex items-center">
                     <div className="w-12 text-sm mr-3 xl:mr-7 font-casual font-semibold">
-                  Wallet
+                      Wallet
                     </div>
                     <div className="text-sm font-casual">{shorten(accountHub?.walletAddress || account)}</div>
                   </div>
                   <div className="mb-1 flex items-center">
                     <div className="w-12 text-sm mr-3 xl:mr-7 font-casual font-semibold">
-                  Email
+                      Email
                     </div>
                     {
                       accountHub?.confirmed
@@ -190,8 +189,9 @@ const GameFiPassV2 = ({ listSocial, loadingSocial, accountEligible, fetchEligibl
                             name="email"
                             value={inputEmail}
                             onChange={e => { setInputEmail(e?.target?.value || '') }}
-                            className="bg-transparent w-full py-2 rounded-sm font-casual text-sm focus:border-none focus:ring-0 border-none ring-0"
+                            className="hidden bg-transparent w-full py-2 rounded-sm font-casual text-sm focus:border-none focus:ring-0 border-none ring-0"
                           ></input>
+                          -
                         </div>
                     }
                   </div>
@@ -207,7 +207,7 @@ const GameFiPassV2 = ({ listSocial, loadingSocial, accountEligible, fetchEligibl
                             </svg>
                           </div>
                         </div>
-                        : <button className={`${!disableVerify ? 'text-gamefiGreen-700' : 'text-gamefiDark-300 cursor-text'} font-semibold text-sm`} onClick={() => {
+                        : <button className={`${!disableVerify ? 'text-gamefiGreen-700' : 'text-gamefiDark-300 cursor-text'} font-semibold text-sm hidden`} onClick={() => {
                           handleVerifyEmail()
                         }}>
                           {loading ? <Spinning className="w-6 h-6" /> : (disableVerify ? 'Please check your email to confirm' : 'Verify my email')}

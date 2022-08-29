@@ -68,8 +68,8 @@ import imgDEsports from '@/components/Pages/Adventure/images/lands/desports.png'
 import logoDEsports from '@/components/Pages/Adventure/images/lands/desports-logo.png'
 import imgEvermoon from '@/components/Pages/Adventure/images/lands/evermoon.png'
 import logoEvermoon from '@/components/Pages/Adventure/images/lands/evermoon-logo.png'
-import logoAniwar from '@/components/Pages/Adventure/images/lands/aniwar-logo.png'
-import imgAniwar from '@/components/Pages/Adventure/images/lands/aniwar.png'
+import logoMysticTreasure from '@/components/Pages/Adventure/images/lands/mystic-treasure-logo.png'
+import imgMysticTreasure from '@/components/Pages/Adventure/images/lands/mystic-treasure.png'
 import logoHomieWar from '@/components/Pages/Adventure/images/lands/homie-wars-logo.png'
 import imgHomieWar from '@/components/Pages/Adventure/images/lands/homie-wars.png'
 import logoStepApp from '@/components/Pages/Adventure/images/lands/step-app-logo.png'
@@ -662,14 +662,14 @@ const landsDefault: LandRaw[] = [{
   logo: logoPlanetMojo,
   ping: 1
 }, {
-  slug: 'aniwar',
-  shape: LandShape.SIXTEEN,
-  positions: [8, 104],
-  name: 'Aniwar',
-  categories: ['MMO', 'Sandbox', 'Strategy'],
-  description: 'Aniwar.io owns a pretty graphic background with character designs, funny and cute interface. The game was developed with an idea similar to pokemon & tank shooter.',
-  img: imgAniwar,
-  logo: logoAniwar,
+  slug: 'mystic-treasure',
+  shape: LandShape.SEVENTEEN,
+  positions: [5, 102],
+  name: 'Mystic Treasure',
+  categories: ['NFT', 'Simulation', 'Adventure'],
+  description: 'Mystic Treasure is a 100% decentralized Play-to-Earn, Learn-and-Earn RPG adventure game enhanced with simulation. Players are entitled to the ultimate power to fully customize their “virtual life” through these experiences solving puzzles and hunting treasure.',
+  img: imgMysticTreasure,
+  logo: logoMysticTreasure,
   ping: 0
 }, {
   slug: 'homie-wars',

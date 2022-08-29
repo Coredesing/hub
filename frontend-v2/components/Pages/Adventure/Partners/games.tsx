@@ -32,8 +32,9 @@ import img31 from '../images/games/31.png'
 import img32 from '../images/games/32.png'
 import img33 from '../images/games/33.png'
 import img34 from '../images/games/34.png'
-import img35 from '../images/games/35.png'
+// import img35 from '../images/games/35.png'
 import img36 from '../images/games/36.png'
+import img37 from '../images/games/37.png'
 import Image from 'next/image'
 
 const items = [
@@ -71,8 +72,9 @@ const items = [
   { name: 'Rise of Immortals', url: 'https://www.immortalrise.com/', img: img32 },
   { name: 'Homie Wars', url: 'https://homiewars.com/', img: img33 },
   { name: 'Monster Era', url: 'https://monsterera.io/', img: img34 },
-  { name: 'Aniwar', url: 'https://aniwar.io/', img: img35 },
-  { name: 'War Legends', url: 'https://warlegends.co/', img: img36 }
+  // { name: 'Aniwar', url: 'https://aniwar.io/', img: img35 },
+  { name: 'War Legends', url: 'https://warlegends.co/', img: img36 },
+  { name: 'Mystic Treasure', url: 'https://mystictreasure.io/', img: img37 }
 ]
 
 const Games = () => {

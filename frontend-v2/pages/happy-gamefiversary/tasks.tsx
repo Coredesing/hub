@@ -266,7 +266,7 @@ const Detail = () => {
       .then((res) => {
         if (res?.currentPoint) {
           setGafish(res.currentPoint)
-        } setGafish(0)
+        } else setGafish(0)
       }).catch(e => console.debug(e))
   }, [account])
 

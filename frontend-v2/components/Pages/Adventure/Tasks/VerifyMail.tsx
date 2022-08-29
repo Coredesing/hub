@@ -76,14 +76,14 @@ export default function VerifyMail () {
 
         let response: { err: any }, responseSendMail
         if (!isRegister && emailToVerify) {
-          response = await fetcher('/api/hub/profile/update', {
-            method: 'POST',
-            body: JSON.stringify(payload),
-            headers: {
-              'X-Signature': signature,
-              'X-Wallet-Address': walletAddress
-            }
-          })
+          // response = await fetcher('/api/hub/profile/update', {
+          //   method: 'POST',
+          //   body: JSON.stringify(payload),
+          //   headers: {
+          //     'X-Signature': signature,
+          //     'X-Wallet-Address': walletAddress
+          //   }
+          // })
         }
         if (response?.err) {
           toast.error(response?.err?.message || 'Something went wrong')

@@ -742,7 +742,26 @@ const World = ({ width = 1600, height = 700, screens = 3, r = 22, items = landsD
   }, [centers, hexagonsPerRow, items, projects])
 
   const [landActive, setLandActive] = useState(null)
+  const [missionsActive, setMissionActive] = useState([])
   const [warningZoom, setWarningZoom] = useState(false)
+
+  useEffect(() => {
+    if (!landActive?.slug) {
+      return
+    }
+
+    fetcher(`/api/adventure/projects/${landActive?.slug}/tasks`)
+      .then(response => {
+        if (response?.data?.slug !== landActive?.slug) {
+          return
+        }
+
+        setMissionActive((response?.data?.tasks || []).filter(x => (x.name || '').indexOf('dummy') === -1))
+      })
+      .catch(() => {
+        setMissionActive([])
+      })
+  }, [landActive?.slug])
 
   const landActiveNext = useMemo(() => {
     if (!landActive) {
@@ -929,7 +948,7 @@ const World = ({ width = 1600, height = 700, screens = 3, r = 22, items = landsD
           </g>
         </svg>
         <div className={clsx('h-full bg-black absolute left-0 border-r border-gamefiDark-500 hidden md:flex flex-col w-1/3 xl:w-1/4 transition-transform', landActive ? 'translate-x-0' : 'translate-x-[-100%]')}>
-          {landActive && <LandDetails land={landActive} onClose={() => setLandActive(null)}></LandDetails>}
+          <LandDetails land={landActive} missions={missionsActive} onClose={() => setLandActive(null)}></LandDetails>
         </div>
 
         <div className="absolute bottom-2 right-2 flex gap-x-2 leading-none text-sm lg:text-base">
@@ -966,33 +985,26 @@ const World = ({ width = 1600, height = 700, screens = 3, r = 22, items = landsD
       {landActive && <div className='md:hidden fixed z-50 top-0 left-0 w-full h-full flex items-center justify-center'>
         <div className="max-w-md flex w-full h-full">
           <div className="absolute inset-0 bg-black bg-opacity-50"></div>
-          <LandDetails land={landActive} onClose={() => setLandActive(null)}></LandDetails>
+          <LandDetails land={landActive} missions={missionsActive} onClose={() => setLandActive(null)}></LandDetails>
         </div>
       </div>}
     </div>
   )
 }
 
-const LandDetails = ({ land, onClose }: { land: Land; onClose: () => void }) => {
-  const [missions, setMissions] = useState([])
+const LandDetails = ({ land, onClose, missions }) => {
+  if (!land) {
+    return null
+  }
 
-  useEffect(() => {
-    fetcher(`/api/adventure/projects/${land.slug}/tasks`)
-      .then(response => {
-        setMissions((response?.data?.tasks || []).filter(x => (x.name || '').indexOf('dummy') === -1))
-      })
-      .catch(() => {
-        setMissions([])
-      })
-  }, [land?.slug])
   return <div className="flex flex-col w-full h-full sm:h-auto md:h-full font-atlas bg-black relative">
-    <div className="block md:absolute xl:relative z-0 w-full"><Image src={land.img} alt="image" layout="responsive"></Image></div>
+    <div className="block md:absolute xl:relative z-0 w-full"><Image src={land?.img} alt="image" layout="responsive"></Image></div>
     <div className="p-4 flex-1 flex flex-col overflow-hidden z-10 md:pt-28 lg:pt-36 xl:pt-4">
-      <p className="text-xs xl:text-sm 2xl:text-base text-white xl:text-gamefiDark-300 mb-2" style={{ textShadow: '0px 0px 4px black' }}>{land.categories.join(', ')}</p>
-      <Link href={`/happy-gamefiversary/tasks/?g=${land?.slug}`} passHref={true}><a className="font-spotnik text-xl xl:text-2xl 2xl:text-[32px] leading-none uppercase font-bold hover:underline underline-offset-8" style={{ textShadow: '0px 0px 4px black' }}>{land.name}</a></Link>
+      <p className="text-xs xl:text-sm 2xl:text-base text-white xl:text-gamefiDark-300 mb-2" style={{ textShadow: '0px 0px 4px black' }}>{land?.categories.join(', ')}</p>
+      <Link href={`/happy-gamefiversary/tasks/?g=${land?.slug}`} passHref={true}><a className="font-spotnik text-xl xl:text-2xl 2xl:text-[32px] leading-none uppercase font-bold hover:underline underline-offset-8" style={{ textShadow: '0px 0px 4px black' }}>{land?.name}</a></Link>
       <div className="flex-1 overflow-auto">
         <p className="leading-normal my-4 xl:my-6 2xl:my-8 text-sm 2xl:text-base line-clamp-4 lg:line-clamp-3 xl:line-clamp-4 2xl:line-clamp-none" style={{ textShadow: '0px 0px 4px black' }}>
-          {land.status !== 'INTRO' ? land.description : <>GameFi.org is a one-stop destination for Web3 gaming. We aim to build digital communities and manage virtual economies for mainstream adoption with <strong>ONE</strong> digital platform, <strong>ONE</strong> virtual identity requiring <strong>ZERO</strong> blockchain knowledge.</>}
+          {land?.status !== 'INTRO' ? land?.description : <>GameFi.org is a one-stop destination for Web3 gaming. We aim to build digital communities and manage virtual economies for mainstream adoption with <strong>ONE</strong> digital platform, <strong>ONE</strong> virtual identity requiring <strong>ZERO</strong> blockchain knowledge.</>}
         </p>
         <p className="font-bold mb-2 text-sm 2xl:text-base 2xl:mb-4">Missions</p>
         <div className="mb-4">
@@ -1008,7 +1020,7 @@ const LandDetails = ({ land, onClose }: { land: Land; onClose: () => void }) => 
       </div>
       <Link href={`/happy-gamefiversary/tasks/?g=${land?.slug}`} passHref={true}>
         <a className="mt-auto bg-gradient-to-r from-[#93FF61] to-[#FAFF00] text-black font-casual font-semibold text-[12px] uppercase block w-full clipped-t-r py-3 text-center" onClick={() => {
-          gtagEvent('catventure_join', { land: land.slug })
+          gtagEvent('catventure_join', { land: land?.slug })
         }}>
           Join Now
         </a>

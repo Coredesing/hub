@@ -103,11 +103,16 @@ const BaseWorld = ({
           ]
         })
       ])
-      flickingGameRef.current.change = (e) => {
-        setCurrentProjectIndex(e.index)
+      if (flickingGameRef.current) {
+        flickingGameRef.current.change = (e) => {
+          setCurrentProjectIndex(e.index)
+        }
       }
-      flickingListGameRef.current.change = (e) => {
-        setCurrentProjectIndex(e.index)
+
+      if (flickingListGameRef.current) {
+        flickingListGameRef.current.change = (e) => {
+          setCurrentProjectIndex(e.index)
+        }
       }
     }, 1000)
   }, [projects])

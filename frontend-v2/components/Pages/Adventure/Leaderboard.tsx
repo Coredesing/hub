@@ -37,6 +37,7 @@ const Leaderboard = () => {
   }, [tab])
 
   useEffect(() => {
+    let isMounted = true
     const poolPlayer = {
       1: 2000,
       5: 1000,
@@ -53,10 +54,16 @@ const Leaderboard = () => {
 
     if (account === null) {
       // only truthy and undefined are accepted
-      return
+      return () => {
+        isMounted = false
+      }
     }
 
     fetcher(`/api/adventure/leaderboards/players?walletAddress=${account || ''}`).then(response => {
+      if (!isMounted) {
+        return
+      }
+
       if (!response) {
         return
       }
@@ -104,6 +111,10 @@ const Leaderboard = () => {
     })
 
     fetcher(`/api/adventure/leaderboards/teams?walletAddress=${account || ''}`).then(response => {
+      if (!isMounted) {
+        return
+      }
+
       if (!response) {
         return
       }
@@ -149,6 +160,10 @@ const Leaderboard = () => {
         me
       })
     })
+
+    return () => {
+      isMounted = false
+    }
   }, [account])
 
   const from = '24 Aug 2022 20:00'

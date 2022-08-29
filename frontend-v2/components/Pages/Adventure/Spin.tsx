@@ -104,6 +104,12 @@ const Spin = ({ className, comingsoon }: { className?: string; comingsoon?: bool
   const [amount, setAmount] = useState<string>('1')
   const [amountPurchase, setAmountPurchase] = useState<string>('5')
 
+  const mounted = useRef(false)
+  useEffect(() => {
+    mounted.current = true
+    return () => { mounted.current = false }
+  }, [])
+
   const contract = useMemo(() => {
     if (!library) {
       return
@@ -571,6 +577,10 @@ const Spin = ({ className, comingsoon }: { className?: string; comingsoon?: bool
 
     fetcher(`/api/adventure/${account}/points`)
       .then(response => {
+        if (!mounted.current) {
+          return
+        }
+
         if (!response?.currentPoint) {
           setBalanceFISH(0)
           return

@@ -979,7 +979,7 @@ const LandDetails = ({ land, onClose }: { land: Land; onClose: () => void }) => 
   useEffect(() => {
     fetcher(`/api/adventure/projects/${land.slug}/tasks`)
       .then(response => {
-        setMissions((response?.tasks || []).filter(x => (x.name || '').indexOf('dummy') === -1))
+        setMissions((response?.data?.tasks || []).filter(x => (x.name || '').indexOf('dummy') === -1))
       })
       .catch(() => {
         setMissions([])

@@ -126,12 +126,13 @@ export default function VerifyMail () {
       <input
         placeholder='Enter your email'
         name="newEmail"
+        disabled={disableVerify}
         id="newEmail"
         value={inputEmail}
         onChange={e => { setInputEmail(e?.target?.value || '') }}
         className="bg-[#22252F] w-full sm:w-[400px] border rounded pl-6 border-[#303342] py-3 lg:py-3.5 font-casual text-sm focus:ring-0 ring-0"
       ></input>
-      <button className={`${!disableVerify ? 'text-gamefiGreen-700' : 'text-gamefiDark-300 cursor-text'} font-semibold text-sm`} onClick={() => {
+      <button className={`${!disableVerify ? 'text-gamefiGreen-700' : 'text-gamefiDark-300 cursor-text'} font-semibold text-sm sm:text-base`} onClick={() => {
         handleVerifyEmail()
       }}>
         {loading ? <Spinning className="w-6 h-6" /> : (disableVerify ? 'Please check your email to confirm' : 'Verify my email')}
